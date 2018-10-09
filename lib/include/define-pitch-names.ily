@@ -1,6 +1,8 @@
 \version "2.19.82"
 
-%% SOLMISASI_define-pitch-names.ily
+%% define-pitch-names.ily
+%%
+%% (Part of "solmisasi" library for Lilypond)
 %%
 %% Copyright (C) 2016 - Henri Yulianto
 %%
@@ -16,10 +18,6 @@
 %%
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-%{
-  TODO:
-%}
 
 #(define-public solmisasi-pitchnames
    `(
@@ -151,3 +149,5 @@
       ))
 
 #(append! language-pitch-names (list (cons 'solmisasi solmisasi-pitchnames)))
+
+%% End of define-pitch-names.ily
