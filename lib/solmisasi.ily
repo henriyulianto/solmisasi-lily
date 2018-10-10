@@ -163,23 +163,36 @@
    (normalize-path
     (location-extract-path (*location*))))
 
+#(ly:message "Start loading \"solmisasi\" library ...\n")
+
 #(ly:parser-include-string
    (format #f "\\include \"~a/include/~a.ily\""
      _SOLMISASI_LIB_DIR
      "logging"))
-#(solmisasi:log "Start loading \"solmisasi\" library ...\n")
-#(solmisasi:log "* Initializing logs\n")
 
 #(ly:parser-include-string
    (format #f "\\include \"~a/include/~a.ily\""
      _SOLMISASI_LIB_DIR
      "define-pitch-names"))
-#(solmisasi:log "* Defining custom pitch names\n")
 
 #(ly:parser-include-string
    (format #f "\\include \"~a/include/~a.ily\""
      _SOLMISASI_LIB_DIR
      "misc-functions"))
-#(solmisasi:log "* Loading macros and functions\n")
 
-#(solmisasi:log "Finished loading \"solmisasi\" library.\n")
+#(ly:parser-include-string
+   (format #f "\\include \"~a/include/~a.ily\""
+     _SOLMISASI_LIB_DIR
+     "solmisasi-markups"))
+
+#(ly:parser-include-string
+   (format #f "\\include \"~a/include/~a.ily\""
+     _SOLMISASI_LIB_DIR
+     "solmisasi-engraver"))
+
+#(ly:parser-include-string
+   (format #f "\\include \"~a/include/~a.ily\""
+     _SOLMISASI_LIB_DIR
+     "solmisasi-layout-definition"))
+
+#(ly:message "Finished loading \"solmisasi\" library.\n")

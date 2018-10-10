@@ -115,4 +115,7 @@ openLogfile =
              (format solmisasi-logfile
                (format "log: ~a\n" (*location*)) fmt))))))
 
-%% End of logging.ily
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#(define LOGGING_LOADED #t)
+#(if (defined? 'LOGGING_LOADED)
+  (solmisasi:log "* Logging module has been loaded.\n"))

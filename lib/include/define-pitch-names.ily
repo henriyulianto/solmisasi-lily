@@ -149,5 +149,3 @@
       ))
 
 #(append! language-pitch-names (list (cons 'solmisasi solmisasi-pitchnames)))
-
-%% End of define-pitch-names.ily
