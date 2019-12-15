@@ -1,6 +1,7 @@
 # Ignore test folder
-tests/
+test*/
 
 # Ignore logs
 *.solmisasi.log
 *.log
+.gitignore

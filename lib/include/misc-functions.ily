@@ -1,4 +1,4 @@
-\version "2.19.82"
+\version "2.19.83"
 
 %% misc-functions.ily
 %%
@@ -136,16 +136,16 @@ transposeUpOneOctave =
 
 %% ALIASES
 
-#(define movableDo 							flexibleDo)
-#(define doIs										flexibleDo)
-#(define doSamaDengan						flexibleDo) % in Bahasa Indonesia
-#(define movableLa								flexibleLa)
-#(define laIs										flexibleLa)
-#(define laSamaDengan						flexibleLa) % in Bahasa Indonesia
-#(define transposeTurunSatuOktaf transposeDownOneOctave) % in Bahasa Indonesia
-#(define transposeNaikSatuOktaf	transposeUpOneOctave) % in Bahasa Indonesia
+#(define movableDo                flexibleDo)
+#(define doIs                     flexibleDo)
+#(define doSamaDengan             flexibleDo) % in Bahasa Indonesia
+#(define movableLa                flexibleLa)
+#(define laIs                     flexibleLa)
+#(define laSamaDengan             flexibleLa) % in Bahasa Indonesia
+#(define transposeTurunSatuOktaf  transposeDownOneOctave) % in Bahasa Indonesia
+#(define transposeNaikSatuOktaf	  transposeUpOneOctave) % in Bahasa Indonesia
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Misc functions module has been loaded.\n"))
+     (solmisasi:log "* Misc functions module has been loaded.\n"))

@@ -1,11 +1,11 @@
-\version "2.19.82"
+\version "2.19.83"
 #(ly:set-option 'relative-includes #t)
 
 %% solmisasi.ily
 %%
 %% (Part of "solmisasi" library for Lilypond)
 %%
-%% Copyright (C) 2016 - Henri Yulianto
+%% Copyright © 2016 - Henri Yulianto
 %%
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -194,5 +194,10 @@
    (format #f "\\include \"~a/include/~a.ily\""
      _SOLMISASI_LIB_DIR
      "solmisasi-layout-definition"))
+
+#(ly:parser-include-string
+   (format #f "\\include \"~a/include/~a.ily\""
+     _SOLMISASI_LIB_DIR
+     "solmisasi-music-parser"))
 
 #(ly:message "Finished loading \"solmisasi\" library.\n")
