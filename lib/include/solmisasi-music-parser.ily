@@ -19,22 +19,20 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-at =
-#(define-music-function (parser location t e m)
-   (ly:duration? ly:music? ly:music?)
-   #{ << #m { \skip $t <>$e } >> #})
+#(define (sol:message arg . rest)
+   #f)
 
 #(begin
 
   ;; Konstanta untuk solmisasiMusic
-  (define _KEY_SIG_PROP    'solmisasi-key-sig)
-  (define _TIME_SIG_PROP   'solmisasi-time-sig)
-  (define _REST_PROP       'solmisasi-rest)
-  (define _DOT_NOTE_PROP   'solmisasi-dot-note)
-
+  (define _KEY_SIG_PROP 	'solmisasi-key-sig)
+  (define _TIME_SIG_PROP 	'solmisasi-time-sig)
+  (define _REST_PROP 			'solmisasi-rest)
+  (define _DOT_NOTE_PROP 	'solmisasi-dot-note)
 
   (define key-changes '())
   (define key-change-completed? #f)
+  (define rest-pos (list))
 
   (define (note-event? m)
     (if (and (ly:music? m)
@@ -105,10 +103,8 @@ at =
            mus)))
     mus)
 
-
   (define solmisasiMusic
-    (define-music-function (parser location mus)
-      (ly:music?)
+    (define-music-function (mus) (ly:music?)
       "Memodifikasi mus agar siap di-engrave sebagai solmisasi/not angka."
 
       (define slur-started? #f)
@@ -116,6 +112,7 @@ at =
       (define slur-stopped? #f)
       (define note-in-tie? #f)
       (define is-rest? #f)
+      (define note-or-rest-iteration 0)
 
       (define (beginMelismaList)
         (cond
@@ -175,74 +172,7 @@ at =
 
         (music-map
          (lambda (m)
-
            (cond
-
-            ;-----------------------------------------------------------
-            ;; Event: PERUBAHAN TEMPO (AWAL)
-            ;; Update header "ekspresi"
-            ; ((and (music-is-of-type? m 'tempo-change-event)
-            ;                   (not tempo-awal))
-            ;              (let*
-            ;               ((tempo-text-mkup (ly:music-property m 'text))
-            ;                (tempo-unit-dur (ly:music-property m 'tempo-unit))
-            ;                (tempo-mm-count (ly:music-property m 'metronome-count))
-            ;                (tempo-header-markup #f))
-            ;               (if tempo-text-mkup
-            ;                   (set! tempo-header-markup #{ \markup \bold #tempo-text-mkup #})
-            ;                   (set! tempo-header-markup #{ \markup \null #}))
-            ;               (if (and (ly:duration? tempo-unit-dur)
-            ;                        (number-or-pair? tempo-mm-count))
-            ;                   (let*
-            ;                    ((dur-log (ly:duration-log tempo-unit-dur))
-            ;                     (dur-dot (ly:duration-dot-count tempo-unit-dur))
-            ;                     (tempo-mm-markup #f))
-            ;                    (set! tempo-mm-markup
-            ;                          (if (number? tempo-mm-count)
-            ;                              #{
-            ;                                \markup \concat {
-            ;                                  (
-            ;                                  \hspace #0.5
-            ;                                  \fontsize #-2 \general-align #Y #DOWN
-            ;                                  \lower #0.4
-            ;                                  \note-by-number #dur-log #dur-dot #UP
-            ;                                  " = "
-            ;                                  #(number->string tempo-mm-count)
-            ;                                  \hspace #0.5
-            ;                                  )
-            ;                                }
-            ;                              #}
-            ;                              ;else => pair
-            ;                              #{
-            ;                                \markup \concat {
-            ;                                  (
-            ;                                  \hspace #0.5
-            ;                                  \fontsize #-2 \general-align #Y #DOWN
-            ;                                  \lower #0.4
-            ;                                  \note-by-number #dur-log #dur-dot #UP
-            ;                                  " = "
-            ;                                  #(number->string (car tempo-mm-count))
-            ;                                  " - "
-            ;                                  #(number->string (cdr tempo-mm-count))
-            ;                                  \hspace #0.5
-            ;                                  )
-            ;                                }
-            ;                              #}
-            ;                              ))
-            ;                    (set! tempo-header-markup
-            ;                          #{ \markup { #tempo-header-markup #tempo-mm-markup } #}
-            ;                          )))
-            ;               ; update header field ekspresi
-            ;               ; (set! m
-            ;               ;                     (make-sequential-music
-            ;               ;                      (append
-            ;               ;                       (list #{ \once \omit MetronomeMark #})
-            ;               ;                       (list m)
-            ;               ;                       )))
-            ;               (update-ekspresi-header tempo-header-markup)
-            ;               (set! tempo-awal #t)
-            ;               ))
-
             ;-----------------------------------------------------------
             ;; Event: PERUBAHAN TANDA SUKAT/BIRAMA/TIME SIGNATURE
             ;; Tambahkan/set properti musik baru: 'solmisasi-time-sig
@@ -337,6 +267,7 @@ at =
             ;; Event: Picthed NOTE atau REST
             ((or (note-event? m)
                  (rest-event? m))
+             (set! note-or-rest-iteration (+ 1 note-or-rest-iteration))
              (set! orig-m (ly:music-deep-copy m))
 
              (set! iter-num (+ 1 iter-num))
@@ -403,14 +334,12 @@ at =
               ;; utk rest, set properti 'solmisasi-rest
               (if (rest-event? m)
                   (begin
-                   (sol:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
+                   (set! rest-pos
+                         (append rest-pos (list note-or-rest-iteration)))
+                   (ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
                    (ly:music-set-property! m 'name 'NoteEvent)
-                   ; (ly:music-set-property! m 'types
-                   ;                      (append
-                   ;                       (delete 'rest-event (ly:music-property m 'types))
-                   ;                       '(note-event melodic-event)))
                    (ly:music-set-property! m 'pitch
                      (if (not (null? (ly:music-property m 'pitch)))
                          (ly:music-property m 'pitch)
@@ -713,10 +642,32 @@ at =
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
+                                   ;;(if (> (+ q4 q8 q16 q32) 0)
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertySet
+                                           'value
+                                           #t
+                                           'symbol
+                                           'melismaBusy)))
                                    (make-list duradot4  q4)
                                    (make-list duradot8  q8)
                                    (make-list duradot16 q16)
                                    (make-list duradot32 q32)
+                                   ;;(if (> (+ q4 q8 q16 q32) 0)
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertyUnset
+                                           'symbol
+                                           'melismaBusy)))
                                    )))
                          ;; else must-reverse = #t
                          ; (begin
@@ -786,8 +737,27 @@ at =
         muscopy)             ;; end let
       )               ;; end define
     )
-
+  (define solmisasiLyric
+    (define-music-function (mus) (ly:music?)
+      (let* ((newmus (empty-music))
+             (elems (music-flatten (ly:music-property mus 'elements '())))
+             (newelems (list))
+             (rp (list-copy rest-pos))
+             (ri 0))
+        (while (not (null? rp))
+          (set! ri (- (car rp) 1))
+          (set! rp (cdr rp))
+          (set! elems
+                (append (drop-right elems (- (length elems) ri))
+                  (list (make-music 'LyricEvent
+                          'text ""
+                          'duration (ly:make-duration 2)))
+                  (take-right elems (- (length elems) ri))))
+          )
+        (set! newmus (make-sequential-music elems))
+        newmus)))
   )
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MUSIC_PARSER_LOADED #t)

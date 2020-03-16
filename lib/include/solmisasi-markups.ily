@@ -1,5 +1,4 @@
-\version "2.19.83"
-
+\version "2.20.0"
 %% solmisasi-markups.ily
 %%
 %% (Part of "solmisasi" library for Lilypond)

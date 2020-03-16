@@ -1,5 +1,4 @@
-\version "2.19.82"
-
+\version "2.20.0"
 %% logging.ily
 %%
 %% Copyright (C) 2016 - Henri Yulianto

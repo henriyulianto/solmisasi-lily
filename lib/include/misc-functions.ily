@@ -1,5 +1,4 @@
-\version "2.19.83"
-
+\version "2.20.0"
 %% misc-functions.ily
 %%
 %% (Part of "solmisasi" library for Lilypond)
@@ -20,6 +19,16 @@
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 %% MACROS
+
+#(define music-flatten
+   (lambda (mus)
+   "Convert nested sequential musics into single sequential musics"
+     (fold
+      (lambda (e prv)
+        (if (not (music-is-of-type? e 'sequential-music))
+            (append prv (list e))
+            (append prv (music-flatten (ly:music-property e 'elements)))))
+      '() mus)))
 
 #(define (get-keysig-alt-count alt-alist)
    "Return the number of alterations in a key signature,
@@ -84,6 +93,70 @@
         (ly:moment<? ZERO-MOMENT (ly:music-length m))))
 
 %% MUSIC/SCHEME/VOID FUNCTIONS
+
+at =
+#(define-music-function (parser location t e m)
+   (ly:duration? ly:music? ly:music?)
+   #{ << #m { \skip $t <>$e } >> #})
+
+music-car =
+#(define-music-function (mus) (ly:music?)
+   (let
+    ((elem 	(ly:music-property mus 'element '()))
+     (elems (ly:music-property mus 'elements '()))
+     (sim 	(music-is-of-type? mus 'simultaneous-music))
+     (rel 	(music-is-of-type? mus 'relative-octave-music))
+     (seq 	(music-is-of-type? mus 'sequential-music)))
+    (cond
+     (rel (make-music 'RelativeOctaveMusic 'element (music-car elem)))
+     (sim (make-music 'SimultaneousMusic 'elements (map music-car elems)))
+     (seq (make-music 'SequentialMusic 'elements (list (car elems))))
+     (else mus))))
+
+music-cdr =
+#(define-music-function (mus) (ly:music?)
+   (let
+    ((elem 	(ly:music-property mus 'element '()))
+     (elems (ly:music-property mus 'elements '()))
+     (sim 	(music-is-of-type? mus 'simultaneous-music))
+     (rel 	(music-is-of-type? mus 'relative-octave-music))
+     (seq 	(music-is-of-type? mus 'sequential-music)))
+    (cond
+     (rel (make-music 'RelativeOctaveMusic 'element (music-cdr elem)))
+     (sim (make-music 'SimultaneousMusic 'elements (map music-cdr elems)))
+     (seq (make-music 'SequentialMusic 'elements (cdr elems)))
+     (else mus))))
+
+music-cons =
+#(define-music-function (el mus) (ly:music? ly:music?)
+   (let*
+    ((elem 		(ly:music-property mus 'element '()))
+     (elems 	(ly:music-property mus 'elements '()))
+     (sim 		(music-is-of-type? mus 'simultaneous-music))
+     (rel 		(music-is-of-type? mus 'relative-octave-music))
+     (seq 		(music-is-of-type? mus 'sequential-music))
+     (elsim		(music-is-of-type? el  'simultaneous-music))
+     (elseq 	(music-is-of-type? el  'sequential-music))
+     (elelems (ly:music-property el  'elements '()))
+     (rem 		(and seq
+                 (not (null? elems))
+                 (or (music-is-of-type? (car elems) 'simultaneous-music)
+                     (music-is-of-type? (car elems) 'relative-octave-music)
+                     (music-is-of-type? (car elems) 'sequential-music)))))
+    (cond
+     (rem (make-music 'SequentialMusic 'elements
+            (cons (music-cons el (car elems)) (cdr elems))))
+     (rel (make-music 'RelativeOctaveMusic 'element
+            (music-cons el elem)))
+     (sim (make-music 'SimultaneousMusic 'elements
+            (if elsim
+                (append elelems elems)
+                (cons (music-cons el (car elems)) (cdr elems)))))
+     (seq (make-music 'SequentialMusic 'elements
+            (if elseq
+                (append elelems elems)
+                (cons el elems))))
+     (else (ly:error "Not a type of music to cons")))))
 
 silence =
 #(define-music-function (arg) (ly:music?)
