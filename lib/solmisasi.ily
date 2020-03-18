@@ -1,9 +1,8 @@
 \version "2.19.83"
 #(ly:set-option 'relative-includes #t)
-
 %% solmisasi.ily
 %%
-%% (Part of "solmisasi" library for Lilypond)
+%% (Part of "solmisasi-lily" library for Lilypond)
 %%
 %% Copyright © 2016 - Henri Yulianto
 %%

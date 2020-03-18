@@ -2,7 +2,7 @@
 
 %% define-pitch-names.ily
 %%
-%% (Part of "solmisasi" library for Lilypond)
+%% (Part of "solmisasi-lily" library for Lilypond)
 %%
 %% Copyright (C) 2016 - Henri Yulianto
 %%

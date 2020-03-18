@@ -1,6 +1,8 @@
 \version "2.20.0"
 %% logging.ily
 %%
+%% (Part of "solmisasi-lily" library for Lilypond)
+%%
 %% Copyright (C) 2016 - Henri Yulianto
 %%
 %% This program is free software: you can redistribute it and/or modify
