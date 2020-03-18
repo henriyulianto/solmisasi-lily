@@ -336,7 +336,7 @@
                   (begin
                    (set! rest-pos
                          (append rest-pos (list note-or-rest-iteration)))
-                   (ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
+                   ;(ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
                    (ly:music-set-property! m 'name 'NoteEvent)

@@ -28,6 +28,8 @@
   (lily)
   (ice-9 regex))
 
+#(define VERSION "1.0.0")
+
 %% #t when running a Windows OS
 #(define-public is-windows
    (let ((os (getenv "OS")))
