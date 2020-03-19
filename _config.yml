@@ -1,3 +1,38 @@
-theme: jekyll-theme-minimal
 title: solmisasi-lily
 description: "\"Solmisasi\" library for Lilypond"
+#baseurl: "/solmisasi-lily" # the subpath of your site, e.g. /blog
+#url: "https://henriyulianto.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+
+permalink: pretty
+exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
+
+source: ./
+destination: ./_site
+#theme: jekyll-theme-minimal
+theme: "just-the-docs"
+
+# Enable or disable the site search
+search_enabled: true
+
+# Set the search token separator for hyphenated-word search:
+search_tokenizer_separator: /[\s/]+/
+
+# Enable or disable heading anchors
+heading_anchors: true
+
+aux_links:
+  "solmisasi-lily on GitHub":
+    - "https://github.com/henriyulianto/solmisasi-lily"
+
+footer_content: "Copyright &copy; 2016-2020 Henri Yulianto. Distributed by a <a href=\"https://github.com/henriyulianto/solmisasi-lily/LICENSE\">GNU GPLv3 license.</a>"
+
+plugins:
+  - jekyll-seo-tag
+
+compress_html:
+  clippings: all
+  comments: all
+  endings: all
+  startings: []
+  blanklines: false
+  profile: false
