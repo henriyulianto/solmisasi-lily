@@ -1,0 +1,9 @@
+.gitattributes export-ignore
+.gitignore export-ignore
+.github export-ignore
+_sass export-ignore
+assets export-ignore
+docs export-ignore
+*.yml export-ignore
+Gemfile export-ignore
+index.md export-ignore
