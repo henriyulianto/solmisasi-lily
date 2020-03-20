@@ -4,13 +4,13 @@ description: "\"Solmisasi\" library for Lilypond"
 #url: "https://henriyulianto.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 
 permalink: pretty
-exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile"]
+exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile", "*.solmisasi.log", "*.ly", "*tmp-lilypond*"]
 
 source: ./
 destination: ./_site
 #theme: jekyll-theme-minimal
-#theme: "just-the-docs"
-remote_theme: pmarsceill/just-the-docs
+theme: "just-the-docs"
+#remote_theme: pmarsceill/just-the-docs
 
 # Enable or disable the site search
 search_enabled: true

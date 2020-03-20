@@ -13,6 +13,12 @@ $root-font-size: 18px;         // Base font-size for rems
 em {
   font-style: italic;
 }
+details summary {
+  cursor: pointer;
+}
+summary {
+  display: list-item;
+}
 
 ////
 //// Colors

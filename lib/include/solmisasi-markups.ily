@@ -53,6 +53,19 @@
                     (make-circle-stencil octave-dot-radius 0.001 #t)
                     octave-dot-padding)
                    0 0))
+             ((3) (ly:stencil-aligned-to
+                   (ly:stencil-combine-at-edge
+                    (ly:stencil-combine-at-edge
+                     (make-circle-stencil octave-dot-radius 0.001 #t)
+                     0
+                     -1
+                     (make-circle-stencil octave-dot-radius 0.001 #t)
+                     octave-dot-padding)
+                    0
+                    1
+                    (make-circle-stencil octave-dot-radius 0.001 #t)
+                    octave-dot-padding)
+                   0 0))
              ))
           (num-x (horizontal-slash-interval num forward (ly:stencil-extent number-stencil X) mag))
           (center-y (interval-center (ly:stencil-extent number-stencil Y)))
@@ -127,4 +140,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MARKUPS_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Solmisasi markups module has been loaded.\n"))
+     (solmisasi:log "* Solmisasi markups module has been loaded.\n"))
