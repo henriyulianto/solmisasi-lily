@@ -22,16 +22,16 @@ Notes: There are 2 solmisasi sub-staves below the standard male vocal staves: (A
 ### Sharp Mode
 {: no_toc }
 
-![Vocal Ranges, in C Major, sharp mode](/docs/comparison/comparison.png)
+![Vocal Ranges, in C Major, sharp mode](./comparison.png)
 
 ### Flat Mode
 {: no_toc }
 
-![Vocal Ranges, in C Major, flat mode](/docs/comparison/comparison-in-flat.png)
+![Vocal Ranges, in C Major, flat mode](./comparison-in-flat.png)
 
 ---
 
 ## Pitches in G Major (One Sharp)
 {: .text-delta .fs-6 }
 
-![Vocal Ranges, in G Major](/docs/comparison/comparison-g-maj.png)
+![Vocal Ranges, in G Major](./comparison-g-maj.png)
