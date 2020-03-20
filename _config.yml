@@ -9,8 +9,8 @@ exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "pac
 source: ./
 destination: ./_site
 #theme: jekyll-theme-minimal
-theme: "just-the-docs"
-#remote_theme: pmarsceill/just-the-docs
+#theme: "just-the-docs"
+remote_theme: pmarsceill/just-the-docs
 
 # Enable or disable the site search
 search_enabled: true
