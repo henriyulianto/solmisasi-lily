@@ -210,7 +210,7 @@ All pitches shown below are written in **'flat mode'**.
 ## Preferred Pitch Numbers
 {: .text-delta .fs-6 }
 
-In most cases of writing score/sheet music in _solmisasi_ system and based on common practice, especially in Indonesia, regardless of the key signatures being used, there are some pitch numbers which users (singers, vocal groups, or choirs) doesn't like. Therefore, many music authors tend to avoid using these pitch numbers.<br>
+In most cases of writing score/sheet music in _solmisasi_ system and based on common practices, especially in Indonesia, regardless of the key signatures being used, there are some pitch numbers which users (singers, vocal groups, or choirs) doesn't like. Therefore, many music authors tend to avoid using these pitch numbers.<br>
 The preferred solmisasi pitch numbers are listed below.
 {: .fs-5 }
 <img src="./preferred-pitch-numbers.png" width="400" />
