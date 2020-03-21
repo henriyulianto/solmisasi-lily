@@ -221,5 +221,5 @@ The question is: _How do we choose the pitches to be used, if the 'original' con
 The answer would be totally based on the skill, style, and technique that the author have and use in creating Lilypond scores. Someone could just replace the avoided pitches with the preferred ones. However, if I intend to have both outputs (standard and solmisasi), I would prefer using 'tags' in my Lilypond snippets to distinguish those notes using their enharmonic equivalencies.
 {: .fs-5 }
 
-So, what are you waiting for? Let's [get started!](/docs/getting-started/)
+So, what are you waiting for? Let's [get started!](../getting-started/)
 {: .fs-7 }
