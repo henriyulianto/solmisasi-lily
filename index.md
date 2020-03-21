@@ -14,7 +14,7 @@ permalink: /
 
 [Preamble](#preamble){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Further Reading](#further-reading){: .btn .btn-green .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/henriyulianto/solmisasi-lily){: .btn .fs-5 .mb-4 .mb-md-0 }
 
-![](/docs/assets/img/solmisasi-art2.jpg)
+![](/assets/img/solmisasi-art2.jpg)
 
 ---
 
