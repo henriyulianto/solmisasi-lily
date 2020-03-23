@@ -5,10 +5,10 @@ nav_order: 1
 parent: Examples of Usage
 ---
 
-# Engraving a Simple Song "Mary Had a Little Lamb - in D Major and E Major" in _Solmisasi_ System
+# Engraving a Simple Song "Mary Had a Little Lamb - in D Major and E Major" in _Solmisasi_
 {: .no_toc .fs-7 }
 
-Let's first engrave this song in standard (Western) system, without an `include` to the _solmisasi-lily_ library. The snippet would be something like this.
+Let's first engrave this song in standard (Western) music notation, without an `include` to the _solmisasi-lily_ library. The snippet would be something like this.
 {: .fs-5 }
 
 ```
@@ -92,7 +92,7 @@ And here is the compilation result.
 
 ![](../basic-01.png)
 
-Now, let's transform that score into _solmisasi_ system. Here is the snippet and its compiled result.
+Now, let's transform that score into _solmisasi_ notation. Here is the snippet and its compiled result.
 {: .fs-5 }
 
 ```
@@ -187,13 +187,13 @@ In the compiled result, there is a new object printed at the end of the second s
 {: .fs-5 }
 <img src="../basic-01-solmisasi-key-equivalence.png" width="100"/>
 
-This object was engraved by a special custom engraver named `Solmisasi_equivalence_key_engraver`, with the purpose of telling the score users/readers about the equivalence of the last note, before the change of the key signature, in the new key signature. It is a common practice in writing music in solmisasi system. However, this object could be omitted, if you want to.
+This object was engraved by a special custom engraver named `Solmisasi_equivalence_key_engraver`, with the purpose of telling the score users/readers about the equivalence of the last note, before the change of the key signature, in the new key signature. It is a common practice in writing music in _solmisasi_ notation. However, this object could be omitted, if you want to.
 {: .fs-5 }
 
 If you carefully look at the latest snippet, you'll find a new music function named `\solmisasiLyric`. _**What is this, and why do I need this function?**_
 {: .fs-5 }
 
-In this version, _solmisasi-lily_ treats both input notes and rests as notes. In the case of a `rest-event` or `multi-measure-rest` found, it will be treated as a `note-event`. Therefore, Lilypond's `Lyric_engraver` will also print the lyric syllables below/above a solmisasi rest (printed as `0`). So, I decided to code a simple function, named `\solmisasiLyric`, to overcome this problem. If I have time in the future, I will implement a dedicated `Rest_engraver` for solmisasi system.
+In this version, _solmisasi-lily_ treats both input notes and rests as notes. In the case of a `rest-event` or `multi-measure-rest` found, it will be treated as a `note-event`. Therefore, Lilypond's `Lyric_engraver` will also print the lyric syllables below/above a _solmisasi_ rest (printed as `0`). So, I decided to code a simple function, named `\solmisasiLyric`, to overcome this problem. If I have time in the future, I will implement a dedicated `Rest_engraver` in the next version of _solmisasi-lily_ library.
 {: .fs-5 }
 
 However, there are other alternative ways, such as:<br>

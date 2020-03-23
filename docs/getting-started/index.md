@@ -20,7 +20,7 @@ Before we start this section, please keep in mind that _solmisasi-lily_ is just 
 
 ## Obtaining _solmisasi-lily_ Library
 
-This library could be obtained by downloading this archive: <a href="{{ site.archive_url }}">{{ site.archive_url_title }}</a> , or by cloning the repo to your machine. If you choose to download the archive, please extract it to your project folder. Let's say, the project folder where this library extracted is `X:\solmisasi-lily` (so the solmisasi-lily library exists in `X:\solmisasi-lily\lib`).
+This library could be obtained by downloading this archive: <a href="{{ site.archive_url }}">{{ site.archive_url_title }}</a> , or by cloning the repo to your machine. If you choose to download the archive, please extract it to your project folder. Let's say, the project folder where this library extracted is `X:\solmisasi-lily` (so the _solmisasi-lily_ library exists in `X:\solmisasi-lily\lib`).
 {: .fs-5 }
 Notes:<br>
 Please keep in mind that Lilypond is a cross-platform software. Therefore, the usage of this library is not OS-specific. However, I will use MS Windows approach, even though I also extensively run Lilypond with this library in my Linux station as well. Should you face any problems in running Lilypond on your machine's OS, please consult the [Lilypond manuals](http://lilypond.org/manuals.html).
@@ -54,7 +54,7 @@ Save it to `getting-started-example-01.ly`, and compile it using simple Lilypond
 {: .fs-5 }
 <img src="./getting-started-example-01-1.png" width="400"/>
 
-To 'convert' that standard notation to solmisasi, we need:
+To 'convert' that standard notation to _solmisasi_, we need:
 {: .fs-5 }
 1. this library to be included at the top of the snippet,
 2. a _music function_, named `\solmisasiMusic`,
@@ -107,7 +107,7 @@ And the result is:<br>
 ## Time and Key Signatures in _Solmisasi_ System
 
 Let's continue...<br>
-You could clearly see that there were some standard notation objects missing in the compilation result of the solmisasi notation, e.g. time signature. Actually, the `SolmisasiStaff` context still contains the Lilypond's original `TimeSignature` object, but it is omitted. We can bring it back into the staff either by reverting the value of `TimeSignature`'s stencil, or by undo-ing the omit. So, let's modify our snippet to this one:
+You could clearly see that there were some standard notation objects missing in the compilation result of the_solmisasi_notation, e.g. time signature. Actually, the `SolmisasiStaff` context still contains the Lilypond's original `TimeSignature` object, but it is omitted. We can bring it back into the staff either by reverting the value of `TimeSignature`'s stencil, or by undo-ing the omit. So, let's modify our snippet to this one:
 {: .fs-5 }
 
 ```
@@ -127,7 +127,7 @@ And the compiled result is:
 <img src="./getting-started-example-01-3.png" width="400"/>
 
 But, wait a sec... _How do we know which key signature those solmisasi notes are in?_<br>
-If we are using standard notation, without a key signature being written at the beginning of the score, we all know that the music passage is written in C Major or A Minor key. Meanwhile, solmisasi system needs the key signature to be explicitly written out in its commonly-acceptable form. (See [Scales and Key Signatures](../../#scales-and-key-signatures))
+If we are using standard notation, without a key signature being written at the beginning of the score, we all know that the music passage is written in C Major or A Minor key. Meanwhile, _solmisasi_ needs the key signature to be explicitly written out in its commonly-acceptable form. (See [Scales and Key Signatures](../../#scales-and-key-signatures))
 {: .fs-5 }
 
 This feature is implemented in a new custom context called `SolmisasiTimeAndKeySignature`. This context is based on the Lilypond's original staff context. So, if we want to use this context, it should be **simultaneously** defined with the `SolmisasiStaff` context.

@@ -4,13 +4,16 @@ nav_order: 2
 title: Standard (Western) vs Solmisasi
 ---
 
-People say: _"A picture is worth a thousand words"_. Let's bring up some pictures here to better show the differences (and implicitly, the equivalencies) between both notation systems.<br>
+# Standard (Western) vs _Solmisasi_ Music Notation
+{: .no_toc .fs-9 }
+
+People say: _"A picture is worth a thousand words"_. Let's bring up some pictures here to better show the differences (and implicitly, the equivalencies) between both music notations.<br>
   Just take a seat, and relax!
 {: .fs-6 }
 
 Let's take a reference from what Wikipedia says: [Vocal range](https://en.wikipedia.org/wiki/Vocal_range). Please take a note that the ranges given below **are approximations** and **are not meant to be too rigidly applied**.<br>
 {: .fs-5 }
-There are 2 solmisasi sub-staves below the standard male vocal staves: _(Actual)_ and _(Real World)_. The pitch numbers on (Actual) are the 'actual' pitch numbers converted from the standard notation pitches, while the ones on (Real World) are the 'real-world' pitch numbers that the solmisasi system applied in vocal music. Using the same Lilypond music passages/sequences, it can be achieved by setting a custom staff context property named `male-vocal` to `##t` (true).
+There will be two (2)_solmisasi_sub-staves below the standard male vocal staves: _(Actual)_ and _(Real World)_. The pitch numbers on (Actual) are the 'actual' pitch numbers converted from the standard notation pitches, while the ones on (Real World) are the 'real-world' pitch numbers that the_solmisasi_system applied in vocal music. Using the same Lilypond music passages/sequences, it can be achieved by setting a custom staff context property named `male-vocal` to `##t` (true).
 {: .fs-4 }
 
 1. TOC
@@ -61,13 +64,13 @@ All pitches shown below are written in **'sharp mode'**.
 
 - ### A Major or F♯ Minor (Three Sharps)
 
-  In this key signature, there are 2 modes in writing notes in solmisasi system as described below.
+  In this key signature, there are two modes in writing notes in _solmisasi_ as described below.
   {: .fs-5 }
 
   #### Mode 1: Actual
   {: no_toc }
 
-  The actual conversion from standard to solmisasi system is shown below.
+  The actual conversion from standard to _solmisasi_ is shown below.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
@@ -129,13 +132,13 @@ All pitches shown below are written in **'flat mode'**.
 
 - ### B♭ Major (Two Flats)
 
-  In this key signature, there are 2 modes in writing notes in solmisasi system as described below.
+  In this key signature, there are two modes in writing notes in _solmisasi_ as described below.
   {: .fs-5 }
 
   #### Mode 1: Actual
   {: no_toc }
 
-  The actual conversion from standard to solmisasi system is shown below.
+  The actual conversion from standard to _solmisasi_ is shown below.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
@@ -161,13 +164,13 @@ All pitches shown below are written in **'flat mode'**.
 
 - ### A♭ Major (Four Flats)
 
-  In this key signature, there are 2 modes in writing notes in solmisasi system as described below.
+  In this key signature, there are two modes in writing notes in _solmisasi_ as described below.
   {: .fs-5 }
 
   #### Mode 1: Actual
   {: no_toc }
 
-  The actual conversion from standard to solmisasi system is shown below.
+  The actual conversion from standard to _solmisasi_ is shown below.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
@@ -210,15 +213,15 @@ All pitches shown below are written in **'flat mode'**.
 ## Preferred Pitch Numbers
 {: .text-delta .fs-6 }
 
-In most cases of writing score/sheet music in _solmisasi_ system and based on common practices, especially in Indonesia, regardless of the key signatures being used, there are some pitch numbers which users (singers, vocal groups, or choirs) doesn't like. Therefore, many music authors tend to avoid using these pitch numbers.<br>
-The preferred solmisasi pitch numbers are listed below.
+In most cases of writing score/sheet music in _solmisasi_ and based on common practices, especially in Indonesia, regardless of the key signatures being used, there are some pitch numbers which users (singers, vocal groups, or choirs) doesn't like. Therefore, many music authors tend to avoid using these pitch numbers.<br>
+The preferred_solmisasi_pitch numbers are listed below.
 {: .fs-5 }
 <img src="./preferred-pitch-numbers.png" width="400" />
 
 The question is: _How do we choose the pitches to be used, if the 'original' converted pitches are not the preferred ones?_
 {: .fs-5 }
 
-The answer would be totally based on the skill, style, and technique that the author have and use in creating Lilypond scores. Someone could just replace the avoided pitches with the preferred ones. However, if I intend to have both outputs (standard and solmisasi), I would prefer using 'tags' in my Lilypond snippets to distinguish those notes using their enharmonic equivalencies.
+The answer would be totally based on the skill, style, and technique that the author have and use in creating Lilypond scores. Someone could just replace the avoided pitches with the preferred ones. However, if I intend to have both outputs (standard and _solmisasi_), I would prefer using 'tags' in my Lilypond snippets to distinguish those notes using their enharmonic equivalencies.
 {: .fs-5 }
 
 So, what are you waiting for? Let's [get started!](../getting-started/)
