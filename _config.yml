@@ -13,7 +13,7 @@ destination: ./_site
 remote_theme: pmarsceill/just-the-docs
 
 # Enable or disable the site search
-search_enabled: true
+search_enabled: false
 
 # Set the search token separator for hyphenated-word search:
 search_tokenizer_separator: /[\s/]+/
