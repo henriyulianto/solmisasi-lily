@@ -107,7 +107,7 @@ And the result is:<br>
 ## Time and Key Signatures in _Solmisasi_ System
 
 Let's continue...<br>
-You could clearly see that there were some standard notation objects missing in the compilation result of the_solmisasi_notation, e.g. time signature. Actually, the `SolmisasiStaff` context still contains the Lilypond's original `TimeSignature` object, but it is omitted. We can bring it back into the staff either by reverting the value of `TimeSignature`'s stencil, or by undo-ing the omit. So, let's modify our snippet to this one:
+You could clearly see that there were some standard notation objects missing in the compilation result of the _solmisasi_ notation, e.g. time signature. Actually, the `SolmisasiStaff` context still contains the Lilypond's original `TimeSignature` object, but it is omitted. We can bring it back into the staff either by reverting the value of `TimeSignature`'s stencil, or by undo-ing the omit. So, let's modify our snippet to this one:
 {: .fs-5 }
 
 ```
