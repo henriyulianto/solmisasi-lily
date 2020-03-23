@@ -3,9 +3,10 @@
 ////
 
 @import url("https://use.typekit.net/ulk7deg.css");
+@import url("./jetbrains-mono.css");
 
 $body-font-family: "source-serif-pro", "Times New Roman", serif;
-$mono-font-family: "source-code-pro", Menlo, Consolas, Monospace;
+$mono-font-family: "JetBrains Mono", "source-code-pro", Menlo, Consolas, Monospace;
 $root-font-size: 18px;         // Base font-size for rems
 //$body-line-height: 1.4;
 //$content-line-height: 1.5;
@@ -18,6 +19,44 @@ details summary {
 }
 summary {
   display: list-item;
+}
+.lilypond pre.highlight {
+  display: block;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  //font-size: 0.7rem;
+  line-height: 1.4;
+  white-space: pre;
+  overflow: auto;
+  background-color: #f5f6fa;
+  border: 1px solid #ddd;
+  padding: .5rem;
+  max-height: 800px;
+  font-family: "JetBrains Mono", "source-code-pro", Menlo, Consolas, Monospace;
+}
+.lilypond pre.highlight code {
+  color: inherit;
+  background-color: #f5f6fa;
+  padding: 0;
+  display: block;
+}
+.lilypond pre.highlight .line-number {
+  display: block;
+  float: left;
+  margin: 0 1em 0 -1em;
+  border-right: 1px solid #d6d1d8;
+  text-align: right;
+  font-size: 12px;
+  line-height: 1.4;
+}
+.lilypond pre.highlight .line-number span {
+  display: block;
+  padding: 0 .5em 0 1em;
+  color: #c6c1c8;
+}
+.lilypond pre.highlight .cl {
+  display: block;
+  clear: both;
 }
 
 ////
@@ -63,17 +102,17 @@ summary {
 //$red-300: #dd2e2e;
 
 //$body-background-color: $white;
-//$sidebar-color: $grey-lt-000;
+$sidebar-color: $grey-lt-000;
 //$search-background-color: $white;
 //$table-background-color: $white;
 //$code-background-color: $grey-lt-000;
 
-//$body-text-color: $grey-dk-100;
-//$body-heading-color: $grey-dk-300;
+$body-text-color: $grey-dk-100;
+$body-heading-color: $grey-dk-300;
 //$search-result-preview-color: $grey-dk-000;
 //$nav-child-link-color: $grey-dk-100;
-//$link-color: $purple-000;
-//$btn-primary-color: $purple-100;
+$link-color: $blue-000;
+$btn-primary-color: $blue-100;
 //$base-button-color: #f7f7f7;
 
 ////

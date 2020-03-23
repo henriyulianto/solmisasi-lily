@@ -169,7 +169,7 @@
               (last-pitch
                (if (and event
                         (vocal-instrument? context-id)
-                        (not (equal? 'SolmisasiTimeAndKeySig context-name)))
+                        (not (equal? 'SolmisasiTimeAndKeySignature context-name)))
                    (ly:event-property event 'last-pitch-solmisasi #f)
                    #f))
               (print-ekuivalensi?
@@ -182,7 +182,8 @@
               (stl #f))
              ;--------------------------------------
              (set! key-is-changed
-                   (not (equal? solmisasi-key-sig current-key-sig)))
+                   (or (equal? current-moment ZERO-MOMENT)
+                       (not (equal? solmisasi-key-sig current-key-sig))))
              (if key-is-changed
                  (begin
                   (ly:grob-set-property! grob 'stencil
@@ -192,7 +193,7 @@
                  (ly:grob-set-property! grob 'stencil #f))
              (set! current-key-sig solmisasi-key-sig))))))))
 
-#(define Solmisasi_ekuivalensi_key_engraver
+#(define Solmisasi_equivalence_key_engraver
    (make-engraver
     (acknowledgers
      ((key-signature-interface engraver grob source-engraver)
@@ -210,7 +211,7 @@
             (last-pitch
              (if (and event
                       ;(vocal-instrument? context-id)
-                      (not (equal? 'SolmisasiTimeAndKeySig context-name)))
+                      (not (equal? 'SolmisasiTimeAndKeySignature context-name)))
                  (ly:event-property event 'last-pitch-solmisasi #f)
                  #f))
             (last-pitch-pitch
@@ -313,4 +314,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_ENGRAVER_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Solmisasi engraver module has been loaded.\n"))
+     (solmisasi:log "* Solmisasi engraver module has been loaded.\n"))

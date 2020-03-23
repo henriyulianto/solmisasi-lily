@@ -1,0 +1,51 @@
+@font-face{
+    font-family: 'JetBrains Mono';
+    src: url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/eot/JetBrainsMono-Regular.eot') format('embedded-opentype'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff2/JetBrainsMono-Regular.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff/JetBrainsMono-Regular.woff') format('woff'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/ttf/JetBrainsMono-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+@font-face{
+    font-family: 'JetBrains Mono';
+    src: url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/eot/JetBrainsMono-Italic.eot') format('embedded-opentype'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff2/JetBrainsMono-Italic.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff/JetBrainsMono-Italic.woff') format('woff'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/ttf/JetBrainsMono-Italic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+@font-face{
+    font-family: 'JetBrains Mono';
+    src: url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/eot/JetBrainsMono-Bold.eot') format('embedded-opentype'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff2/JetBrainsMono-Bold.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff/JetBrainsMono-Bold.woff') format('woff'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/ttf/JetBrainsMono-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+@font-face{
+    font-family: 'JetBrains Mono';
+    src: url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/eot/JetBrainsMono-Bold-Italic.eot') format('embedded-opentype'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff2/JetBrainsMono-Bold-Italic.woff2') format('woff2'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/web/woff/JetBrainsMono-Bold-Italic.woff') format('woff'),
+         url('https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/ttf/JetBrainsMono-Bold-Italic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+    -webkit-font-feature-settings: "liga" on, "calt" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}

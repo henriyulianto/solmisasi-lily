@@ -125,6 +125,61 @@
             note-number pitch-alter diff-octave thickness))
     not-angka-stencil))
 
+#(define-markup-command (infoNadaBaru layout props nada oktafDasar)
+   (ly:pitch? number?)
+   (interpret-markup layout props
+     #{
+       \markup {
+         \pad-around #0.1
+         \center-align \concat {
+           \hspace #0.2
+           "="
+           \hspace #0.2
+           \solmisasi \not-angka #nada #oktafDasar
+           \hspace #0.2
+         }
+       }
+     #}))
+
+#(define-markup-command (ekuivalensiNada layout props nada oktafDasar)
+   (ly:pitch? number?)
+   (interpret-markup layout props
+     #{
+       \markup {
+         \override #'(thickness . 1.5)
+         \box
+         \with-dimensions-from
+         \overlay {
+           \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
+           \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
+         }
+         \infoNadaBaru #nada #oktafDasar
+       }
+     #}))
+
+#(define-markup-command (boxNadaDasar layout props keySigPair)
+   (pair?)
+   (define key-sig-number-string
+     (ly:number->string (car keySigPair)))
+   (define key-sig-string (get-key-sig-string (cdr keySigPair)))
+   (interpret-markup layout props
+     #{
+       \markup {
+         \override #'(thickness . 1.3)
+         \override #'(box-padding . 0.5)
+         \box
+         % \with-dimensions-from
+         %          \pad-x #1.5
+         %          \overlay {
+         %            \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
+         %            \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
+         %          }
+         \center-align \concat \bold \larger {
+           #key-sig-number-string "=" #key-sig-string
+         }
+       }
+     #}))
+
 #(if (not (defined? 'make-solmisasi-markup))
      (define-markup-command (solmisasi layout props arg)
        (markup?)

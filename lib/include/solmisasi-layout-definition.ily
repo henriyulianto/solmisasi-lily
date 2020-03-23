@@ -239,7 +239,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \alias Staff
 
     \consists \Solmisasi_note_head_engraver
-    \consists \Solmisasi_ekuivalensi_key_engraver
+    \consists \Solmisasi_equivalence_key_engraver
 
     %% Initialisasi property male-vocal
     male-vocal = ##f
@@ -333,7 +333,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
   }
   \context {
     \type "Engraver_group"
-    \name "SolmisasiTimeAndKeySig"
+    \name "SolmisasiTimeAndKeySignature"
 
     %\override StaffSymbol.line-count = #0
     \consists "Bar_engraver"
@@ -399,7 +399,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \denies Staff
     %\accepts GlobalTempo
     \accepts SolmisasiStaff
-    %\accepts SolmisasiTimeAndKeySig
+    %\accepts SolmisasiTimeAndKeySignature
     \accepts SolmisasiVoice
     \accepts SolmisasiLyrics
   }
@@ -409,7 +409,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \accepts GlobalTempo
     \accepts SolmisasiChoirStaff
     \accepts SolmisasiStaff
-    \accepts SolmisasiTimeAndKeySig
+    \accepts SolmisasiTimeAndKeySignature
     \accepts SolmisasiLyrics
     \accepts SolmisasiVoice
   }
@@ -417,18 +417,18 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \ChoirStaff
     \accepts SolmisasiStaff
     \accepts GlobalTempo
-    %\accepts SolmisasiTimeAndKeySig
+    %\accepts SolmisasiTimeAndKeySignature
   }
   \context {
     \GrandStaff
     \accepts SolmisasiChoirStaff
     \accepts SolmisasiStaff
-    \accepts SolmisasiTimeAndKeySig
+    \accepts SolmisasiTimeAndKeySignature
     \accepts SolmisasiVoice
     \accepts SolmisasiLyrics
   }
-  \context { \PianoStaff 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySig }
-  \context { \StaffGroup 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySig }
+  \context { \PianoStaff 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySignature }
+  \context { \StaffGroup 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySignature }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
