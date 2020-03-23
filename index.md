@@ -38,12 +38,12 @@ _Solmisasi (notasi angka)_ (EN: solmization) is a numbered music notation which 
 
 ### Pitches
   - _Solmisasi_ is mostly used to write vocal compositions and arrangements. So, possible pitch range is from `E2` (the lowest male pitch, could possibly be lower) up to `C6` (the highest female pitch, could possibly be higher). However, there is no such validation of pitches included in this library.
-  - This system is mainly applied in vocal/choral music. Pitch numbers are written in a 'relative' way, based on the gender of vocal instruments. The solmisasi pitch numbers written on male vocal staves (tenor, baritone, and bass) are actually 1-octave lower than the same ones written on female vocal staves (soprano, mezzo-soprano, and alto).
+  - _Solmisasi_ is mainly applied in vocal/choral music. Pitch numbers are written in a 'relative' way, based on the gender of vocal instruments. The solmisasi pitch numbers written on male vocal staves (tenor, baritone, and bass) are actually 1-octave lower than the same ones written on female vocal staves (soprano, mezzo-soprano, and alto).
 {: .fs-5 }
 
 ### Accidentals
-  - _Sharp notes_ (♯) are notated by putting a single "**/**" (upward slash) over the pitch number.
-  - _Flat notes_ (♭) are notated by putting a single "**\\**" (downward backslash) over the pitch number.
+  - _Sharp notes_ (♯) are engraved by overlaying a single "**/**" (upward slash) to the pitch number.
+  - _Flat notes_ (♭) are notated by overlaying a single "**\\**" (downward backslash) to the pitch number.
   - This music notation is by far not able to handle _double-flats_ and _double-sharps_. Those kind of pitches should be notated in their 'normalized-enharmonic' pitch, for example:<br>
     `4` for `geses` (g♭♭) in C major (g♭♭ is normalized as f), and<br>
     `5` for `cisis` (c♯♯) in G major.
@@ -51,18 +51,18 @@ _Solmisasi (notasi angka)_ (EN: solmization) is a numbered music notation which 
 {: .fs-5 }
 
 ### Octavations
-  - 1-octave HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number with a _single dot_ ABOVE/BELOW, respectively.
-  - 2-octaves HIGHER/LOWER pitch are individually written as an object containing the corresponding pitch number with a _double dot_ ABOVE/BELOW, respectively. Consequently, this double dot should be stacked vertically. However, to maintain the vertical spaces, this library draws a horizontal double dot.
+  - 1-octave HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and accidental slashes, if any) with a _single dot_ ABOVE/BELOW, respectively.
+  - 2-octaves HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and accidental slashes, if any) with a _double dot_ ABOVE/BELOW, respectively. Consequently, this double dot should be stacked vertically. However, to maintain the vertical spaces, this library draws a horizontal double dot.
 {: .fs-5 }
 
 ### Note Durations
-  - Every single pitch/note number is considered as a _quarter note/crotchet_, if there are no horizontal lines (beams) above.
+  - Every single note object is considered as a _quarter note/crotchet_, if there are no horizontal lines (beams) above.
   - Similarly, every single duration dot (`.`) is considered as a _quarter/crothet rest_, if there are no horizontal lines (beams) above.
-  - Duration dots (`.`) maintain their own "rhythmic space", unlike the standard notation in which they are "glued" left to its parent/corresponding note or rest.
+  - Duration dots (`.`) maintain their own "rhythmic space", unlike the standard notation in which they are "glued" left to their parent/associated notes or rests.
 {: .fs-5 }
 
 ### Scales and Key Signatures
-  - *Solmisasi* occupies _MOVABLE/FLEXIBLE 'DO'_ system. Note pitches are written as if they are in major scales. In a C major passage, the pitch `d` equals to `2` (`re`), or vice versa. This also applies to passages written in A minor.<br>
+  - *Solmisasi* occupies _MOVABLE/FLEXIBLE 'DO'_. Note pitches are written as if they are in major scales. In a C major passage, the pitch `d` equals to `2` (`re`), or vice versa. This also applies to passages written in A minor.<br>
     In a G major passage, the pitch `fis` equals to `7` (`si`), or vice versa. This also applies to passages written in E minor.
   - Major scales are written using the pitch `1` (`do`) as the root, for example: `1=F♯` or `1=f♯` for F♯ major, and `1=E♭` or `1=e♭` for E♭ major.
     Minor scales are written using the pitch `6` (`la`) as the root, for example: `6=F` or `6=f` for F minor, and `6=G` or `6=g` for G minor.
