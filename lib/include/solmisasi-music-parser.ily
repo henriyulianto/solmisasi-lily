@@ -148,24 +148,25 @@
             ))
 
       (sol:message (_ "\n  [solmisasiMusic] --------- BEGIN ---------\n"))
-      (let* ((muscopy (ly:music-deep-copy mus))
-             (iter-num 0)
-             (last-pitch (ly:make-pitch 0 0 0))
-             (last-pitch-solmisasi last-pitch)
-             (major-tonic-pitch (ly:make-pitch 0 0 0))
-             (beat-structure-dur 1/4)
-             (beat-structure-mom (ly:make-moment beat-structure-dur))
-             (evaluated-moment ZERO-MOMENT)
-             (evaluated-dur 0)
-             (last-key-str "")
-             (mus-key-changes '())
-             (key-changes-str #f)
-             (dur 0)
-             (last-moment ZERO-MOMENT)
-             (last-dur 0)
-             (tempo-awal #f)
-             (orig-m (empty-music))
-             (current-time-sig 4/4))
+      (let* ( (muscopy (ly:music-deep-copy mus))
+              (iter-num 0)
+              (last-pitch (ly:make-pitch 0 0 0))
+              (last-pitch-solmisasi last-pitch)
+              (major-tonic-pitch (ly:make-pitch 0 0 0))
+              (beat-structure-dur 1/4)
+              (beat-structure-mom (ly:make-moment beat-structure-dur))
+              (evaluated-moment ZERO-MOMENT)
+              (evaluated-dur 0)
+              (last-key-str "")
+              (mus-key-changes '())
+              (key-changes-str #f)
+              (dur 0)
+              (last-moment ZERO-MOMENT)
+              (last-dur 0)
+              (tempo-awal #f)
+              (orig-m (empty-music))
+              (current-time-sig 4/4)
+              (duradot-sum 0) )
 
         ;; Get last pitch untuk repeat-volta
         (set! muscopy (prepare-repeat-volta-last-pitch muscopy))
@@ -180,7 +181,7 @@
              (let*
               ( (numerator-num (ly:music-property m 'numerator))
                 (denominator-num (ly:music-property m 'denominator))
-                (time-sig-fraction (cons numerator-num denominator-num)))
+                (time-sig-fraction (cons numerator-num denominator-num)) )
 
               (set! evaluated-moment ZERO-MOMENT)
               (set! evaluated-dur 0)
@@ -195,7 +196,8 @@
               (set! current-time-sig (/ numerator-num denominator-num))
               (sol:message (_ "  [solmisasiMusic] - Menemukan perubahan TANDA SUKAT: ~a/~a bs=~a\n")
                 numerator-num denominator-num beat-structure-dur)
-              (update-tanda-sukat-header numerator-num denominator-num)
+              (if (defined? 'update-tanda-sukat-header)
+                  (update-tanda-sukat-header numerator-num denominator-num))
               (ly:music-set-property! m _TIME_SIG_PROP (cons numerator-num denominator-num))
               ))
             ;-----------------------------------------------------------
@@ -334,8 +336,9 @@
               ;; utk rest, set properti 'solmisasi-rest
               (if (rest-event? m)
                   (begin
-                   (set! rest-pos
-                         (append rest-pos (list note-or-rest-iteration)))
+                   (if (not (memq note-or-rest-iteration rest-pos))
+                       (set! rest-pos
+                             (append rest-pos (list note-or-rest-iteration))))
                    ;(ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
@@ -608,8 +611,9 @@
                      (set! in-slur? (and slur-started? (not slur-stopped?)))
                      (set! slur-started? (slur-start-note? m))
 
-                     (sol:message (_ "  [solmisasiMusic] must-reverse=~a|d4=~a|d8=~a|d16=~a|d4-ex=~a|d8-ex=~a|d16-ex=~a!has-extra-job=~a\n")
-                       must-reverse duradot4 duradot8 duradot16 duradot4-extra duradot8-extra duradot16-extra has-extra-job)
+                     ; (if is-rest?
+                     ;                          (ly:message (_ "  [solmisasiMusic] must-reverse=~a|d4=~a|d8=~a|d16=~a|d4-ex=~a|d8-ex=~a|d16-ex=~a!has-extra-job=~a\n")
+                     ;                            must-reverse duradot4 duradot8 duradot16 duradot4-extra duradot8-extra duradot16-extra has-extra-job))
                      (if (equal? must-reverse #f)
                          ; (begin
                          ;                           (if is-rest?
@@ -720,8 +724,19 @@
                           (set! slur-stopped? #f)
                           (set! in-slur? #f)))
                      (set! note-in-tie? (tied-note? m))
+                     (set! duradot-sum (1- (+ duradot4-extra
+                                             duradot8-extra
+                                             duradot16-extra
+                                             duradot32-extra)))
                      )
                     )
+                (if (and is-rest? (positive? duradot-sum))
+                    (while (positive? duradot-sum)
+                      (set! duradot-sum (1- duradot-sum))
+                      (set! note-or-rest-iteration (1+ note-or-rest-iteration))
+                      (if (not (memq note-or-rest-iteration rest-pos))
+                          (set! rest-pos
+                                (append rest-pos (list note-or-rest-iteration))))))
                 (set! last-dur dur)
                 (set! last-moment (ly:make-moment last-dur))
                 (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))
@@ -730,23 +745,24 @@
               )
              )
             ;-----------------------------------------------------------
-            ) 			;; end cond
-           m)        ;; end lambda (m)
-         muscopy)        ;; end music-map
+            ) ;; end cond
+           m) ;; end lambda (m)
+         muscopy) ;; end music-map
         (set! key-changes (append key-changes (list mus-key-changes)))
-        muscopy)             ;; end let
-      )               ;; end define
-    )
+        muscopy) ;; end let
+      ) ;; end define-music-function
+    ) ;; end define
+
   (define solmisasiLyric
     (define-music-function (mus) (ly:music?)
       (let* ((newmus (empty-music))
              (elems (music-flatten (ly:music-property mus 'elements '())))
              (newelems (list))
-             (rp (list-copy rest-pos))
+             ;(rp (list-copy rest-pos))
              (ri 0))
-        (while (not (null? rp))
-          (set! ri (- (car rp) 1))
-          (set! rp (cdr rp))
+        (while (not (null? rest-pos))
+          (set! ri (- (car rest-pos) 1))
+          (set! rest-pos (cdr rest-pos))
           (set! elems
                 (append (drop-right elems (- (length elems) ri))
                   (list (make-music 'LyricEvent

@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Examples of Usage
-nav_order: 4
+title: APPENDIX
+nav_order: 5
 has_children: true
 ---
 
-# Examples of Usage
+# Appendix
 {: .no_toc .fs-9 }

@@ -32,7 +32,7 @@ Please keep in mind that Lilypond is a cross-platform software. Therefore, the u
 Let's write a new simple Lilypond snippet like this:
 {: .fs-5 }
 
-```tex
+```
 \version "2.20.0"
 
 music = {
@@ -65,7 +65,7 @@ To 'convert' that standard notation to solmisasi, we need:
 So, let's modify the snippet with this one:
 {: .fs-5 }
 
-```tex
+```
 \version "2.20.0"
 \include "solmisasi.ily"
 
@@ -110,7 +110,7 @@ Let's continue...<br>
 You could clearly see that there were some standard notation objects missing in the compilation result of the solmisasi notation, e.g. time signature. Actually, the `SolmisasiStaff` context still contains the Lilypond's original `TimeSignature` object, but it is omitted. We can bring it back into the staff either by reverting the value of `TimeSignature`'s stencil, or by undo-ing the omit. So, let's modify our snippet to this one:
 {: .fs-5 }
 
-```tex
+```
 ...
 \new SolmisasiStaff \with {
   \revert TimeSignature.stencil
@@ -135,7 +135,7 @@ This feature is implemented in a new custom context called `SolmisasiTimeAndKeyS
 
 Let's modify our snippet to include this new context.
 {: .fs-5 }
-```tex
+```
 ...
 <<
   \new SolmisasiTimeAndKeySignature {
@@ -167,7 +167,7 @@ We should somehow delete one of those time signatures. We can do either
 
 Let's do the first option by modifying our snippet to this.
 {: .fs-5 }
-```tex
+```
 ...
 <<
   \new SolmisasiTimeAndKeySignature \with {
@@ -192,7 +192,7 @@ The compiled result would be:
 
 To implement the second option, please remember that the `SolmisasiStaff` naturally has the `TimeSignature` object omitted. So, the modified snippet will be like this.
 {: .fs-5 }
-```tex
+```
 ...
 <<
   \new SolmisasiTimeAndKeySignature {
