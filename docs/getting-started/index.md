@@ -20,7 +20,7 @@ Before we start this section, please keep in mind that _solmisasi-lily_ is just 
 
 ## Obtaining _solmisasi-lily_ Library
 
-This library could be obtained by downloading this archive: <a href="{{ site.archive_url }}">solmisasi-lily-v1.0.0.zip</a> , or by cloning the repo to your machine. If you choose to download the archive, please extract it to your project folder. Let's say, the project folder where this library extracted is `X:\solmisasi-lily` (so the solmisasi-lily library exists in `X:\solmisasi-lily\lib`).
+This library could be obtained by downloading this archive: <a href="{{ site.archive_url }}">{{ site.archive_url_title }}</a> , or by cloning the repo to your machine. If you choose to download the archive, please extract it to your project folder. Let's say, the project folder where this library extracted is `X:\solmisasi-lily` (so the solmisasi-lily library exists in `X:\solmisasi-lily\lib`).
 {: .fs-5 }
 Notes:<br>
 Please keep in mind that Lilypond is a cross-platform software. Therefore, the usage of this library is not OS-specific. However, I will use MS Windows approach, even though I also extensively run Lilypond with this library in my Linux station as well. Should you face any problems in running Lilypond on your machine's OS, please consult the [Lilypond manuals](http://lilypond.org/manuals.html).

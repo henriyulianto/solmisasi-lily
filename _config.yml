@@ -38,4 +38,5 @@ compress_html:
   blanklines: false
   profile: false
 
-archive_url: blablabla.zip
+archive_url: https://github.com/henriyulianto/solmisasi-lily/releases/download/v1.0.0-min/solmisasi-lily-v1.0.0-min.zip
+archive_url_title: solmisasi-lily-v1.0.0-min.zip
