@@ -161,6 +161,7 @@ The compiled result would be just like this:
 <img src="./getting-started-example-01-4.png" width="400"/>
 
 We should somehow delete one of those time signatures. We can do either
+{: .fs-5 }
 1. omit the `TimeSignature` object inside `SolmisasiTimeAndKeySignature` context, OR
 2. omit Lilypond's original `TimeSignature` object inside  `SolmisasiStaff` context.
 {: .fs-5 }
