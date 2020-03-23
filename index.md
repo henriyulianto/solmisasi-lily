@@ -42,7 +42,7 @@ _Solmisasi (notasi angka)_ (EN: solmization) is a numbered music notation which 
 {: .fs-5 }
 
 ### Accidentals
-  - _Sharp notes_ (♯) are engraved by overlaying a single "**/**" (upward slash) to the pitch number.
+  - _Sharp notes_ (♯) are notated by overlaying a single "**/**" (upward slash) to the pitch number.
   - _Flat notes_ (♭) are notated by overlaying a single "**\\**" (downward backslash) to the pitch number.
   - This music notation is by far not able to handle _double-flats_ and _double-sharps_. Those kind of pitches should be notated in their 'normalized-enharmonic' pitch, for example:<br>
     `4` for `geses` (g♭♭) in C major (g♭♭ is normalized as f), and<br>
@@ -51,8 +51,8 @@ _Solmisasi (notasi angka)_ (EN: solmization) is a numbered music notation which 
 {: .fs-5 }
 
 ### Octavations
-  - 1-octave HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and accidental slashes, if any) with a _single dot_ ABOVE/BELOW, respectively.
-  - 2-octaves HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and accidental slashes, if any) with a _double dot_ ABOVE/BELOW, respectively. Consequently, this double dot should be stacked vertically. However, to maintain the vertical spaces, this library draws a horizontal double dot.
+  - 1-octave HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and an overlaying accidental slash/backslash, if any) with a _single dot_ ABOVE/BELOW, respectively.
+  - 2-octaves HIGHER/LOWER pitches are individually written as an object containing the corresponding pitch number (and an overlaying accidental slash/backslash, if any) with a _double dot_ ABOVE/BELOW, respectively. Consequently, this double dot should be stacked vertically. However, to maintain vertical spaces, this library draws a horizontal double dot.
 {: .fs-5 }
 
 ### Note Durations
