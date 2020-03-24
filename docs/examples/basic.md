@@ -5,7 +5,7 @@ nav_order: 1
 parent: Examples of Usage
 ---
 
-# Engraving a Simple Song "Mary Had a Little Lamb - in D Major and E Major" in _Solmisasi_
+# Engraving a Simple Song: "Mary Had a Little Lamb - in D Major and E Major" in _Solmisasi_
 {: .no_toc .fs-7 }
 
 Let's first engrave this song in standard (Western) music notation, without an `include` to the _solmisasi-lily_ library. The snippet would be something like this.

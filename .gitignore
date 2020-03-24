@@ -1,0 +1,23 @@
+# Ignore test folder
+test*/
+
+# Ignore logs
+*.solmisasi.log
+*.log
+
+/tools/solmisasi2ly/roman.pm
+/solmisasi.png
+/solmisasi-art.png
+/repository-open-graph-template.png
+/tools
+/examples/*.pdf
+_site
+/docs/*.ly
+/docs/*.pdf
+/Gemfile.lock
+*.md~*
+/solmisasi-lily-v1.0.0-min.zip
+/releases
+
+# Temporary Lilypond files
+*tmp-lilypond*
