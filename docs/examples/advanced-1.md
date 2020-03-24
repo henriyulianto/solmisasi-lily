@@ -332,4 +332,4 @@ Compared to the previous two examples of the same piece, some changes have been 
 {: .fs-5 }
 - There is no need to use `NullVoice` contexts, as we already have the 'original' non-converted music definition from the standard notation staves.
 - I decided to engrave `Lyrics` for each vocal instrument. This way, each instrument could be 'separated' one to another.
-- And of course, there are Some simple tweaks added.
+- And of course, there are some simple tweaks added.
