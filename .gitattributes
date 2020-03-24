@@ -2,8 +2,13 @@
 .gitignore export-ignore
 .github export-ignore
 _sass export-ignore
+_includes export-ignore
+_layouts export-ignore
 assets export-ignore
 docs export-ignore
+examples export-ignore
+releases export-ignore
 *.yml export-ignore
 Gemfile export-ignore
 index.md export-ignore
+favicon.ico export-ignore
