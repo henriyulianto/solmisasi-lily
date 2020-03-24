@@ -265,7 +265,6 @@ strofab = \lyricmode {
   \layout {
     \context {
       \Score
-      \consists "Metronome_mark_engraver"
       \override NonMusicalPaperColumn.line-break-permission = ##f
     }
     \context {

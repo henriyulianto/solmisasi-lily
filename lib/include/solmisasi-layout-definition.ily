@@ -139,6 +139,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 \layout {
   \context {
     \Score
+    \name "SolmisasiScore"
     \consists \DbBars
     \consists "Span_arpeggio_engraver"
     \remove "Metronome_mark_engraver"
@@ -387,6 +388,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
   }
   \context {
     \ChoirStaff
+    \name "SolmisasiChoirStaff"
     \consists "Bar_number_engraver"
   }
   \context {
