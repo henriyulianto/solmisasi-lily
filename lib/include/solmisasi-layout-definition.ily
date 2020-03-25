@@ -241,6 +241,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 
     \consists \Solmisasi_note_head_engraver
     \consists \Solmisasi_equivalence_key_engraver
+    \consists \Solmisasi_rest_engraver
 
     %% Initialisasi property male-vocal
     male-vocal = ##f

@@ -29,6 +29,7 @@
   (define _TIME_SIG_PROP 	'solmisasi-time-sig)
   (define _REST_PROP 			'solmisasi-rest)
   (define _DOT_NOTE_PROP 	'solmisasi-dot-note)
+  (define _EXPERIMENTAL		#f)
 
   (define key-changes '())
   (define key-change-completed? #f)
@@ -77,7 +78,7 @@
              articulations)))))
 
   (define (tied-note? m)
-    (let* ((articulations (ly:music-property m 'articulations)))
+    (let ((articulations (ly:music-property m 'articulations)))
       (not (null?
             (filter (lambda (a) (music-is-of-type? a 'tie-event)) articulations)))))
 
@@ -170,6 +171,8 @@
 
         ;; Get last pitch untuk repeat-volta
         (set! muscopy (prepare-repeat-volta-last-pitch muscopy))
+        ;; Initiate rest-pos
+        (set! rest-pos (list))
 
         (music-map
          (lambda (m)
@@ -269,7 +272,14 @@
             ;; Event: Picthed NOTE atau REST
             ((or (note-event? m)
                  (rest-event? m))
-             (set! note-or-rest-iteration (+ 1 note-or-rest-iteration))
+             (display note-or-rest-iteration)(display (tied-note? m)) (newline)
+             (set! note-or-rest-iteration (1+ note-or-rest-iteration))
+             (if (tied-note? m)
+                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
+             (if (slur-stop-note? m)
+                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
+             (if (and slur-started? (not (slur-stop-note? m)))
+                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
              (set! orig-m (ly:music-deep-copy m))
 
              (set! iter-num (+ 1 iter-num))
@@ -310,26 +320,42 @@
                        ;'pitch pitchProp
                        'pitch dotpitch
                        _DOT_NOTE_PROP #t))
-                (q4-rest (make-music 'NoteEvent
-                           'duration dur4
-                           'origin (ly:music-property m 'origin)
-                           ;'tags (list (quote do-not-print))
-                           _REST_PROP #t))
-                (q8-rest (make-music 'NoteEvent
-                           'duration dur8
-                           'origin (ly:music-property m 'origin)
-                           ;'tags (list (quote do-not-print))
-                           _REST_PROP #t))
-                (q16-rest (make-music 'NoteEvent
-                            'duration dur16
-                            'origin (ly:music-property m 'origin)
-                            ;'tags (list (quote do-not-print))
-                            _REST_PROP #t))
-                (q32-rest (make-music 'NoteEvent
-                            'duration dur32
-                            'origin (ly:music-property m 'origin)
-                            ;'tags (list (quote do-not-print))
-                            _REST_PROP #t))
+                (q4-rest
+                 (if _EXPERIMENTAL
+                     (make-music 'RestEvent
+                       'duration (ly:make-duration 2))
+                     (make-music 'NoteEvent
+                       'duration dur4
+                       'origin (ly:music-property m 'origin)
+                       ;'tags (list (quote do-not-print))
+                       _REST_PROP #t)))
+                (q8-rest
+                 (if _EXPERIMENTAL
+                     (make-music 'RestEvent
+                       'duration (ly:make-duration 3))
+                     (make-music 'NoteEvent
+                       'duration dur8
+                       'origin (ly:music-property m 'origin)
+                       ;'tags (list (quote do-not-print))
+                       _REST_PROP #t)))
+                (q16-rest
+                 (if _EXPERIMENTAL
+                     (make-music 'RestEvent
+                       'duration (ly:make-duration 4))
+                     (make-music 'NoteEvent
+                       'duration dur16
+                       'origin (ly:music-property m 'origin)
+                       ;'tags (list (quote do-not-print))
+                       _REST_PROP #t)))
+                (q32-rest
+                 (if _EXPERIMENTAL
+                     (make-music 'RestEvent
+                       'duration (ly:make-duration 5))
+                     (make-music 'NoteEvent
+                       'duration dur32
+                       'origin (ly:music-property m 'origin)
+                       ;'tags (list (quote do-not-print))
+                       _REST_PROP #t)))
                 (skipRest (make-music 'SkipEvent 'duration (ly:make-duration 2 0 1)))
                 )
 
@@ -342,7 +368,9 @@
                    ;(ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
-                   (ly:music-set-property! m 'name 'NoteEvent)
+                   (if _EXPERIMENTAL
+                       (ly:music-set-property! m 'name 'RestEvent)
+                       (ly:music-set-property! m 'name 'NoteEvent))
                    (ly:music-set-property! m 'pitch
                      (if (not (null? (ly:music-property m 'pitch)))
                          (ly:music-property m 'pitch)
@@ -646,7 +674,6 @@
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
-                                   ;;(if (> (+ q4 q8 q16 q32) 0)
                                    (list (make-music
                                           'ContextSpeccedMusic
                                           'context-type
@@ -662,7 +689,6 @@
                                    (make-list duradot8  q8)
                                    (make-list duradot16 q16)
                                    (make-list duradot32 q32)
-                                   ;;(if (> (+ q4 q8 q16 q32) 0)
                                    (list (make-music
                                           'ContextSpeccedMusic
                                           'context-type
@@ -706,6 +732,17 @@
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertySet
+                                           'value
+                                           #t
+                                           'symbol
+                                           'melismaBusy)))
                                    (make-list duradot32 			q32)
                                    (make-list duradot16 			q16)
                                    (make-list duradot8  			q8)
@@ -714,6 +751,15 @@
                                    (make-list duradot8-extra  q8)
                                    (make-list duradot16-extra q16)
                                    (make-list duradot32-extra q32)
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertyUnset
+                                           'symbol
+                                           'melismaBusy)))
                                    )))
                          ) ; end (if (equal? must-reverse #f)
 
@@ -749,6 +795,7 @@
            m) ;; end lambda (m)
          muscopy) ;; end music-map
         (set! key-changes (append key-changes (list mus-key-changes)))
+        (display rest-pos)
         muscopy) ;; end let
       ) ;; end define-music-function
     ) ;; end define
@@ -758,11 +805,11 @@
       (let* ((newmus (empty-music))
              (elems (music-flatten (ly:music-property mus 'elements '())))
              (newelems (list))
-             ;(rp (list-copy rest-pos))
+             (rp rest-pos)
              (ri 0))
-        (while (not (null? rest-pos))
-          (set! ri (- (car rest-pos) 1))
-          (set! rest-pos (cdr rest-pos))
+        (while (not (null? rp))
+          (set! ri (- (car rp) 1))
+          (set! rp (cdr rp))
           (set! elems
                 (append (drop-right elems (- (length elems) ri))
                   (list (make-music 'LyricEvent
@@ -771,8 +818,10 @@
                   (take-right elems (- (length elems) ri))))
           )
         (set! newmus (make-sequential-music elems))
-        newmus)))
-  )
+        newmus))
+    ) ; end solmisasiLyric
+
+  ) % end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

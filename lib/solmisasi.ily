@@ -1,4 +1,4 @@
-\version "2.19.83"
+\version "2.20.0"
 #(ly:set-option 'relative-includes #t)
 %% solmisasi.ily
 %%
@@ -27,7 +27,7 @@
   (lily)
   (ice-9 regex))
 
-#(define VERSION "1.0.0")
+#(define _VERSION "1.0.3-beta")
 
 %% #t when running a Windows OS
 #(define-public is-windows
@@ -164,7 +164,7 @@
    (normalize-path
     (location-extract-path (*location*))))
 
-#(ly:message "Start loading \"solmisasi\" library ...\n")
+#(ly:message (format #f "Start loading \"solmisasi\" library v~a ...\n" _VERSION))
 
 #(ly:parser-include-string
    (format #f "\\include \"~a/include/~a.ily\""
