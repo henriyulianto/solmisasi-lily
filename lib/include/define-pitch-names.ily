@@ -1,5 +1,4 @@
-\version "2.19.83"
-
+\version "2.20.0"
 %% define-pitch-names.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)

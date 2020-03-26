@@ -139,7 +139,6 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 \layout {
   \context {
     \Score
-    \name "SolmisasiScore"
     \consists \DbBars
     \consists "Span_arpeggio_engraver"
     \remove "Metronome_mark_engraver"
@@ -176,9 +175,6 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
   \context {
     \Lyrics
     \override VerticalAxisGroup.nonstaff-unrelatedstaff-spacing.padding = #2.25
-    %\newLH "-"
-    %\override LyricHyphen.Y-offset = #0.2
-    %\override LyricHyphen.length = #1
   }
   \context {
     \Lyrics
@@ -238,10 +234,8 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \Staff
     \name "SolmisasiStaff"
     \alias Staff
-
-    \consists \Solmisasi_note_head_engraver
-    \consists \Solmisasi_equivalence_key_engraver
-    \consists \Solmisasi_rest_engraver
+    \consists #Solmisasi_note_head_engraver
+    \consists #Solmisasi_equivalence_key_engraver
 
     %% Initialisasi property male-vocal
     male-vocal = ##f
@@ -347,8 +341,8 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \consists "Break_align_engraver"
     \consists "Time_signature_engraver"
     \consists "Key_engraver"
-    \consists \Solmisasi_time_signature_engraver
-    \consists \Solmisasi_key_engraver
+    \consists #Solmisasi_time_signature_engraver
+    \consists #Solmisasi_key_engraver
 
     \override BarLine.transparent = ##t
     \override BarLine.bar-extent = #'(-0.5 . 0.5)
@@ -389,7 +383,6 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
   }
   \context {
     \ChoirStaff
-    \name "SolmisasiChoirStaff"
     \consists "Bar_number_engraver"
   }
   \context {
@@ -418,9 +411,8 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
   }
   \context {
     \ChoirStaff
-    \accepts SolmisasiStaff
     \accepts GlobalTempo
-    %\accepts SolmisasiTimeAndKeySignature
+    \accepts SolmisasiStaff
   }
   \context {
     \GrandStaff
@@ -430,8 +422,20 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \accepts SolmisasiVoice
     \accepts SolmisasiLyrics
   }
-  \context { \PianoStaff 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySignature }
-  \context { \StaffGroup 	\accepts SolmisasiStaff \accepts SolmisasiTimeAndKeySignature }
+  \context {
+    \PianoStaff
+    \accepts SolmisasiStaff
+    \accepts SolmisasiTimeAndKeySignature
+    \accepts SolmisasiVoice
+    \accepts SolmisasiLyrics
+  }
+  \context {
+    \StaffGroup
+    \accepts SolmisasiStaff
+    \accepts SolmisasiTimeAndKeySignature
+    \accepts SolmisasiVoice
+    \accepts SolmisasiLyrics
+  }
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

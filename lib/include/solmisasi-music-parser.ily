@@ -1,5 +1,4 @@
-\version "2.19.83"
-
+\version "2.20.0"
 %% solmisasi-music-parser.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
@@ -167,11 +166,17 @@
               (tempo-awal #f)
               (orig-m (empty-music))
               (current-time-sig 4/4)
+              (is-last-note-end-of-slur? #f)
               (duradot-sum 0) )
 
         ;; Get last pitch untuk repeat-volta
         (set! muscopy (prepare-repeat-volta-last-pitch muscopy))
-        ;; Initiate rest-pos
+        ;; Initialize beam grouping with default 4/4
+        (set! muscopy (make-sequential-music
+                       (append
+                        (list (beam_grouping_by_time_sig (cons 4 4)))
+                        (list muscopy))))
+        ;; Initialize rest-pos
         (set! rest-pos (list))
 
         (music-map
@@ -202,6 +207,10 @@
               (if (defined? 'update-tanda-sukat-header)
                   (update-tanda-sukat-header numerator-num denominator-num))
               (ly:music-set-property! m _TIME_SIG_PROP (cons numerator-num denominator-num))
+              (set! m (make-sequential-music
+                       (append
+                        (list (beam_grouping_by_time_sig time-sig-fraction))
+                        (list m))))
               ))
             ;-----------------------------------------------------------
 
@@ -272,13 +281,12 @@
             ;; Event: Picthed NOTE atau REST
             ((or (note-event? m)
                  (rest-event? m))
-             (display note-or-rest-iteration)(display (tied-note? m)) (newline)
              (set! note-or-rest-iteration (1+ note-or-rest-iteration))
              (if (tied-note? m)
                  (set! note-or-rest-iteration (1- note-or-rest-iteration)))
              (if (slur-stop-note? m)
                  (set! note-or-rest-iteration (1- note-or-rest-iteration)))
-             (if (and slur-started? (not (slur-stop-note? m)))
+             (if in-slur?
                  (set! note-or-rest-iteration (1- note-or-rest-iteration)))
              (set! orig-m (ly:music-deep-copy m))
 
@@ -362,10 +370,11 @@
               ;; utk rest, set properti 'solmisasi-rest
               (if (rest-event? m)
                   (begin
+                   (if is-last-note-end-of-slur?
+                       (set! note-or-rest-iteration (1- note-or-rest-iteration)))
                    (if (not (memq note-or-rest-iteration rest-pos))
                        (set! rest-pos
                              (append rest-pos (list note-or-rest-iteration))))
-                   ;(ly:message (_ "  [solmisasiMusic] - Menemukan TANDA DIAM: durasi=~a\n") (ly:moment-main (ly:music-duration-length m)))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
                    (if _EXPERIMENTAL
@@ -377,22 +386,7 @@
                          last-pitch))
                    (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)
                    (ly:music-set-property! m _REST_PROP #t)
-                   ;(pretty-print m)
                    (set! skipRest (skip-of-length m))
-                   ; ; Rest event
-                   ;                    (if (music-is-of-type? m 'rest-event)
-                   ;(ly:music-set-property! m 'types
-                   ;  (append
-                   ;(delete 'rest-event (ly:music-property m 'types))
-                   ;   '(note-event melodic-event)))
-                   ;)
-                   ;                    ; Multi-measure rest event
-                   ;                    (if (music-is-of-type? m 'multi-measure-rest)
-                   ;                        (ly:music-set-property! m 'types
-                   ;                          (append
-                   ;                           (delete 'multi-measure-rest (ly:music-property m 'types))
-                   ;                           '(note-event rhythmic-event melodic-event))))
-                   ;(ly:music-set-property! m 'tags '(do-not-print))
                    (set! q4 q4-rest)
                    (set! q8 q8-rest)
                    (set! q16 q16-rest)
@@ -400,19 +394,6 @@
                    )
                   ;; else: pitched note event
                   (begin
-                   ; (if (and (tied-note? m)
-                   ;                             (ly:pitch? (ly:music-property m 'pitch)))
-                   ;                        (begin
-                   ;                         (set! (ly:music-property q4 'pitch)
-                   ;                               (ly:music-property m 'pitch))
-                   ;                         (set! (ly:music-property q8 'pitch)
-                   ;                               (ly:music-property m 'pitch))
-                   ;                         (set! (ly:music-property q16 'pitch)
-                   ;                               (ly:music-property m 'pitch)))
-                   ;                        (begin
-                   ;                         (set! (ly:music-property q4 'pitch) #f)
-                   ;                         (set! (ly:music-property q8 'pitch) #f)
-                   ;                         (set! (ly:music-property q16 'pitch) #f)))
                    (if (ly:pitch? (ly:music-property m 'pitch))
                        (begin
                         (set! last-pitch (ly:music-property m 'pitch))
@@ -636,6 +617,7 @@
 
                      (set! note-in-tie? (or note-in-tie? (tied-note? m)))
                      (set! slur-stopped? (slur-stop-note? m))
+                     (set! is-last-note-end-of-slur? (slur-stop-note? m))
                      (set! in-slur? (and slur-started? (not slur-stopped?)))
                      (set! slur-started? (slur-start-note? m))
 
@@ -643,34 +625,6 @@
                      ;                          (ly:message (_ "  [solmisasiMusic] must-reverse=~a|d4=~a|d8=~a|d16=~a|d4-ex=~a|d8-ex=~a|d16-ex=~a!has-extra-job=~a\n")
                      ;                            must-reverse duradot4 duradot8 duradot16 duradot4-extra duradot8-extra duradot16-extra has-extra-job))
                      (if (equal? must-reverse #f)
-                         ; (begin
-                         ;                           (if is-rest?
-                         ;                               (set! m (make-sequential-music
-                         ;                                        (append
-                         ;                                         (list #{
-                         ;                                           \set Score.associatedVoice = "skipRest"
-                         ;                                           #})
-                         ;                                         (list
-                         ;                                          (make-simultaneous-music
-                         ;                                           (append
-                         ;                                            (list #{
-                         ;                                              { \new NullVoice = "skipRest" { #skipRest } }
-                         ;                                              #})
-                         ;                                            (list
-                         ;                                             (make-sequential-music
-                         ;                                              (append
-                         ;                                               (list #{ \melismaEnd #})
-                         ;                                               (list m)
-                         ;                                               (make-list duradot4  q4)
-                         ;                                               (make-list duradot8  q8)
-                         ;                                               (make-list duradot16 q16)
-                         ;                                               ;(endMelismaList)
-                         ;                                               ))))))
-                         ;                                         (list #{
-                         ;                                           \undo \set Score.associatedVoice = "skipRest"
-                         ;                                           #})
-                         ;                                         )))
-                         ; not rest
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
@@ -700,35 +654,6 @@
                                            'melismaBusy)))
                                    )))
                          ;; else must-reverse = #t
-                         ; (begin
-                         ;                           (if is-rest?
-                         ;                               (set! m (make-sequential-music
-                         ;                                        (append
-                         ;                                         (list #{
-                         ;                                           \set Score.associatedVoice = "skipRest"
-                         ;                                           #})
-                         ;                                         (list
-                         ;                                          (make-simultaneous-music
-                         ;                                           (append
-                         ;                                            (list #{
-                         ;                                              { \new Voice = "skipRest" { #skipRest } }
-                         ;                                              #})
-                         ;                                            (list
-                         ;                                             (make-sequential-music
-                         ;                                              (append
-                         ;                                               (list m)
-                         ;                                               (make-list duradot16 q16)
-                         ;                                               (make-list duradot8  q8)
-                         ;                                               (make-list duradot4  q4)
-                         ;                                               (make-list duradot4-extra  q4)
-                         ;                                               (make-list duradot8-extra  q8)
-                         ;                                               (make-list duradot16-extra q16)
-                         ;                                               ))))))
-                         ;                                         (list #{
-                         ;                                           \undo \set Score.associatedVoice = "skipRest"
-                         ;                                           #})
-                         ;                                         )))
-                         ; not rest
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
@@ -770,10 +695,11 @@
                           (set! slur-stopped? #f)
                           (set! in-slur? #f)))
                      (set! note-in-tie? (tied-note? m))
-                     (set! duradot-sum (1- (+ duradot4-extra
-                                             duradot8-extra
-                                             duradot16-extra
-                                             duradot32-extra)))
+                     (set! duradot-sum ;(1-
+                           (+ duradot4-extra
+                             duradot8-extra
+                             duradot16-extra
+                             duradot32-extra));)
                      )
                     )
                 (if (and is-rest? (positive? duradot-sum))
@@ -795,7 +721,6 @@
            m) ;; end lambda (m)
          muscopy) ;; end music-map
         (set! key-changes (append key-changes (list mus-key-changes)))
-        (display rest-pos)
         muscopy) ;; end let
       ) ;; end define-music-function
     ) ;; end define
@@ -810,12 +735,13 @@
         (while (not (null? rp))
           (set! ri (- (car rp) 1))
           (set! rp (cdr rp))
-          (set! elems
-                (append (drop-right elems (- (length elems) ri))
-                  (list (make-music 'LyricEvent
-                          'text ""
-                          'duration (ly:make-duration 2)))
-                  (take-right elems (- (length elems) ri))))
+          (if (> (length elems) ri)
+              (set! elems
+                    (append (drop-right elems (- (length elems) ri))
+                      (list (make-music 'LyricEvent
+                              'text ""
+                              'duration (ly:make-duration 2)))
+                      (take-right elems (- (length elems) ri)))))
           )
         (set! newmus (make-sequential-music elems))
         newmus))

@@ -207,13 +207,101 @@ transposeUpOneOctave =
    "Transpose music up for one octave."
    #{ \transpose c c' { $m } #})
 
+beam_grouping_by_time_sig  =
+#(define-music-function (ts) (fraction?)
+   (cond
+    ((equal? ts (cons 2 4)) ; 2/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 3 4)) ; 3/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 ) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 4 4)) ; 4/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 5 4)) ; 5/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 6 4)) ; 6/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 2 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 7 4)) ; 7/4
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 2 2 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 2 3)) ; 2/2
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (2 2 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 3 8)) ; 3/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (1) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 5 8)) ; 6/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (3 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 6 8)) ; 6/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (3 3) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 7 8)) ; 6/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (3 2 2) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 9 8)) ; 9/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (3 3 3) ) )
+                              ) )
+     #})
+    ((equal? ts (cons 12 8)) ; 12/8
+     #{
+       \set beamExceptions = #'( (end .
+                              ( ( (1 . 8) . (3 3 3 3) ) )
+                              ) )
+     #})
+    (else
+     #{ {} #})
+    ))
+
+
 %% ALIASES
 
 #(define movableDo                flexibleDo)
 #(define doIs                     flexibleDo)
+#(define doEqualsTo               flexibleDo)
 #(define doSamaDengan             flexibleDo) % in Bahasa Indonesia
 #(define movableLa                flexibleLa)
 #(define laIs                     flexibleLa)
+#(define laEqualsTo               flexibleLa)
 #(define laSamaDengan             flexibleLa) % in Bahasa Indonesia
 #(define transposeTurunSatuOktaf  transposeDownOneOctave) % in Bahasa Indonesia
 #(define transposeNaikSatuOktaf	  transposeUpOneOctave) % in Bahasa Indonesia
