@@ -198,7 +198,7 @@ lyric = \lyricmode {
 
 ![](../advanced-2.png)
 
-Now, we need to define where the key signature summary will be printed in. Please take a look at the following image, which show us the default layout Lilypond has defined.
+Now, we need to define where the key signature summary will be printed in. Please take a look at the following image, which shows us the default layout Lilypond has defined.
 {: .fs-5 }
 It'd be great if you understand how to modify this default layout, or even make your own layout. But, in this documentation, I will not cover that. Instead, you'd better consult the Lilypond documentation.
 {: .fs-4 }
@@ -282,10 +282,10 @@ updateKeySignatureSummary =
 ```
 {: .lilypond }
 
-Those Functions described above could be inserted anywhere in the original Lilypond snippet. But the execution of `\updateKeySignatureSummary` has to be inserted after the music defined, since we need the `music` variable as the first parameter supplied.
+Those functions described above could be inserted anywhere in the original Lilypond snippet. But the execution of `\updateKeySignatureSummary` has to be inserted after the music defined, since we need the `music` variable as the first parameter supplied.
 {: .fs-5 }
 
-So, I decided to insert all of those additional codes at the bottom of the original snippet (right after the `\score` definition). And here is the complete snippet and the result.
+So, I decided to insert all of those additional codes at the bottom of the original snippet (right after the `\score` definition; this is not the best practice, though!). And here is the complete snippet and the result.
 {: .fs-5 }
 
 ```
