@@ -27,7 +27,7 @@
   (lily)
   (ice-9 regex))
 
-#(define _VERSION "1.0.4-beta")
+#(define _VERSION "1.0.5-beta")
 
 %% #t when running a Windows OS
 #(define-public is-windows
@@ -164,41 +164,59 @@
    (normalize-path
     (location-extract-path (*location*))))
 
+% List of include files
+#(define-public ily-files '(
+                             "logging"
+                             "define-pitch-names"
+                             "misc-functions"
+                             "solmisasi-script-alist"
+                             "solmisasi-markups"
+                             "solmisasi-engraver"
+                             "solmisasi-music-parser"
+                             "solmisasi-layout-definition"
+                             ))
+
+
 #(ly:message (format #f "Start loading \"solmisasi\" library v~a ...\n" _VERSION))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "logging"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "logging"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "define-pitch-names"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "define-pitch-names"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "misc-functions"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "misc-functions"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "solmisasi-markups"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "solmisasi-script-alist"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "solmisasi-engraver"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "solmisasi-markups"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "solmisasi-layout-definition"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "solmisasi-engraver"))
 
 #(ly:parser-include-string
-   (format #f "\\include \"~a/include/~a.ily\""
-     _SOLMISASI_LIB_DIR
-     "solmisasi-music-parser"))
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "solmisasi-music-parser"))
+
+#(ly:parser-include-string
+  (format #f "\\include \"~a/include/~a.ily\""
+    _SOLMISASI_LIB_DIR
+    "solmisasi-layout-definition"))
 
 #(ly:message "Finished loading \"solmisasi\" library.\n")

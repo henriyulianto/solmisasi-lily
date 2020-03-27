@@ -1,4 +1,4 @@
-\version "2.20.0"
+%\version "2.20.0"
 %% define-pitch-names.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
@@ -148,3 +148,8 @@
       ))
 
 #(append! language-pitch-names (list (cons 'solmisasi solmisasi-pitchnames)))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+#(define PITCHNAMES_LOADED #t)
+#(if (defined? 'LOGGING_LOADED)
+  (solmisasi:log "* Solmisasi pitch names data has been loaded.\n"))

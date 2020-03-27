@@ -1,4 +1,4 @@
-\version "2.20.0"
+%\version "2.20.0"
 %% logging.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)

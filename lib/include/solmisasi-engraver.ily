@@ -51,13 +51,42 @@
             (event (event-cause grob))
             (solmisasi-dot-note? (ly:event-property event _DOT_NOTE_PROP #f))
             (solmisasi-rest? (ly:event-property event _REST_PROP #f))
+            (cdr-chords (ly:event-property event 'cdr-chords))
             (dur-log (ly:grob-property grob 'duration-log))
+            (base-markup
+             ;(grob-interpret-markup grob
+             #{
+               \markup {
+                 \overlay {
+                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
+                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
+                 }
+               }
+             #})
+            (stl-base (grob-interpret-markup grob base-markup))
             (dot-circle-stencil (ly:stencil-translate
                                  (make-circle-stencil 0.22 0.001 #t)
                                  (cons 0.5 -0.2))))
 
            (if solmisasi-dot-note?
-               (ly:grob-set-property! grob 'stencil dot-circle-stencil)
+               (if (or (not cdr-chords) (null? cdr-chords))
+                   (ly:grob-set-property! grob 'stencil dot-circle-stencil)
+                   (let* ((dotstl dot-circle-stencil))
+                     (for-each
+                      (lambda (ch)
+                        (set! dotstl
+                              (ly:stencil-combine-at-edge
+                               dotstl
+                               1
+                               1
+                               dot-circle-stencil
+                               (- (cdr (ly:stencil-extent stl-base Y)) (car (ly:stencil-extent stl-base Y)) 0.5 ))
+                              ) ; end set
+                        ) ; end lambda
+                      cdr-chords) ; end for-each
+                     (ly:grob-set-property! grob 'stencil dotstl)
+                     ) ; end let
+                   ) ; end if cdr-chords
                ;; else create number stencil based on the scale degree of the note
                ;; TODO: handle notes without pitches that aren't solmisasi-rests
                (let*
@@ -79,16 +108,6 @@
                   (if (not solmisasi-rest?)
                       (if is-male-vocal? -1 0)
                       0))
-                 (base-markup
-                  ;(grob-interpret-markup grob
-                  #{
-                    \markup {
-                      \overlay {
-                        \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
-                        \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
-                      }
-                    }
-                  #})
                  (stl
                   (grob-interpret-markup grob
                     (if solmisasi-rest?
@@ -99,20 +118,54 @@
                             \solmisasi "0"
                           }
                         #}
-                        #{
-                          \markup {
-                            \lower #0.5
-                            \solmisasi {
-                              %\with-dimensions-from #base-markup
-                              %\hcenter-in
-                              \not-angka #grob-pitch-solmisasi #base-octave
-                            }
-                          }
-                        #}
+                        (if (or (not cdr-chords) (null? cdr-chords))
+                            ; single note
+                            #{
+                              \markup {
+                                \lower #0.5
+                                \solmisasi {
+                                  %\with-dimensions-from #base-markup
+                                  %\hcenter-in
+                                  \not-angka #grob-pitch-solmisasi #base-octave
+                                }
+                              }
+                            #}
+                            ; chords
+                            (let* ((cm
+                                    #{
+                                      \markup {
+                                        \lower #0.5 \solmisasi {
+                                          %\with-dimensions-from #base-markup
+                                          %\hcenter-in
+                                          \not-angka #grob-pitch-solmisasi #base-octave
+                                        }
+                                    } #}))
+                              (for-each
+                               (lambda (ch)
+                                 (set! cm
+                                       #{
+                                         \markup \lower #0.5 {
+                                           \center-column {
+                                             \with-dimensions-from #base-markup \lower #0.5 \solmisasi {
+                                               \not-angka #(ly:music-property ch 'pitch-solmisasi) #base-octave
+                                             }
+                                             #cm
+                                           }
+                                         }
+                                       #})
+                                 ) ; end lambda
+                               cdr-chords) ; end for-each
+                              cm) ; end let
+                            ) ; end if not cdr-chords
                         )))
                  )
-                (if solmisasi-rest?
-                    (ly:event-set-property! event 'name 'RestEvent))
+                (if (positive? (length cdr-chords))
+                    (ly:grob-set-property! grob 'Y-offset
+                      (-
+                       (- (cdr (ly:stencil-extent stl Y)) (car (ly:stencil-extent stl Y)))
+                       (- (cdr (ly:stencil-extent stl-base Y)) (car (ly:stencil-extent stl-base Y)))
+                       ))
+                    ) ; end if
                 ; set stencil
                 (ly:grob-set-property! grob 'Y-extent
                   (ly:stencil-extent stl Y))

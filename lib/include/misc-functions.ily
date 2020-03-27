@@ -22,7 +22,7 @@
 
 #(define music-flatten
    (lambda (mus)
-   "Convert nested sequential musics into single sequential musics"
+     "Convert nested sequential musics into single sequential musics"
      (fold
       (lambda (e prv)
         (if (not (music-is-of-type? e 'sequential-music))
@@ -94,8 +94,20 @@
 
 %% MUSIC/SCHEME/VOID FUNCTIONS
 
+withExtensions =
+#(define-void-function (exts) (list?)
+   "Load one or some extensions of this library."
+   (for-each
+    (lambda (o)
+      (ly:parser-parse-string
+       (ly:parser-clone)
+       (format "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
+      (solmisasi:log "* Extension \"exts\" has been loaded.\n")
+      )
+    exts))
+
 at =
-#(define-music-function (parser location t e m)
+#(define-music-function (t e m)
    (ly:duration? ly:music? ly:music?)
    #{ << #m { \skip $t <>$e } >> #})
 
@@ -211,83 +223,83 @@ beam_grouping_by_time_sig  =
 #(define-music-function (ts) (fraction?)
    (cond
     ((equal? ts (cons 2 4)) ; 2/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 3 4)) ; 3/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 ) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 ) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 4 4)) ; 4/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 5 4)) ; 5/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 6 4)) ; 6/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 2 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 2 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 7 4)) ; 7/4
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 2 2 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 2 2 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 2 3)) ; 2/2
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (2 2 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (2 2 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 3 8)) ; 3/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (1) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (1) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 5 8)) ; 6/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (3 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (3 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 6 8)) ; 6/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (3 3) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (3 3) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 7 8)) ; 6/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (3 2 2) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (3 2 2) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 9 8)) ; 9/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (3 3 3) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (3 3 3) ) )
+                                    ) )
+      #})
     ((equal? ts (cons 12 8)) ; 12/8
-     #{
-       \set beamExceptions = #'( (end .
-                              ( ( (1 . 8) . (3 3 3 3) ) )
-                              ) )
-     #})
+      #{
+        \set beamExceptions = #'( (end .
+                                    ( ( (1 . 8) . (3 3 3 3) ) )
+                                    ) )
+      #})
     (else
      #{ {} #})
     ))

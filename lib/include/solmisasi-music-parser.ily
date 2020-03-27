@@ -48,6 +48,10 @@
             #f)
         #f))
 
+  (define (event-chord? m)
+    (and (ly:music? m)
+         (music-is-of-type? m 'event-chord)))
+
   (define (get-last-pitch-for-volta m)
     (let*
      ((last-elt (last (ly:music-property m 'elements))))
@@ -181,6 +185,28 @@
 
         (music-map
          (lambda (m)
+           ;-----------------------------------------------------------
+           ;; Event: ChordEvent
+           (if (event-chord? m)
+               (let* ((elems (filter
+                              (lambda (l)
+                                (music-is-of-type? l 'note-event))
+                              (music-flatten (ly:music-property m 'elements))))
+                      (nelems			(length elems))
+                      (firstelems (car elems))
+                      (durelems 	(ly:music-property firstelems 'duration))
+                      (cdrelems		(cdr elems)))
+                 (set! m firstelems)
+                 (ly:music-set-property! m 'duration
+                   (ly:music-property firstelems 'duration))
+                 (ly:music-set-property! m 'cdr-chords cdrelems)
+                 m) ; end let
+               ) ; end if chord
+           m) ; end lambda m
+         muscopy)
+
+        (music-map
+         (lambda (m)
            (cond
             ;-----------------------------------------------------------
             ;; Event: PERUBAHAN TANDA SUKAT/BIRAMA/TIME SIGNATURE
@@ -281,6 +307,7 @@
             ;; Event: Picthed NOTE atau REST
             ((or (note-event? m)
                  (rest-event? m))
+
              (set! note-or-rest-iteration (1+ note-or-rest-iteration))
              (if (tied-note? m)
                  (set! note-or-rest-iteration (1- note-or-rest-iteration)))
@@ -365,6 +392,7 @@
                        ;'tags (list (quote do-not-print))
                        _REST_PROP #t)))
                 (skipRest (make-music 'SkipEvent 'duration (ly:make-duration 2 0 1)))
+                (cdr-chords (ly:music-property m 'cdr-chords #f))
                 )
 
               ;; utk rest, set properti 'solmisasi-rest
@@ -411,6 +439,23 @@
                        (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
                                           (ly:make-pitch 0 0 0)))))
                    (set! last-pitch-solmisasi (ly:music-property m 'pitch-solmisasi))
+                   ; FOR CHORDS
+                   (if cdr-chords
+                       (begin
+                        ;(ly:music-set-property! m 'cdr-chords
+                        (map!
+                         (lambda (e)
+                           (ly:music-set-property! e 'pitch-solmisasi
+                             (ly:pitch-transpose (ly:music-property e 'pitch)
+                               (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
+                                                  (ly:make-pitch 0 0 0))))))
+                         cdr-chords)
+                        (ly:music-set-property! m 'cdr-chords cdr-chords)
+                        (ly:music-set-property! q4 'cdr-chords cdr-chords)
+                        (ly:music-set-property! q8 'cdr-chords cdr-chords)
+                        (ly:music-set-property! q16 'cdr-chords cdr-chords)
+                        (ly:music-set-property! q32 'cdr-chords cdr-chords)
+                        ))
                    (sol:message (_ "                     in C: nada=~a, durasi=~a\n")
                      (ly:music-property m 'pitch) (ly:moment-main (ly:music-duration-length m)))
                    ))
