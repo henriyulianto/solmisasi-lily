@@ -102,7 +102,7 @@ withExtensions =
       (ly:parser-parse-string
        (ly:parser-clone)
        (format "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
-      (solmisasi:log "* Extension \"exts\" has been loaded.\n")
+      (solmisasi:log (format "* Extension \"~a\" has been loaded.\n" o))
       )
     exts))
 

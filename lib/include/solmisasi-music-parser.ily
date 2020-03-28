@@ -741,11 +741,17 @@
                           (set! in-slur? #f)))
                      (set! note-in-tie? (tied-note? m))
                      (set! duradot-sum ;(1-
-                           (+ duradot4-extra
+                           (+ duradot4
+                             duradot8
+                             duradot16
+                             duradot32
+                            duradot4-extra
                              duradot8-extra
                              duradot16-extra
                              duradot32-extra));)
                      )
+                    (if (positive? duradot-sum)
+                        (set! note-or-rest-iteration (1+ note-or-rest-iteration)))
                     )
                 (if (and is-rest? (positive? duradot-sum))
                     (while (positive? duradot-sum)

@@ -38,6 +38,6 @@ compress_html:
   blanklines: false
   profile: false
 
-archive_url: https://github.com/henriyulianto/solmisasi-lily/releases/download/v1.0.5-beta/solmisasi-lily-v1.0.5-beta.zip
-archive_url_title: solmisasi-lily-v1.0.5-beta.zip
-archive_version: v1.0.5-beta (ZIP)
+archive_url: https://github.com/henriyulianto/solmisasi-lily/releases/download/v1.0.5.1-beta/solmisasi-lily-v1.0.5.1-beta.zip
+archive_url_title: solmisasi-lily-v1.0.5.1-beta.zip
+archive_version: v1.0.5.1-beta
