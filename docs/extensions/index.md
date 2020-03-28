@@ -22,7 +22,7 @@ It is very possible that this library can't do some stuffs users want to produce
 
 ## About "Extensions"
 
-Extensions mentioned here is basically Lilypond helper snippets to be included in the main music snippet after completely loading _solmisasi-lily_. They must be exist in the directory `lib/extension` inside the root directory of _solmisasi-lily_. They must follow this rule of file naming: `solmisasi-<name-of-extension>.ily`.
+Extensions mentioned here are basically Lilypond helper snippets to be included in the main music snippet after completely loading _solmisasi-lily_. They must be exist in the directory `lib/extension` inside the root directory of _solmisasi-lily_. They must follow this rule of file naming: `solmisasi-<name-of-extension>.ily`.
 {: .fs-5 }
 
 So, let's say there are two extension snippets named `solmisasi-extension-1.ily` and `solmisasi-extension-2.ily` inside the directory `lib/extension`. To use this extension, users have to write:
