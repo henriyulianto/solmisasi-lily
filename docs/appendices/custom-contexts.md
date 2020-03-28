@@ -371,9 +371,6 @@ This context is also built from the following engravers:
 
 </div>
 
-This context omits the following layout objects:
-{: .pt-5 .fs-5 }
-
 This context sets the following properties:
 {: .pt-5 .fs-5 }
 
@@ -402,7 +399,7 @@ This context overrides the following settings to the layout objects within:
 - Overrides `Glissando.bound-details.left.padding` to `0.2`
 - Overrides `Glissando.bound-details.right.padding` to `0.2`
 - Overrides `TieColumn.tie-configuration` to `'((-2.65 . -1))`
-- Overrides `BreathingSign.text` to 
+- Overrides `BreathingSign.text` to
   ```
   \markup {
     \translate #'(0 . -1.5)
