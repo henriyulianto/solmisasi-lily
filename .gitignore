@@ -5,19 +5,20 @@ test*/
 *.solmisasi.log
 *.log
 
-/tools/solmisasi2ly/roman.pm
-/solmisasi.png
-/solmisasi-art.png
-/repository-open-graph-template.png
-/tools
-/examples/*.pdf
-_site
-/docs/*.ly
-/docs/*.pdf
-/Gemfile.lock
 *.md~*
-/solmisasi-lily-v1.0.0-min.zip
+/Gemfile.lock
+/docs/*/*.ly
+/docs/*/*.pdf
+/docs/ly
+/examples/*.pdf
 /releases
+/repository-open-graph-template.png
+/solmisasi-art.png
+/solmisasi-lily-v1.0.0-min.zip
+/solmisasi.png
+/tools
+/tools/solmisasi2ly/roman.pm
+_site
 
 # Temporary Lilypond files
 *tmp-lilypond*
