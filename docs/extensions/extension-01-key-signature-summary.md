@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 1
-title: "Extension: \"key-signature-summary\""
+title: "Extension: 'key-signature-summary'"
 parent: EXTENSIONS
 ext_name: "key-signature-summary"
 ---
@@ -26,7 +26,7 @@ Main function(s):
 
 Example of Usage:
 ```
-\withExtensions #'( 
+\withExtensions #'(
   "{{ page.ext_name }}"
 )
 

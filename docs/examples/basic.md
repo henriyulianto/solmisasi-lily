@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Basic: \"Mary Had a Little Lamb - in D Major and E Major\""
+title: "Basic: 'Mary Had a Little Lamb - in D Major and E Major'"
 nav_order: 1
 parent: Examples of Usage
 ---

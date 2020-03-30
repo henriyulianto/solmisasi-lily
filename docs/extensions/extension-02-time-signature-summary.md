@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_order: 2
-title: "Extension: \"time-signature-summary\""
+title: "Extension: 'time-signature-summary'"
 parent: EXTENSIONS
 ext_name: "time-signature-summary"
 ---
