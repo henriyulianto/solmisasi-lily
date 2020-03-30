@@ -9,6 +9,9 @@ ext_name: "time-signature-summary"
 # {{ page.title }}
 {: .no_toc .fs-6 }
 
+Bundled in **solmisasi-lily-v1.0.5.1-beta** and up
+{: .label .label-green }
+
 <div class="code-example" markdown="1">
 
 Full path (Linux/Mac): `<solmisasi-lily-root-dir>/lib/extension/solmisasi-{{ page.ext_name }}.ily`
@@ -23,6 +26,10 @@ Main function(s):
 
 Example of Usage:
 ```
+\withExtensions #'(
+  "{{ page.ext_name }}"
+)
+
 % Variable 'music' has to be defined already
 % For example:
 % music = \solmisasiMusic \mus

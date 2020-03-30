@@ -27,7 +27,7 @@
   (lily)
   (ice-9 regex))
 
-#(define _VERSION "1.0.5.1-beta")
+#(define _VERSION "1.0.5.2-beta")
 #(define _SOLMISASI_LILY_LOADED #f)
 
 %% #t when running a Windows OS

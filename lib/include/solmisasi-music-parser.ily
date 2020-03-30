@@ -187,6 +187,34 @@
         (set! rest-pos (list))
 
         ;-----------------------------------------------------------
+        ; Event: ChordEvent
+        (music-map
+         (lambda (m)
+           (if (event-chord? m)
+               (let* ((elems (filter
+                              (lambda (l)
+                                (music-is-of-type? l 'note-event))
+                              (music-flatten (ly:music-property m 'elements))))
+                      (nelems			(length elems))
+                      (firstelems (if (positive? nelems) (car elems) #f))
+                      (durelems 	(if firstelems
+                                     (ly:music-property firstelems 'duration)
+                                     #f))
+                      (cdrelems		(if (positive? nelems) (cdr elems) #f)))
+                 (cond
+                  (firstelems
+                   (set! m firstelems)
+                   (ly:music-set-property! m 'duration
+                     (ly:music-property firstelems 'duration))
+                   (ly:music-set-property! m 'cdr-chords cdrelems))
+                  (else
+                   m))
+                 m) ; end let
+               ) ; end if chord
+           m) ; end lambda m
+         muscopy)
+
+        ;-----------------------------------------------------------
         ; Event: RestEvent
         ; Save a list of rest-event position in rest-pos
         (music-map
@@ -202,28 +230,6 @@
                       (not (tied-note? m)))
                  (set! note-or-rest-iteration (1+ note-or-rest-iteration))))
             ) ; end cond
-           m) ; end lambda m
-         muscopy)
-
-        ;-----------------------------------------------------------
-        ; Event: ChordEvent
-        (music-map
-         (lambda (m)
-           (if (event-chord? m)
-               (let* ((elems (filter
-                              (lambda (l)
-                                (music-is-of-type? l 'note-event))
-                              (music-flatten (ly:music-property m 'elements))))
-                      (nelems			(length elems))
-                      (firstelems (car elems))
-                      (durelems 	(ly:music-property firstelems 'duration))
-                      (cdrelems		(cdr elems)))
-                 (set! m firstelems)
-                 (ly:music-set-property! m 'duration
-                   (ly:music-property firstelems 'duration))
-                 (ly:music-set-property! m 'cdr-chords cdrelems)
-                 m) ; end let
-               ) ; end if chord
            m) ; end lambda m
          muscopy)
 
