@@ -8,6 +8,8 @@
 [![GitHub forks](https://img.shields.io/github/forks/henriyulianto/solmisasi-lily)](https://github.com/henriyulianto/solmisasi-lily/network)
 [![GitHub stars](https://img.shields.io/github/stars/henriyulianto/solmisasi-lily)](https://github.com/henriyulianto/solmisasi-lily/stargazers)
 
+![GitHub All Releases](https://img.shields.io/github/downloads/henriyulianto/solmisasi-lily/total?style=for-the-badge&color=454546&labelColor=343435)
+
 
 For documentation, please head over to [https://henriyulianto.github.io/solmisasi-lily/](https://henriyulianto.github.io/solmisasi-lily/)
 
