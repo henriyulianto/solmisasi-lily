@@ -21,7 +21,7 @@ Description:
 Main function(s):
 > [\updateTimeSignatureSummary](../../appendices/custom-functions/#updateTimeSignatureSummary) [void] - _music_ (music) _property-name_ (symbol)
 
-Example Usage:
+Example of Usage:
 ```
 % Variable 'music' has to be defined already
 % For example:
