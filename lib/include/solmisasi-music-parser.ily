@@ -50,7 +50,9 @@
 
   (define (event-chord? m)
     (and (ly:music? m)
-         (music-is-of-type? m 'event-chord)))
+         (music-is-of-type? m 'event-chord)
+         (positive? (length (ly:music-property m 'elements)))
+         ))
 
   (define (get-last-pitch-for-volta m)
     (let*
@@ -170,6 +172,7 @@
               (tempo-awal #f)
               (orig-m (empty-music))
               (current-time-sig 4/4)
+              (last-note (empty-music))
               (is-last-note-end-of-slur? #f)
               (duradot-sum 0) )
 
@@ -183,10 +186,29 @@
         ;; Initialize rest-pos
         (set! rest-pos (list))
 
+        ;-----------------------------------------------------------
+        ; Event: RestEvent
+        ; Save a list of rest-event position in rest-pos
         (music-map
          (lambda (m)
-           ;-----------------------------------------------------------
-           ;; Event: ChordEvent
+           (cond
+            ((rest-event? m)
+             (set! note-or-rest-iteration (1+ note-or-rest-iteration))
+             (if (not (memq note-or-rest-iteration rest-pos))
+                 (set! rest-pos
+                       (append rest-pos (list note-or-rest-iteration)))))
+            ((or (note-event? m) (event-chord? m))
+             (if (and (not (slur-stop-note? m))
+                      (not (tied-note? m)))
+                 (set! note-or-rest-iteration (1+ note-or-rest-iteration))))
+            ) ; end cond
+           m) ; end lambda m
+         muscopy)
+
+        ;-----------------------------------------------------------
+        ; Event: ChordEvent
+        (music-map
+         (lambda (m)
            (if (event-chord? m)
                (let* ((elems (filter
                               (lambda (l)
@@ -207,11 +229,16 @@
 
         (music-map
          (lambda (m)
+           (if (and (note-event? m) (not (slur-stop-note? m)))
+               (set! note-or-rest-iteration (1+ note-or-rest-iteration)))
+
            (cond
+
             ;-----------------------------------------------------------
             ;; Event: PERUBAHAN TANDA SUKAT/BIRAMA/TIME SIGNATURE
             ;; Tambahkan/set properti musik baru: 'solmisasi-time-sig
             ((music-is-of-type? m 'time-signature-music)
+
              (let*
               ( (numerator-num (ly:music-property m 'numerator))
                 (denominator-num (ly:music-property m 'denominator))
@@ -244,6 +271,7 @@
             ;; Event: PERUBAHAN NADA DASAR/KEY
             ;; Tambahkan/set properti musik baru: 'solmisasi-key-sig
             ((music-is-of-type? m 'key-change-event)
+
              (let*
               ( (pitch-alist (ly:music-property m 'pitch-alist))
                 (key-alts (filter (lambda (a) (not (= 0 (cdr a)))) pitch-alist))
@@ -295,6 +323,7 @@
             ;-----------------------------------------------------------
             ;; Event: Skip event
             ((music-is-of-type? m 'skip-event)
+
              (let
               ((dur (ly:moment-main (ly:music-duration-length m))))
               (set! last-pitch #f)
@@ -308,13 +337,7 @@
             ((or (note-event? m)
                  (rest-event? m))
 
-             (set! note-or-rest-iteration (1+ note-or-rest-iteration))
-             (if (tied-note? m)
-                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
-             (if (slur-stop-note? m)
-                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
-             (if in-slur?
-                 (set! note-or-rest-iteration (1- note-or-rest-iteration)))
+             (if (note-event? m) (set! last-note m))
              (set! orig-m (ly:music-deep-copy m))
 
              (set! iter-num (+ 1 iter-num))
@@ -398,11 +421,6 @@
               ;; utk rest, set properti 'solmisasi-rest
               (if (rest-event? m)
                   (begin
-                   (if is-last-note-end-of-slur?
-                       (set! note-or-rest-iteration (1- note-or-rest-iteration)))
-                   (if (not (memq note-or-rest-iteration rest-pos))
-                       (set! rest-pos
-                             (append rest-pos (list note-or-rest-iteration))))
                    (set! is-rest? #t)
                    (set! m (make-music 'RestEvent m))
                    (if _EXPERIMENTAL
@@ -442,7 +460,6 @@
                    ; FOR CHORDS
                    (if cdr-chords
                        (begin
-                        ;(ly:music-set-property! m 'cdr-chords
                         (map!
                          (lambda (e)
                            (ly:music-set-property! e 'pitch-solmisasi
@@ -489,6 +506,7 @@
                       (duradot8-extra 0)
                       (duradot16-extra 0)
                       (duradot32-extra 0)
+                      (dots-list (empty-music))
                       ;; TODO: nilai nada/durasi lain?
                       (current-moment   (ly:make-moment dur))
                       (delta-moment     (ly:moment-mod evaluated-moment beat-structure-mom))
@@ -662,57 +680,112 @@
 
                      (set! note-in-tie? (or note-in-tie? (tied-note? m)))
                      (set! slur-stopped? (slur-stop-note? m))
-                     (set! is-last-note-end-of-slur? (slur-stop-note? m))
+                     ;(set! is-last-note-end-of-slur? (slur-stop-note? m))
                      (set! in-slur? (and slur-started? (not slur-stopped?)))
                      (set! slur-started? (slur-start-note? m))
 
-                     ; (if is-rest?
-                     ;                          (ly:message (_ "  [solmisasiMusic] must-reverse=~a|d4=~a|d8=~a|d16=~a|d4-ex=~a|d8-ex=~a|d16-ex=~a!has-extra-job=~a\n")
-                     ;                            must-reverse duradot4 duradot8 duradot16 duradot4-extra duradot8-extra duradot16-extra has-extra-job))
-                     (if (equal? must-reverse #f)
+                     (set! duradot-sum ;(1-
+                           (+ duradot4
+                             duradot8
+                             duradot16
+                             duradot32
+                             duradot4-extra
+                             duradot8-extra
+                             duradot16-extra
+                             duradot32-extra));)
+
+                     (if slur-stopped?
+                         ; end of slur, perhaps have dots
+                         (if (positive? duradot-sum)
+                             (set! dots-list (append
+                                              (list (make-music
+                                                     'ContextSpeccedMusic
+                                                     'context-type
+                                                     'Bottom
+                                                     'element
+                                                     (make-music
+                                                      'PropertySet
+                                                      'value
+                                                      #t
+                                                      'symbol
+                                                      'melismaBusy)))
+                                              (make-list duradot4  q4)
+                                              (make-list duradot8  q8)
+                                              (make-list duradot16 q16)
+                                              (make-list duradot32 q32)
+                                              (list (make-music
+                                                     'ContextSpeccedMusic
+                                                     'context-type
+                                                     'Bottom
+                                                     'element
+                                                     (make-music
+                                                      'PropertyUnset
+                                                      'symbol
+                                                      'melismaBusy)))
+                                              ))
+                             ; zero duradot-sum
+                             (set! dots-list (list (empty-music)))
+
+                             )
+
+                         ; not end of slur
+                         (if (positive? duradot-sum)
+                             (set! dots-list (append
+                                              (if (not (slur-stop-note? last-note))
+                                                  (list (make-music
+                                                         'ContextSpeccedMusic
+                                                         'context-type
+                                                         'Bottom
+                                                         'element
+                                                         (make-music
+                                                          'PropertySet
+                                                          'value
+                                                          #t
+                                                          'symbol
+                                                          'melismaBusy)))
+                                                  (list empty-music))
+                                              (make-list duradot4  q4)
+                                              (make-list duradot8  q8)
+                                              (make-list duradot16 q16)
+                                              (make-list duradot32 q32)
+                                              (if (not (slur-stop-note? last-note))
+                                                  (list (make-music
+                                                         'ContextSpeccedMusic
+                                                         'context-type
+                                                         'Bottom
+                                                         'element
+                                                         (make-music
+                                                          'PropertyUnset
+                                                          'symbol
+                                                          'melismaBusy)))
+                                                  (list empty-music))
+                                              ))
+                             ; zero duradot-sum
+                             (set! dots-list (list (empty-music)))
+                             )
+                         ) ; end if (slur-stopped?)
+
+                     (if (not must-reverse)
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
-                                   (list (make-music
-                                          'ContextSpeccedMusic
-                                          'context-type
-                                          'Bottom
-                                          'element
-                                          (make-music
-                                           'PropertySet
-                                           'value
-                                           #t
-                                           'symbol
-                                           'melismaBusy)))
-                                   (make-list duradot4  q4)
-                                   (make-list duradot8  q8)
-                                   (make-list duradot16 q16)
-                                   (make-list duradot32 q32)
-                                   (list (make-music
-                                          'ContextSpeccedMusic
-                                          'context-type
-                                          'Bottom
-                                          'element
-                                          (make-music
-                                           'PropertyUnset
-                                           'symbol
-                                           'melismaBusy)))
+                                   dots-list
                                    )))
                          ;; else must-reverse = #t
                          (set! m (make-sequential-music
                                   (append
                                    (list m)
-                                   (list (make-music
-                                          'ContextSpeccedMusic
-                                          'context-type
-                                          'Bottom
-                                          'element
-                                          (make-music
-                                           'PropertySet
-                                           'value
-                                           #t
-                                           'symbol
-                                           'melismaBusy)))
+                                   ; (list (make-music
+                                   ;                                           'ContextSpeccedMusic
+                                   ;                                           'context-type
+                                   ;                                           'Bottom
+                                   ;                                           'element
+                                   ;                                           (make-music
+                                   ;                                            'PropertySet
+                                   ;                                            'value
+                                   ;                                            #t
+                                   ;                                            'symbol
+                                   ;                                            'melismaBusy)))
                                    (make-list duradot32 			q32)
                                    (make-list duradot16 			q16)
                                    (make-list duradot8  			q8)
@@ -721,45 +794,29 @@
                                    (make-list duradot8-extra  q8)
                                    (make-list duradot16-extra q16)
                                    (make-list duradot32-extra q32)
-                                   (list (make-music
-                                          'ContextSpeccedMusic
-                                          'context-type
-                                          'Bottom
-                                          'element
-                                          (make-music
-                                           'PropertyUnset
-                                           'symbol
-                                           'melismaBusy)))
+                                   ; (list (make-music
+                                   ;                                           'ContextSpeccedMusic
+                                   ;                                           'context-type
+                                   ;                                           'Bottom
+                                   ;                                           'element
+                                   ;                                           (make-music
+                                   ;                                            'PropertyUnset
+                                   ;                                            'symbol
+                                   ;                                            'melismaBusy)))
                                    )))
                          ) ; end (if (equal? must-reverse #f)
 
                      ;; RESET
                      (if slur-stopped?
                          (begin
+                          (set! duradot-sum 0)
                           (set! slur-started? #f)
                           (set! slur-stopped? #f)
                           (set! in-slur? #f)))
                      (set! note-in-tie? (tied-note? m))
-                     (set! duradot-sum ;(1-
-                           (+ duradot4
-                             duradot8
-                             duradot16
-                             duradot32
-                            duradot4-extra
-                             duradot8-extra
-                             duradot16-extra
-                             duradot32-extra));)
                      )
-                    (if (positive? duradot-sum)
-                        (set! note-or-rest-iteration (1+ note-or-rest-iteration)))
                     )
-                (if (and is-rest? (positive? duradot-sum))
-                    (while (positive? duradot-sum)
-                      (set! duradot-sum (1- duradot-sum))
-                      (set! note-or-rest-iteration (1+ note-or-rest-iteration))
-                      (if (not (memq note-or-rest-iteration rest-pos))
-                          (set! rest-pos
-                                (append rest-pos (list note-or-rest-iteration))))))
+
                 (set! last-dur dur)
                 (set! last-moment (ly:make-moment last-dur))
                 (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))

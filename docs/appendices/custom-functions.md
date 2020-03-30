@@ -45,6 +45,7 @@ Function: `\withExtensions` [void] - _extension-list_ (list of string)
 
 <div class="code-example" markdown="1">
 
+<a name="updateKeySignatureSummary"></a>
 Function `\updateKeySignatureSummary` [void] - _music_ (music) _property-name_ (symbol)<br>
 {: .fs-5 }
 Available in extension: [key-signature-summary](../../extensions/extension-01-key-signature-summary/)
@@ -54,6 +55,7 @@ Available in extension: [key-signature-summary](../../extensions/extension-01-ke
 
 <div class="code-example" markdown="1">
 
+<a name="updateTimeSignatureSummary"></a>
 Function `\updateTimeSignatureSummary` [void] - _music_ (music) _property-name_ (symbol)<br>
 {: .fs-5 }
 Available in extension: [time-signature-summary](../../extensions/extension-02-time-signature-summary/)

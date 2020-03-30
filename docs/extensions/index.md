@@ -57,7 +57,7 @@ th:first-of-type, td:first-of-type {
 }
 </style>
 
-| Nr. | Name | Details | Free/Paid |
-|:----|:-----|:--------|:----------|
-|  1. | `key-signature-summary`  | [Extension: "key-signature-summary"](./extension-01-key-signature-summary/) | Free |
-|  2. | `time-signature-summary` | [Extension: "time-signature-summary"](./extension-02-time-signature-summary/) | Free |
+| Nr. | Name | Details | Free? | Bundled? |
+|:----|:-----|:--------|:------|:---------|
+|  1. | `key-signature-summary`  | [<i class="fas fa-external-link-alt"></i> Read This](./extension-01-key-signature-summary/) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
+|  2. | `time-signature-summary` | [<i class="fas fa-external-link-alt"></i> Read This](./extension-02-time-signature-summary/) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
