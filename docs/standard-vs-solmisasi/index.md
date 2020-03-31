@@ -29,7 +29,7 @@ There will be two (2)_solmisasi_sub-staves below the standard male vocal staves:
 
 <details>
 <summary>Click to show/hide</summary>
-<img src="./comparison.png">
+<img src="./img/comparison.png">
 </details>
 
 ### Flat Mode
@@ -37,7 +37,7 @@ There will be two (2)_solmisasi_sub-staves below the standard male vocal staves:
 
 <details>
 <summary>Click to show/hide</summary>
-<img src="./comparison-in-flat.png">
+<img src="./img/comparison-in-flat.png">
 </details>
 
 ---
@@ -52,14 +52,14 @@ All pitches shown below are written in **'sharp mode'**.
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-g-maj.png">
+  <img src="./img/comparison-g-maj.png">
   </details>
 
 - ### D Major of B Minor (Two Sharps)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-d-maj.png">
+  <img src="./img/comparison-d-maj.png">
   </details>
 
 - ### A Major or F♯ Minor (Three Sharps)
@@ -74,7 +74,7 @@ All pitches shown below are written in **'sharp mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-a-maj.png">
+  <img src="./img/comparison-a-maj.png">
   </details>
 
   #### Mode 2: Common Alternative
@@ -84,35 +84,35 @@ All pitches shown below are written in **'sharp mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-a-maj-2.png">
+  <img src="./img/comparison-a-maj-2.png">
   </details>
 
 - ### E Major or C♯ Minor (Four Sharps)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-e-maj.png">
+  <img src="./img/comparison-e-maj.png">
   </details>
 
 - ### B Major or G♯ Minor (Five Sharps)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-b-maj.png">
+  <img src="./img/comparison-b-maj.png">
   </details>
 
 - ### F♯ Major or D♯ Minor (Six Sharps)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-fis-maj.png">
+  <img src="./img/comparison-fis-maj.png">
   </details>
 
 - ### C♯ Major or A♯ Minor (Seven Sharps)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-cis-maj.png">
+  <img src="./img/comparison-cis-maj.png">
   </details>
 
 ---
@@ -127,7 +127,7 @@ All pitches shown below are written in **'flat mode'**.
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-f-maj.png">
+  <img src="./img/comparison-f-maj.png">
   </details>
 
 - ### B♭ Major (Two Flats)
@@ -142,7 +142,7 @@ All pitches shown below are written in **'flat mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-bes-maj.png">
+  <img src="./img/comparison-bes-maj.png">
   </details>
 
   #### Mode 2: Common Alternative
@@ -152,14 +152,14 @@ All pitches shown below are written in **'flat mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-bes-maj-2.png">
+  <img src="./img/comparison-bes-maj-2.png">
   </details>
 
 - ### E♭ Major (Three Flats)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-es-maj.png">
+  <img src="./img/comparison-es-maj.png">
   </details>
 
 - ### A♭ Major (Four Flats)
@@ -174,7 +174,7 @@ All pitches shown below are written in **'flat mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-aes-maj.png">
+  <img src="./img/comparison-aes-maj.png">
   </details>
 
   #### Mode 2: Common Alternative
@@ -184,28 +184,28 @@ All pitches shown below are written in **'flat mode'**.
   {: .fs-5 }
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-aes-maj-2.png">
+  <img src="./img/comparison-aes-maj-2.png">
   </details>
 
 - ### D♭ Major (Five Flats)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-des-maj.png">
+  <img src="./img/comparison-des-maj.png">
   </details>
 
 - ### G♭ Major (Six Flats)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-ges-maj.png">
+  <img src="./img/comparison-ges-maj.png">
   </details>
 
 - ### C♭ Major (Seven Flats)
 
   <details>
   <summary>Click to show/hide</summary>
-  <img src="./comparison-ces-maj.png">
+  <img src="./img/comparison-ces-maj.png">
   </details>
 
 ---
@@ -216,7 +216,7 @@ All pitches shown below are written in **'flat mode'**.
 In most cases of writing score/sheet music in _solmisasi_ and based on common practices, especially in Indonesia, regardless of the key signatures being used, there are some pitch numbers which users (singers, vocal groups, or choirs) doesn't like. Therefore, many music authors tend to avoid using these pitch numbers.<br>
 The preferred_solmisasi_pitch numbers are listed below.
 {: .fs-5 }
-<img src="./preferred-pitch-numbers.png" width="400" />
+<img src="./img/preferred-pitch-numbers.png" width="400" />
 
 The question is: _How do we choose the pitches to be used, if the 'original' converted pitches are not the preferred ones?_
 {: .fs-5 }

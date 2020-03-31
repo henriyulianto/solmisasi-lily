@@ -52,7 +52,7 @@ music = {
 
 Save it to `getting-started-example-01.ly`, and compile it using simple Lilypond compilation command. The result is:<br>
 {: .fs-5 }
-<img src="./getting-started-example-01-1.png" width="400"/>
+<img src="./img/getting-started-example-01-1.png" width="400"/>
 
 To 'convert' that standard notation to _solmisasi_, we need:
 {: .fs-5 }
@@ -97,7 +97,7 @@ lilypond --include="X:\solmisasi-lily\lib" getting-started-example-01.ly
 
 And the result is:<br>
 {: .fs-5 }
-<img src="./getting-started-example-01-2.png" width="400"/>
+<img src="./img/getting-started-example-01-2.png" width="400"/>
 
 **TIPS**
 {: .label .label-green }
@@ -124,7 +124,7 @@ You could clearly see that there were some standard notation objects missing in 
 
 And the compiled result is:
 {: .fs-5 }
-<img src="./getting-started-example-01-3.png" width="400"/>
+<img src="./img/getting-started-example-01-3.png" width="400"/>
 
 But, wait a sec... _How do we know which key signature those solmisasi notes are in?_<br>
 If we are using standard notation, without a key signature being written at the beginning of the score, we all know that the music passage is written in C Major or A Minor key. Meanwhile, _solmisasi_ needs the key signature to be explicitly written out in its commonly-acceptable form. (See [Scales and Key Signatures](../../#scales-and-key-signatures))
@@ -158,7 +158,7 @@ Let's modify our snippet to include this new context.
 
 The compiled result would be just like this:
 {: .fs-5 }
-<img src="./getting-started-example-01-4.png" width="400"/>
+<img src="./img/getting-started-example-01-4.png" width="400"/>
 
 We should somehow delete one of those time signatures. We can do either
 {: .fs-5 }
@@ -189,7 +189,7 @@ Let's do the first option by modifying our snippet to this.
 
 The compiled result would be:
 {: .fs-5 }
-<img src="./getting-started-example-01-5.png" width="400"/>
+<img src="./img/getting-started-example-01-5.png" width="400"/>
 
 To implement the second option, please remember that the `SolmisasiStaff` naturally has the `TimeSignature` object omitted. So, the modified snippet will be like this.
 {: .fs-5 }
@@ -210,7 +210,7 @@ To implement the second option, please remember that the `SolmisasiStaff` natura
 
 The compiled result would be just like this:
 {: .fs-5 }
-<img src="./getting-started-example-01-6.png" width="400"/>
+<img src="./img/getting-started-example-01-6.png" width="400"/>
 
 ---
 

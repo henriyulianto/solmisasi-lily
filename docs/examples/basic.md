@@ -90,7 +90,7 @@ mary_lyric = \lyricmode {
 And here is the compilation result.
 {: .fs-5 }
 
-![](../basic-01.png)
+![](../img/basic-01.png)
 
 Now, let's transform that score into _solmisasi_ notation. Here is the snippet and its compiled result.
 {: .fs-5 }
@@ -181,11 +181,11 @@ mary_lyric = \lyricmode {
 ```
 {: .lilypond }
 
-![](../basic-01-solmisasi.png)
+![](../img/basic-01-solmisasi.png)
 
 In the compiled result, there is a new object printed at the end of the second system, as shown by the following image.
 {: .fs-5 }
-<img src="../basic-01-solmisasi-key-equivalence.png" width="100"/>
+<img src="../img/basic-01-solmisasi-key-equivalence.png" width="100"/>
 
 This object was engraved by a special custom engraver named `Solmisasi_equivalence_key_engraver`, with the purpose of telling the score users/readers about the equivalence of the last note, before the change of the key signature, in the new key signature. It is a common practice in writing music in _solmisasi_ notation. However, this object could be omitted, if you want to.
 {: .fs-5 }

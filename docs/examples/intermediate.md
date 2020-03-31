@@ -265,7 +265,7 @@ strofab = {
 ```
 {: .lilypond}
 
-![Tantum Ergo Sacramentum - Standard Notation](../tantum-ergo-haydn.png)
+![Tantum Ergo Sacramentum - Standard Notation](../img/tantum-ergo-haydn.png)
 
 ## Solmisasi Notation
 {: .no_toc }
@@ -545,4 +545,4 @@ strofab = \lyricmode {
 ```
 {: .lilypond}
 
-![Tantum Ergo Sacramentum - Solmisasi Notation](../tantum-ergo-haydn-solmisasi.png)
+![Tantum Ergo Sacramentum - Solmisasi Notation](../img/tantum-ergo-haydn-solmisasi.png)

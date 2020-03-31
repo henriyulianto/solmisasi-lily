@@ -1,18 +1,3 @@
----
-layout: default
-title: "Combining Both Notation Systems"
-nav_order: 1
-grand_parent: Examples of Usage
-parent: Advanced Examples
----
-
-# Combining Both Standard and _Solmisasi_ Notation in One Score
-{: .no_toc .fs-7 }
-
-From the previous examples, we already had standard and solmisasi notation version of the song "Tantum Ergo Sacramentum". Occasionally, for some specific reasons, you may want those music representations combined, or engraved altogether in one score. It can be achieved quite easily. I'll give you a shot, please check this out, guys!
-{: .fs-5}
-
-```
 %%% tantum-ergo-haydn-combined.ly
 \version "2.20.0"
 \include "english.ly"
@@ -323,12 +308,3 @@ strofab = \lyricmode {
     \line { Amen. }
   }
 }
-```
-{: .lilypond }
-![Tantum Ergo Sacramentum](../img/tantum-ergo-haydn-combined.png)
-
-Compared to the previous two examples of the same piece, some changes have been made here, e.g.:
-{: .fs-5 }
-- There is no need to use `NullVoice` contexts, as we already have the 'original' non-converted music definition from the standard notation staves.
-- I decided to engrave `Lyrics` for each vocal instrument. This way, each instrument could be 'separated' one to another.
-- And of course, there are some simple tweaks added.

@@ -114,6 +114,6 @@ Available in extension: [time-signature-summary](../../extensions/extension-02-t
 ### `\flexibleDo`, `\flexibleLa`, and `\silence`
 {: .fs-5 }
 
-<img src="../../../examples/helper-functions-demo.png" width="500px"/>
+<img src="../img/helper-functions-demo.png" width="500px"/>
 
 </div>

@@ -196,13 +196,13 @@ lyric = \lyricmode {
 ```
 {: .lilypond }
 
-![](../advanced-2.png)
+![](../img/advanced-2.png)
 
 Now, we need to define where the key signature summary will be printed in. Please take a look at the following image, which shows us the default layout Lilypond has defined.
 {: .fs-5 }
 It'd be great if you understand how to modify this default layout, or even make your own layout. But, in this documentation, I will not cover that. Instead, you'd better consult the Lilypond documentation.
 {: .fs-4 }
-![](../default-layout-overview.png)
+![](../img/default-layout-overview.png)
 
 Let's take the `poet` property in the header block to be filled with our key signature summary text.
 {: .fs-5 }
@@ -519,7 +519,7 @@ updateKeySignatureSummary =
 ```
 {: .lilypond }
 
-![](../advanced-2-1.png)
+![](../img/advanced-2-1.png)
 
 ---
 
@@ -862,4 +862,4 @@ updateTimeSignatureSummary =
 ```
 {: .lilypond }
 
-![](../advanced-2-2.png)
+![](../img/advanced-2-2.png)
