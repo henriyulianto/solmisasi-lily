@@ -3,6 +3,7 @@ layout: default
 title: "Modifications to Standar Lilypond Contexts"
 nav_order: 1
 parent: APPENDICES
+permalink: /appendices/standar-lilypond-overrides.html
 ---
 
 # Modifications to Standar Lilypond Contexts
@@ -30,13 +31,13 @@ _solmisasi-lily_ includes the following engravers into the [ChoirStaff](http://l
 
 </div>
 
-_solmisasi-lily_ adds the following acceptable [custom contexts](../custom-contexts/) into the ChoirStaff context:
+_solmisasi-lily_ adds the following acceptable [custom contexts](./custom-contexts.html) into the ChoirStaff context:
 {: .pt-5 .fs-5 }
 
 <div class="code-example" markdown="1">
 
-- [GlobalTempo](../custom-contexts/#globaltempo)
-- [SolmisasiStaff](../custom-contexts/#solmisasistaff)
+- [GlobalTempo](./custom-contexts.html#globaltempo)
+- [SolmisasiStaff](./custom-contexts.html#solmisasistaff)
 
 </div>
 
@@ -44,16 +45,16 @@ _solmisasi-lily_ adds the following acceptable [custom contexts](../custom-conte
 
 ## **GrandStaff**
 
-_solmisasi-lily_ adds the following acceptable [custom contexts](../custom-contexts/) into the [GrandStaff](http://lilypond.org/doc/v2.20/Documentation/internals/grandstaff) context:
+_solmisasi-lily_ adds the following acceptable [custom contexts](./custom-contexts.html) into the [GrandStaff](http://lilypond.org/doc/v2.20/Documentation/internals/grandstaff) context:
 {: .pt-5 .fs-5 }
 
 <div class="code-example" markdown="1">
 
-- [SolmisasiChoirStaff](../custom-contexts/#solmisasichoirstaff)
-- [SolmisasiLyrics](../custom-contexts/#solmisasilyrics)
-- [SolmisasiStaff](../custom-contexts/#solmisasistaff)
-- [SolmisasiTimeAndKeySignature](../custom-contexts/#solmisasitimeandkeysignature)
-- [SolmisasiVoice](../custom-contexts/#solmisasivoice)
+- [SolmisasiChoirStaff](./custom-contexts.html#solmisasichoirstaff)
+- [SolmisasiLyrics](./custom-contexts.html#solmisasilyrics)
+- [SolmisasiStaff](./custom-contexts.html#solmisasistaff)
+- [SolmisasiTimeAndKeySignature](./custom-contexts.html#solmisasitimeandkeysignature)
+- [SolmisasiVoice](./custom-contexts.html#solmisasivoice)
 
 </div>
 
@@ -61,15 +62,15 @@ _solmisasi-lily_ adds the following acceptable [custom contexts](../custom-conte
 
 ## **PianoStaff**
 
-_solmisasi-lily_ adds the following acceptable [custom contexts](../custom-contexts/) into the [PianoStaff](http://lilypond.org/doc/v2.20/Documentation/internals/pianostaff) context:
+_solmisasi-lily_ adds the following acceptable [custom contexts](./custom-contexts.html) into the [PianoStaff](http://lilypond.org/doc/v2.20/Documentation/internals/pianostaff) context:
 {: .pt-5 .fs-5 }
 
 <div class="code-example" markdown="1">
 
-- [SolmisasiLyrics](../custom-contexts/#solmisasilyrics)
-- [SolmisasiStaff](../custom-contexts/#solmisasistaff)
-- [SolmisasiTimeAndKeySignature](../custom-contexts/#solmisasitimeandkeysignature)
-- [SolmisasiVoice](../custom-contexts/#solmisasivoice)
+- [SolmisasiLyrics](./custom-contexts.html#solmisasilyrics)
+- [SolmisasiStaff](./custom-contexts.html#solmisasistaff)
+- [SolmisasiTimeAndKeySignature](./custom-contexts.html#solmisasitimeandkeysignature)
+- [SolmisasiVoice](./custom-contexts.html#solmisasivoice)
 
 </div>
 
@@ -98,17 +99,17 @@ _solmisasi-lily_ removes the following engravers from the [Score](http://lilypon
 
 </div>
 
-_solmisasi-lily_ adds the following acceptable [custom contexts](../custom-contexts/) into the [Score](http://lilypond.org/doc/v2.20/Documentation/internals/score) context:
+_solmisasi-lily_ adds the following acceptable [custom contexts](./custom-contexts.html) into the [Score](http://lilypond.org/doc/v2.20/Documentation/internals/score) context:
 {: .pt-5 .fs-5 }
 
 <div class="code-example" markdown="1">
 
-- [GlobalTempo](../custom-contexts/#globaltempo)
-- [SolmisasiChoirStaff](../custom-contexts/#solmisasichoirstaff)
-- [SolmisasiLyrics](../custom-contexts/#solmisasilyrics)
-- [SolmisasiStaff](../custom-contexts/#solmisasistaff)
-- [SolmisasiTimeAndKeySignature](../custom-contexts/#solmisasitimeandkeysignature)
-- [SolmisasiVoice](../custom-contexts/#solmisasivoice)
+- [GlobalTempo](./custom-contexts.html#globaltempo)
+- [SolmisasiChoirStaff](./custom-contexts.html#solmisasichoirstaff)
+- [SolmisasiLyrics](./custom-contexts.html#solmisasilyrics)
+- [SolmisasiStaff](./custom-contexts.html#solmisasistaff)
+- [SolmisasiTimeAndKeySignature](./custom-contexts.html#solmisasitimeandkeysignature)
+- [SolmisasiVoice](./custom-contexts.html#solmisasivoice)
 
 </div>
 
@@ -174,15 +175,15 @@ _solmisasi-lily_ overrides the following settings of layout objects in [Staff](h
 
 ## **StaffGroup**
 
-_solmisasi-lily_ adds the following acceptable [custom contexts](../custom-contexts/) into the [StaffGroup](http://lilypond.org/doc/v2.20/Documentation/internals/staffgroup) context:
+_solmisasi-lily_ adds the following acceptable [custom contexts](./custom-contexts.html) into the [StaffGroup](http://lilypond.org/doc/v2.20/Documentation/internals/staffgroup) context:
 {: .pt-5 .fs-5 }
 
 <div class="code-example" markdown="1">
 
-- [SolmisasiLyrics](../custom-contexts/#solmisasilyrics)
-- [SolmisasiStaff](../custom-contexts/#solmisasistaff)
-- [SolmisasiTimeAndKeySignature](../custom-contexts/#solmisasitimeandkeysignature)
-- [SolmisasiVoice](../custom-contexts/#solmisasivoice)
+- [SolmisasiLyrics](./custom-contexts.html#solmisasilyrics)
+- [SolmisasiStaff](./custom-contexts.html#solmisasistaff)
+- [SolmisasiTimeAndKeySignature](./custom-contexts.html#solmisasitimeandkeysignature)
+- [SolmisasiVoice](./custom-contexts.html#solmisasivoice)
 
 </div>
 

@@ -4,6 +4,7 @@ title: "Combining Both Notation Systems"
 nav_order: 1
 grand_parent: Examples of Usage
 parent: Advanced Examples
+permalink: /examples/advanced/advanced-1.html
 ---
 
 # Combining Both Standard and _Solmisasi_ Notation in One Score

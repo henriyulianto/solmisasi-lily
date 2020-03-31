@@ -3,6 +3,7 @@ layout: default
 title: "Custom Functions"
 nav_order: 4
 parent: APPENDICES
+permalink: /appendices/custom-functions.html
 ---
 
 # Custom Functions Provided by _solmisasi-lily_ Library
@@ -15,6 +16,7 @@ parent: APPENDICES
 
 ## Main Functions
 
+<a name="solmisasiMusic"></a>
 <div class="code-example" markdown="1">
 
 ### Function: `\solmisasiMusic` [music] - _music_ (music)
@@ -23,14 +25,19 @@ parent: APPENDICES
 
 </div>
 
+<a name="solmisasiLyric"></a>
 <div class="code-example" markdown="1">
 
 ### Function: `\solmisasiLyric` [music] - _lyrics_ (music)
 {: .fs-5 }
 > (Experimental) Parse and translate _lyrics_ into a _solmisasi_-ready form of lyrics.
 
+Alias (to be more consequent )
+- `\solmisasiLyrics`
+
 </div>
 
+<a name="withExtensions"></a>
 <div class="code-example" markdown="1">
 
 ### Function: `\withExtensions` [void] - _extension-list_ (list of string)
@@ -90,7 +97,7 @@ Available in _solmisasi-lily_ core library
 <a name="updateKeySignatureSummary"></a>
 ### Function: `\updateKeySignatureSummary` [void] - _music_ (music) _property-name_ (symbol)<br>
 {: .fs-5 }
-Available in extension: [key-signature-summary](../../extensions/extension-01-key-signature-summary/)
+Available in extension: [key-signature-summary](../extensions/extension-01-key-signature-summary.html)
 > Summarizes all key signatures specified in _music_ as a text/string, and save it to a custom header property named _property-name_. _music_ has to be translated first with `\solmisasiMusic`. The custom header property _property-name_ can then be used in `\header` block by using a markup command `\property-name` or `\fromproperty #'header:property-name`.
 
 </div>
@@ -100,7 +107,7 @@ Available in extension: [key-signature-summary](../../extensions/extension-01-ke
 <a name="updateTimeSignatureSummary"></a>
 ### Function: `\updateTimeSignatureSummary` [void] - _music_ (music) _property-name_ (symbol)<br>
 {: .fs-5 }
-Available in extension: [time-signature-summary](../../extensions/extension-02-time-signature-summary/)
+Available in extension: [time-signature-summary](../../extensions/extension-02-time-signature-summary.html)
 > Summarizes all time signatures specified in _music_ as a text/string, and save it to a custom header property named _property-name_. _music_ has to be translated first with `\solmisasiMusic`. The custom header property _property-name_ can then be used in `\header` block by using a markup command `\property-name` or `\fromproperty #'header:property-name`.
 
 </div>
@@ -114,6 +121,6 @@ Available in extension: [time-signature-summary](../../extensions/extension-02-t
 ### `\flexibleDo`, `\flexibleLa`, and `\silence`
 {: .fs-5 }
 
-<img src="../img/helper-functions-demo.png" width="500px"/>
+<img src="./img/helper-functions-demo.png" width="500px"/>
 
 </div>

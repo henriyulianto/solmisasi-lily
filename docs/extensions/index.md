@@ -4,12 +4,13 @@ title: EXTENSIONS
 nav_order: 5
 has_children: true
 has_toc: false
+permalink: /extensions/
 ---
 
 # EXTENSIONS: Extending _solmisasi-lily_ Library
 {: .no_toc .fs-9 }
 
-It is very possible that this library can't do some stuffs users want to produce in simple ways, for example, the one described in this section: [Printing More Informations in the Header of _Solmisasi_ Score](../examples/advanced-2/). I, or you, or other developers may add some extensions to this library.
+It is very possible that this library can't do some stuffs users want to produce in simple ways, for example, the one described in this section: [Printing More Informations in the Header of _Solmisasi_ Score](../examples/advanced-2.html). I, or you, or other developers may add some extensions to this library.
 {: .fs-5 }
 
 ## Table of Contents
@@ -38,8 +39,8 @@ th:first-of-type, td:first-of-type {
 
 | Nr. | Name | Details | Free? | Bundled? |
 |:----|:-----|:--------|:------|:---------|
-|  1. | `key-signature-summary`  | [<i class="fas fa-external-link-alt"></i> Read This](./extension-01-key-signature-summary/) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
-|  2. | `time-signature-summary` | [<i class="fas fa-external-link-alt"></i> Read This](./extension-02-time-signature-summary/) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
+|  1. | `key-signature-summary`  | [<i class="fas fa-external-link-alt"></i> Read This](./extension-01-key-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
+|  2. | `time-signature-summary` | [<i class="fas fa-external-link-alt"></i> Read This](./extension-02-time-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
 
 ---
 
@@ -55,7 +56,7 @@ Some extensions are bundled in the release archive file, others can be distribut
 Extensions mentioned here are basically Lilypond helper snippets to be included in the main music snippet after completely loading _solmisasi-lily_. They must be exist in the directory `lib/extension` inside the root directory of _solmisasi-lily_. They must follow this rule of file naming: `solmisasi-<name-of-extension>.ily`.
 {: .fs-5 }
 
-So, let's say there are two extension snippets named `solmisasi-extension-1.ily` and `solmisasi-extension-2.ily` inside the directory `lib/extension`. To use this extension, users have to write:
+So, let's say there are two extension snippets named `solmisasi-extension-1.ily` and `solmisasi-extension-2.ily` inside the directory `lib/extension`. To use this extension, users have use [\withExtensions](../appendices/custom-functions.html#withExtensions) command like this:
 {: .fs-5 }
 
 ```

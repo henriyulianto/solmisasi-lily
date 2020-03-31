@@ -3,6 +3,7 @@ layout: default
 title: "Custom Engravers"
 nav_order: 3
 parent: APPENDICES
+permalink: /appendices/custom-engravers.html
 ---
 
 # Custom Engravers Implemented in _solmisasi-lily_ Library

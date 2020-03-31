@@ -4,6 +4,7 @@ title: "More Info in the Header"
 nav_order: 2
 grand_parent: Examples of Usage
 parent: Advanced Examples
+permalink: /examples/advanced-2.html
 ---
 
 # Printing More Informations in the Header of _Solmisasi_ Score
@@ -196,13 +197,13 @@ lyric = \lyricmode {
 ```
 {: .lilypond }
 
-![](../img/advanced-2.png)
+![A Score](./img/advanced-2.png)
 
 Now, we need to define where the key signature summary will be printed in. Please take a look at the following image, which shows us the default layout Lilypond has defined.
 {: .fs-5 }
 It'd be great if you understand how to modify this default layout, or even make your own layout. But, in this documentation, I will not cover that. Instead, you'd better consult the Lilypond documentation.
 {: .fs-4 }
-![](../img/default-layout-overview.png)
+![Default Layout Overview](./img/default-layout-overview.png)
 
 Let's take the `poet` property in the header block to be filled with our key signature summary text.
 {: .fs-5 }
@@ -519,7 +520,7 @@ updateKeySignatureSummary =
 ```
 {: .lilypond }
 
-![](../img/advanced-2-1.png)
+![A Score With Key Signature Summary](./img/advanced-2-1.png)
 
 ---
 
@@ -862,4 +863,4 @@ updateTimeSignatureSummary =
 ```
 {: .lilypond }
 
-![](../img/advanced-2-2.png)
+![A Score With Time And Key Signature Summary](./img/advanced-2-2.png)

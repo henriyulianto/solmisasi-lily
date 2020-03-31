@@ -4,6 +4,7 @@ nav_order: 2
 title: "Extension: 'time-signature-summary'"
 parent: EXTENSIONS
 ext_name: "time-signature-summary"
+permalink: /extensions/extension-02-time-signature-summary.html
 ---
 
 # {{ page.title }}
@@ -22,7 +23,7 @@ Description:
 > This extension contains some necessary helper functions to summarize all time signature changes throughout the given music. The time signature summary is written to a custom header property.
 
 Main function(s):
-> [\updateTimeSignatureSummary](../../appendices/custom-functions/#updateTimeSignatureSummary) [void] - _music_ (music) _property-name_ (symbol)
+> [\updateTimeSignatureSummary](../appendices/custom-functions.html#updateTimeSignatureSummary) [void] - _music_ (music) _property-name_ (symbol)
 
 Example of Usage:
 ```

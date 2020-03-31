@@ -3,6 +3,7 @@ layout: default
 title: APPENDICES
 nav_order: 6
 has_children: true
+permalink: /appendices/
 ---
 
 # Appendices

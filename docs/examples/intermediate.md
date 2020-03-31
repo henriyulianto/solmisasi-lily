@@ -3,6 +3,7 @@ layout: default
 title: "Intermediate: A Choral Music Example"
 nav_order: 2
 parent: Examples of Usage
+permalink: /examples/intermediate.html
 ---
 
 # Engraving a Simple Choral Song: "Tantum Ergo Sacramentum" for Voice (SATB)
@@ -265,7 +266,7 @@ strofab = {
 ```
 {: .lilypond}
 
-![Tantum Ergo Sacramentum - Standard Notation](../img/tantum-ergo-haydn.png)
+![Tantum Ergo Sacramentum - Standard Notation](./img/tantum-ergo-haydn.png)
 
 ## Solmisasi Notation
 {: .no_toc }
@@ -545,4 +546,4 @@ strofab = \lyricmode {
 ```
 {: .lilypond}
 
-![Tantum Ergo Sacramentum - Solmisasi Notation](../img/tantum-ergo-haydn-solmisasi.png)
+![Tantum Ergo Sacramentum - Solmisasi Notation](./img/tantum-ergo-haydn-solmisasi.png)

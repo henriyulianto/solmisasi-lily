@@ -3,6 +3,7 @@ layout: default
 title: "Custom Contexts"
 nav_order: 2
 parent: APPENDICES
+permalink: /appendices/custom-contexts.html
 ---
 
 # Custom Contexts Implemented in _solmisasi-lily_ Library
@@ -193,7 +194,7 @@ This context also accepts the following context:
 
 <div class="code-example" markdown="1">
 
-- [SolmisasiVoice](../custom-contexts/#solmisasivoice)
+- [SolmisasiVoice](#solmisasivoice)
 
 </div>
 
@@ -202,8 +203,8 @@ This context is also built from the following engravers:
 
 <div class="code-example" markdown="1">
 
-- [Solmisasi_equivalence_key_engraver](../custom-engravers/#solmisasi_equivalence_key_engraver)
-- [Solmisasi_note_head_engraver](../custom-engravers/#solmisasi_note_head_engraver)
+- [Solmisasi_equivalence_key_engraver](./custom-engravers.html#solmisasi_equivalence_key_engraver)
+- [Solmisasi_note_head_engraver](./custom-engravers.html#solmisasi_note_head_engraver)
 
 </div>
 
@@ -295,8 +296,8 @@ This context is built from the following engravers:
 - [Key_engraver](http://lilypond.org/doc/v2.20/Documentation/internals/key_005fengraver)
 - [Pure_from_neighbor_engraver](http://lilypond.org/doc/v2.20/Documentation/internals/pure_005ffrom_005fneighbor_005fengraver)
 - [Separating_line_group_engraver](http://lilypond.org/doc/v2.20/Documentation/internals/separating_005fline_005fgroup_005fengraver)
-- [Solmisasi_key_engraver](../custom-engravers/#solmisasi_key_engraver)
-- [Solmisasi_time_signature_engraver](../custom-engravers/#solmisasi_time_signature_engraver)
+- [Solmisasi_key_engraver](./custom-engravers.html#solmisasi_key_engraver)
+- [Solmisasi_time_signature_engraver](./custom-engravers.html#solmisasi_time_signature_engraver)
 - [Time_signature_engraver](http://lilypond.org/doc/v2.20/Documentation/internals/time_005fsignature_005fengraver)
 
 </div>

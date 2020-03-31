@@ -2,6 +2,7 @@
 layout: default
 nav_order: 3
 title: Getting Started
+permalink: /getting-started/
 ---
 
 # Getting Started with _solmisasi-lily_
@@ -56,10 +57,10 @@ Save it to `getting-started-example-01.ly`, and compile it using simple Lilypond
 
 To 'convert' that standard notation to _solmisasi_, we need:
 {: .fs-5 }
-1. this library to be included at the top of the snippet,
-2. a _music function_, named `\solmisasiMusic`,
-3. a custom Staff context, named `SolmisasiStaff`, and
-4. a custom Voice context, named `SolmisasiVoice`.
+1. this _solmisasi-lily_ library, to be included at the top of the snippet,
+2. a _music function_, named [\solmisasiMusic](../appendices/custom-functions.html#solmisasiMusic),
+3. a custom Staff context, named [SolmisasiStaff](../appendices/custom-contexts.html#solmisasistaff), and
+4. a custom Voice context, named [SolmisasiVoice](../appendices/custom-contexts.html#solmisasivoice).
 {: .fs-5 }
 
 So, let's modify the snippet with this one:
@@ -127,7 +128,7 @@ And the compiled result is:
 <img src="./img/getting-started-example-01-3.png" width="400"/>
 
 But, wait a sec... _How do we know which key signature those solmisasi notes are in?_<br>
-If we are using standard notation, without a key signature being written at the beginning of the score, we all know that the music passage is written in C Major or A Minor key. Meanwhile, _solmisasi_ needs the key signature to be explicitly written out in its commonly-acceptable form. (See [Scales and Key Signatures](../../#scales-and-key-signatures))
+If we are using standard notation, without a key signature being written at the beginning of the score, we all know that the music passage is written in C Major or A Minor key. Meanwhile, _solmisasi_ needs the key signature to be explicitly written out in its commonly-acceptable form. (See [Scales and Key Signatures](../#scales-and-key-signatures))
 {: .fs-5 }
 
 This feature is implemented in a new custom context called `SolmisasiTimeAndKeySignature`. This context is based on the Lilypond's original staff context. So, if we want to use this context, it should be **simultaneously** defined with the `SolmisasiStaff` context.

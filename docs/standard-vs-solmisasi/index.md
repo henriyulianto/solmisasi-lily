@@ -2,6 +2,7 @@
 layout: default
 nav_order: 2
 title: Standard (Western) vs Solmisasi
+permalink: /standard-vs-solmisasi/
 ---
 
 # Standard (Western) vs _Solmisasi_ Music Notation

@@ -3,6 +3,7 @@ layout: default
 title: "Custom Pitch Names"
 nav_order: 5
 parent: APPENDICES
+permalink: /appendices/custom-pitch-names.html
 ---
 
 # Custom _Solmisasi_ Pitch Names

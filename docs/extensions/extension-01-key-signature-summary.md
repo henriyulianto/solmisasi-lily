@@ -4,6 +4,7 @@ nav_order: 1
 title: "Extension: 'key-signature-summary'"
 parent: EXTENSIONS
 ext_name: "key-signature-summary"
+permalink: /extensions/extension-01-key-signature-summary.html
 ---
 
 # {{ page.title }}
@@ -22,7 +23,7 @@ Description:
 > This extension contains some necessary helper functions to summarize all key signature changes throughout the given music. The key signature summary is written to a custom header property.
 
 Main function(s):
-> [\updateKeySignatureSummary](../../appendices/custom-functions/#updateKeySignatureSummary) [void] - _music_ (music) _property-name_ (symbol)
+> [\updateKeySignatureSummary](../appendices/custom-functions.html#updateKeySignatureSummary) [void] - _music_ (music) _property-name_ (symbol)
 
 Example of Usage:
 ```
