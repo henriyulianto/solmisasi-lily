@@ -6,7 +6,6 @@ test*/
 *.log
 
 *.md~*
-/Gemfile.lock
 /docs/*/*.ly
 /docs/*/*.pdf
 /docs/ly
@@ -22,3 +21,5 @@ _site
 
 # Temporary Lilypond files
 *tmp-lilypond*
+Gemfile.lock
+jekyll_serve.bat

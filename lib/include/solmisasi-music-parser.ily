@@ -861,6 +861,8 @@
         newmus))
     ) ; end solmisasiLyric
 
+  (define solmisasiLyrics solmisasiLyric)
+
   ) % end
 
 

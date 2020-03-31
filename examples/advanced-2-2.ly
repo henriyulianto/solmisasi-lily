@@ -118,7 +118,7 @@ music = \solmisasiMusic {
 
 }
 
-lyric = \solmisasiLyric \lyricmode {
+lyric = \solmisasiLyrics \lyricmode {
   ma ma ma ma ma ma ma ma
   ma ma ma ma ma ma ma moo __
   ma ma ma ma ma ma ma ma
