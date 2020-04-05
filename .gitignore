@@ -23,3 +23,9 @@ _site
 *tmp-lilypond*
 Gemfile.lock
 jekyll_serve.bat
+
+snippets/
+
+test\.txt
+
+examples/
