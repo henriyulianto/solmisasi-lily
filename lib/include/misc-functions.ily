@@ -92,6 +92,102 @@
         (ly:music? m)
         (ly:moment<? ZERO-MOMENT (ly:music-length m))))
 
+%% For chords open and close lines
+
+#(define (span-point side common dir)
+   (let ((iv
+          ; compatible with 2.19 onwards -vv
+          (ly:generic-bound-extent side common)))
+     ;(ly:grob-robust-relative-extent side common X)))
+     (if (interval-empty? iv)
+         (ly:grob-relative-coordinate side common X)
+         (interval-bound iv dir))))
+
+#(define (close-divisi-stencil grob)
+   (let* ((left-bound (ly:spanner-bound grob LEFT))
+          (right-bound (ly:spanner-bound grob RIGHT))
+          (common (ly:grob-common-refpoint left-bound right-bound X))
+          (left-span (span-point left-bound common RIGHT))
+          (right-span (span-point right-bound common LEFT))
+          (span-length (- right-span left-span))
+          (usable-length
+           (- span-length
+             (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
+             (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
+          (base-markup
+             ;(grob-interpret-markup grob
+             #{
+               \markup {
+                 \overlay {
+                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
+                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
+                 }
+               }
+             #})
+          (note-height
+           (* 1.8
+             (interval-length
+              (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
+          (bottom-y 1.2)
+          (top-y (- note-height bottom-y))
+          (middle-y (* 0.5 (+ bottom-y top-y))))
+     (grob-interpret-markup grob
+       (markup
+        #:line
+        (#:with-dimensions
+         (cons 1.0e-4 1.0e-4)
+         (cons 1.0e-4 1.0e-4)
+         (#:path
+          0.13
+          (list
+           (list (quote moveto) 1.7 (+ 0.25 bottom-y))
+           (list (quote lineto) (+ 1.7 usable-length) (+ 0.25 middle-y))
+           (list (quote lineto) 1.7 (+ 0.25 top-y)))))))
+     ))
+
+#(define (open-divisi-stencil grob)
+   (let* ((left-bound (ly:spanner-bound grob LEFT))
+          (right-bound (ly:spanner-bound grob RIGHT))
+          (common (ly:grob-common-refpoint left-bound right-bound X))
+          (left-span (span-point left-bound common RIGHT))
+          (right-span (span-point right-bound common LEFT))
+          (span-length (- right-span left-span))
+          (usable-length
+           (- span-length
+             (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
+             (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
+          (base-markup
+             ;(grob-interpret-markup grob
+             #{
+               \markup {
+                 \overlay {
+                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
+                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
+                 }
+               }
+             #})
+          (note-height
+           (* 1.8
+             (interval-length
+              (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
+          (bottom-y 1.2)
+          (top-y (- note-height bottom-y))
+          (middle-y (* 0.5 (+ bottom-y top-y))))
+     (grob-interpret-markup grob
+       (markup
+        #:line
+        (#:with-dimensions
+         (cons 1.0e-4 1.0e-4)
+         (cons 1.0e-4 1.0e-4)
+         (#:path
+          0.13
+          (list
+           (list (quote moveto) (+ 1.7 usable-length) bottom-y)
+           (list (quote lineto) 1.7 middle-y)
+           (list (quote lineto) (+ 1.7 usable-length) top-y))))))
+     ))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MUSIC/SCHEME/VOID FUNCTIONS
 
 withExtensions =
@@ -316,7 +412,11 @@ beam_grouping_by_time_sig  =
 #(define laEqualsTo               flexibleLa)
 #(define laSamaDengan             flexibleLa) % in Bahasa Indonesia
 #(define transposeTurunSatuOktaf  transposeDownOneOctave) % in Bahasa Indonesia
-#(define transposeNaikSatuOktaf	  transposeUpOneOctave) % in Bahasa Indonesia
+#(define transposeNaikSatuOktaf	 	 transposeUpOneOctave) % in Bahasa Indonesia
+
+%% EXTERNAL LIBRARIES
+\include "imported/shapeII.ily"
+\include "imported/extract-chords.ily"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)

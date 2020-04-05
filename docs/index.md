@@ -9,7 +9,7 @@ permalink: /
 # Let's write _Solmisasi ("notasi angka")_ using Lilypond
 {: .no_toc .fs-9 }
 
-**"solmisasi‐lily"** is a library developed as a workaround on engraving _solmisasi_ numbered music notation that are widely used in Indonesia, using [Lilypond](http://lilypond.org). This library would always be considered in **beta phase**, since some extra works might have to be done by users in engraving such a specific score or sheet music in this notation system.
+**"solmisasi‐lily"** is a library developed as a workaround on engraving _solmisasi_ numbered music notation that is widely used in Indonesia, using [Lilypond](http://lilypond.org). This library would always be considered in **beta phase**, since some extra works might have to be done by users in engraving such a specific score or sheet music in this notation system.
 {: .fs-6 }
 
 [Preamble](#preamble){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 } [Further Reading](#further-reading){: .btn .btn-green .fs-5 .mb-4 .mb-md-0 .mr-2 } [View it on GitHub](https://github.com/henriyulianto/solmisasi-lily){: .btn .fs-5 .mb-4 .mb-md-0 }

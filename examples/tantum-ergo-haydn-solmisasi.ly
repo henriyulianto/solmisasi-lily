@@ -82,7 +82,7 @@ contralti = {
   \relative c'' {
     \clef treble
     \repeat volta 2 {
-      c2 -\tweak extra-offset #'(0 . -0.6)\mf c4\< | c4 c2 <>\! |
+      c2 -\tweak extra-offset #'(0 . -0.6)\mf c4\< | c4 c2 s1*0\! |
       c2 \> c4 | c4 c4 \! r4 |
       e4 ( d4 ) c4 | c4 ( f4 ) d4 | c2 b4 | c2 r4 |
       e2 e4 | e8 ( d8 ) d2 | e2 e4 | e4 d2\fermata |
@@ -99,7 +99,7 @@ tenori = {
   \relative c' {
     \clef "treble_8"
     \repeat volta 2 {
-      g2 -\tweak extra-offset #'(0 . -0.6)\mf g4\< | g8 ( a8 ) a4. ( b8 ) \! |
+      g2 -\tweak extra-offset #'(0 . -0.6)\mf g4\< | g8 ( a8 ) a,4. ( b'8 ) \! |
       c4 \> ( b4 ) a4 | a8 ( g8 ) g4 \! r4 |
       c4 ( b4 ) c4 | c2 a4 | g2 g4 | g2 r4 |
       c2 c4 | c8 ( b8 ) b2 | c2 c4 | c8 ( b8 ) b2\fermata |
@@ -241,6 +241,8 @@ strofab = \lyricmode {
     \context {
       \SolmisasiVoice
       \override Beam.extra-offset = #'(0 . -0.25)
+      \override NoteColumn.skyline-vertical-padding = #0.1
+      \shapeII #'((0.0 0.3)(0 0.2)(0 0.2)(0.0 0.3)) Slur
     }
     \context {
       \SolmisasiTimeAndKeySignature

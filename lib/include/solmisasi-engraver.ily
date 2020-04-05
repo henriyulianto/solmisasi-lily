@@ -37,11 +37,13 @@
    (make-engraver
     (acknowledgers
      ((note-head-interface engraver grob source-engraver)
+      ;(display (event-cause grob))(newline)
       ;; make sure \omit is not in effect (stencil is not #f)
       (if (ly:grob-property-data grob 'stencil)
           ;;(ly:message (_ "  [Solmisasi_*_engraver] NOTE HEAD ENGRAVING\n"))
           (let*
            ((staff-context (ly:translator-context engraver))
+            (music-context (ly:translator-context source-engraver))
             (vocal-type-string
              (markup->string
               (ly:context-property staff-context 'shortInstrumentName "")))
@@ -51,7 +53,7 @@
             (event (event-cause grob))
             (solmisasi-dot-note? (ly:event-property event _DOT_NOTE_PROP #f))
             (solmisasi-rest? (ly:event-property event _REST_PROP #f))
-            (cdr-chords (ly:event-property event 'cdr-chords))
+            (cdr-chords (ly:event-property event 'cdr-chords #f))
             (dur-log (ly:grob-property grob 'duration-log))
             (base-markup
              ;(grob-interpret-markup grob
@@ -64,9 +66,14 @@
                }
              #})
             (stl-base (grob-interpret-markup grob base-markup))
+            (stl-base-Y (ly:stencil-extent stl-base Y))
+            (stl-base-height (interval-length stl-base-Y))
+            (chord-gap 0.6)
+            (chord-down-Y-pos (- 0 (* chord-gap 0.5) (* stl-base-height 0.4)))
+            (chord-up-Y-pos (+ 0 (* chord-gap 0.5) (* stl-base-height 0.5)))
             (dot-circle-stencil (ly:stencil-translate
                                  (make-circle-stencil 0.22 0.001 #t)
-                                 (cons 0.5 -0.2))))
+                                 (cons 0.5 -0.25))))
 
            (if solmisasi-dot-note?
                (if (or (not cdr-chords) (null? cdr-chords))
@@ -80,11 +87,13 @@
                                1
                                1
                                dot-circle-stencil
-                               (- (cdr (ly:stencil-extent stl-base Y)) (car (ly:stencil-extent stl-base Y)) 0.5 ))
+                               (* 0.95 stl-base-height))
                               ) ; end set
                         ) ; end lambda
                       cdr-chords) ; end for-each
                      (ly:grob-set-property! grob 'stencil dotstl)
+                     (ly:grob-set-property! grob 'Y-offset
+                                            (- -0.2 (* 1.0 (+ (* 0.5 stl-base-height) chord-gap))))
                      ) ; end let
                    ) ; end if cdr-chords
                ;; else create number stencil based on the scale degree of the note
@@ -110,95 +119,108 @@
                       0))
                  (stl
                   (grob-interpret-markup grob
-                    (if solmisasi-rest?
-                        #{
-                          \markup {
-                            \lower #0.5
-                            %\with-dimensions-from #base-markup
-                            \solmisasi "0"
-                          }
-                        #}
-                        (if (or (not cdr-chords) (null? cdr-chords))
-                            ; single note
-                            #{
-                              \markup {
-                                \lower #0.5
-                                \solmisasi {
-                                  %\with-dimensions-from #base-markup
-                                  %\hcenter-in
-                                  \not-angka #grob-pitch-solmisasi #base-octave
-                                }
-                              }
-                            #}
-                            ; chords
-                            (let* ((cm
-                                    #{
-                                      \markup {
-                                        \lower #0.5 \solmisasi {
-                                          %\with-dimensions-from #base-markup
-                                          %\hcenter-in
-                                          \not-angka #grob-pitch-solmisasi #base-octave
-                                        }
-                                    } #}))
-                              (for-each
-                               (lambda (ch)
-                                 (set! cm
-                                       #{
-                                         \markup \lower #0.5 {
-                                           \center-column {
-                                             \with-dimensions-from #base-markup \lower #0.5 \solmisasi {
-                                               \not-angka #(ly:music-property ch 'pitch-solmisasi) #base-octave
-                                             }
-                                             #cm
-                                           }
-                                         }
-                                       #})
-                                 ) ; end lambda
-                               cdr-chords) ; end for-each
-                              cm) ; end let
-                            ) ; end if not cdr-chords
-                        )))
+                                         (if solmisasi-rest?
+                                             #{
+                                               \markup {
+                                                 \lower #0.5
+                                                 %\with-dimensions-from #base-markup
+                                                 \solmisasi "0"
+                                               }
+                                             #}
+                                             (if (or (not cdr-chords) (null? cdr-chords))
+                                                 ; single note
+                                                 #{
+                                                   \markup {
+                                                     \lower #0.5
+                                                     \solmisasi {
+                                                       %\with-dimensions-from #base-markup
+                                                       %\hcenter-in
+                                                       \not-angka #grob-pitch-solmisasi #base-octave
+                                                     }
+                                                   }
+                                                 #}
+                                                 ; chords
+                                                 (let* ((cm
+                                                         #{
+                                                           \markup \fontsize #-0.4 {
+                                                             \lower #0.5
+                                                             \solmisasi {
+                                                               %\with-dimensions-from #base-markup
+                                                               %\hcenter-in
+                                                               \not-angka #grob-pitch-solmisasi #base-octave
+                                                             }
+                                                         } #}))
+                                                   (for-each
+                                                    (lambda (ch)
+                                                      (set! cm
+                                                            #{
+                                                              \markup {
+                                                                \center-column {
+                                                                  \vspace #chord-gap
+                                                                  \overlay {
+                                                                    \translate #(cons 0 chord-down-Y-pos) #cm
+                                                                    \translate #(cons 0 chord-up-Y-pos)
+                                                                    \with-dimensions-from \fontsize #-0.4 #base-markup
+                                                                    \fontsize #-0.4 \lower #0.5 \solmisasi {
+                                                                      \not-angka #(ly:music-property ch 'pitch-solmisasi) #base-octave
+                                                                    }
+                                                                  }
+                                                                }
+                                                              }
+                                                            #})
+                                                      ) ; end lambda
+                                                    cdr-chords) ; end for-each
+                                                   cm) ; end let
+                                                 ) ; end if not cdr-chords
+                                             )))
                  )
-                (if (positive? (length cdr-chords))
-                    (ly:grob-set-property! grob 'Y-offset
-                      (-
-                       (- (cdr (ly:stencil-extent stl Y)) (car (ly:stencil-extent stl Y)))
-                       (- (cdr (ly:stencil-extent stl-base Y)) (car (ly:stencil-extent stl-base Y)))
-                       ))
-                    ) ; end if
                 ; set stencil
-                (ly:grob-set-property! grob 'Y-extent
-                  (ly:stencil-extent stl Y))
                 (ly:grob-set-property! grob 'stencil stl)
+                (ly:grob-set-property! grob 'Y-extent
+                                       (ly:stencil-extent stl Y))
+                (if cdr-chords
+                    (begin
+                     (ly:grob-set-property! grob 'stencil
+                                            (ly:stencil-stack empty-stencil Y DOWN stl 0.5 0.3))
+                     (ly:grob-set-property! grob 'Y-offset
+                                            (* 0.5 (+ (* 0.5 stl-base-height) chord-gap)))
+                     (ly:grob-set-property! grob 'Y-extent
+                                            (cons
+                                             (car (ly:stencil-extent stl Y))
+                                             (- (cdr (ly:stencil-extent stl Y))
+                                                (* 1.0 (+ (* 0.65 stl-base-height) chord-gap)))))
+                     (ly:grob-set-property! grob 'springs-and-rods #t)
+                     )
+                    ) ; end if
                 ))
 
            (if (eq? (ly:grob-property grob 'style) 'cross)
                (ly:grob-set-property! grob 'stencil
-                 (grob-interpret-markup grob
-                   #{
-                     \markup {
-                       \raise #0.2
-                       \musicglyph #"noteheads.s2cross"
-                     }
-                   #})))
+                                      (grob-interpret-markup grob
+                                                             #{
+                                                               \markup {
+                                                                 \raise #0.2
+                                                                 \musicglyph #"noteheads.s2cross"
+                                                               }
+                                                             #})))
            (if (eq? (ly:grob-property grob 'style) 'xcircle)
                (ly:grob-set-property! grob 'stencil
-                 (grob-interpret-markup grob
-                   #{
-                     \markup {
-                       \raise #0.2
-                       \musicglyph #"noteheads.s2xcircle"
-                     }
-                   #})))
+                                      (grob-interpret-markup grob
+                                                             #{
+                                                               \markup {
+                                                                 \raise #0.2
+                                                                 \musicglyph #"noteheads.s2xcircle"
+                                                               }
+                                                             #})))
            (if (eq? (ly:grob-property grob 'style) 'triangle)
                (ly:grob-set-property! grob 'stencil
-                 (grob-interpret-markup grob
-                   #{
-                     \markup {
-                       \raise #0.2
-                       \musicglyph #"noteheads.u1triangle"
-                     }
-                   #})))
+                                      (grob-interpret-markup grob
+                                                             #{
+                                                               \markup {
+                                                                 \raise #0.2
+                                                                 \musicglyph #"noteheads.u1triangle"
+                                                               }
+                                                             #})))
            ))))))
 
 % #(define Solmisasi_rest_engraver
@@ -273,8 +295,8 @@
              (if key-is-changed
                  (begin
                   (ly:grob-set-property! grob 'stencil
-                    (grob-interpret-markup grob
-                      #{ \markup { \boxNadaDasar #solmisasi-key-sig } #}))
+                                         (grob-interpret-markup grob
+                                                                #{ \markup { \boxNadaDasar #solmisasi-key-sig } #}))
                   (ly:grob-set-property! grob 'Y-offset 0.7))
                  (ly:grob-set-property! grob 'stencil #f))
              (set! current-key-sig solmisasi-key-sig))))))))
@@ -335,8 +357,8 @@
                                     last-pitch-alter)))
                  )
                 (ly:grob-set-property! grob 'stencil
-                  (grob-interpret-markup grob
-                    #{ \markup { \ekuivalensiNada #last-pitch #base-octave } #}))
+                                       (grob-interpret-markup grob
+                                                              #{ \markup { \ekuivalensiNada #last-pitch #base-octave } #}))
                 (ly:grob-set-property! grob 'whiteout #t)
                 (ly:grob-set-property! grob 'Y-offset -1.15))
                (ly:grob-set-property! grob 'stencil #f))))))))
@@ -357,23 +379,23 @@
                     current-time-sig))
                (stl
                 (grob-interpret-markup grob
-                  #{
-                    \markup {
-                      \larger \bold \solmisasi
-                      \fraction
-                      #(string-append
-                        " "
-                        (number->string (car solmisasi-time-sig))
-                        " ")
-                      #(string-append
-                        " "
-                        (number->string (cdr solmisasi-time-sig))
-                        " ")
-                    }
-                  #}))
+                                       #{
+                                         \markup {
+                                           \larger \bold \solmisasi
+                                           \fraction
+                                           #(string-append
+                                             " "
+                                             (number->string (car solmisasi-time-sig))
+                                             " ")
+                                           #(string-append
+                                             " "
+                                             (number->string (cdr solmisasi-time-sig))
+                                             " ")
+                                         }
+                                       #}))
                (key-sig-stl
                 (grob-interpret-markup grob
-                  #{\markup \center-align { \boxNadaDasar #'(1 . (ly:make-pitch 0 0 0)) }#}))
+                                       #{\markup \center-align { \boxNadaDasar #'(1 . (ly:make-pitch 0 0 0)) }#}))
                (key-sig-X-extent
                 (ly:stencil-extent key-sig-stl X))
                (extra-X
@@ -392,10 +414,10 @@
           (x-scale (+ 0.8 (/ 1.2 x-ext))))
      ;; (display x-ext)(newline)
      (ly:grob-set-property! grob 'stencil
-       (ly:stencil-translate
-        (ly:stencil-scale (ly:grob-property grob 'stencil) x-scale 1)
-        (cons 0.5 0))
-       )))
+                            (ly:stencil-translate
+                             (ly:stencil-scale (ly:grob-property grob 'stencil) x-scale 1)
+                             (cons 0.5 0))
+                            )))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_ENGRAVER_LOADED #t)

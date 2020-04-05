@@ -228,9 +228,9 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \override DynamicLineSpanner.Y-extent = #'(1.5 . -1.5)
     \override DynamicText.extra-offset = #'(0 . -0.5)
     \override Hairpin.extra-offset = #'(0 . -0.5)
+    %\override DynamicText.Y-offset = #-1.0
     \override Hairpin.whiteout = #1.5
     \override TextScript.Y-extent = #'(1.5 . -1.5)
-    \override Beam.extra-offset = #'(0 . -0.2)
     \override TupletBracket.shorten-pair = #'(0 . 0)
     \override TupletNumber.font-size = #0
     \override Glissando.bound-details.left.Y = #-1.2
@@ -282,12 +282,14 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 
     \override Stem.thickness = #14
     \override Stem.X-offset = #0.65
-    \override Stem.length-fraction = #0.8
+    \override Stem.length = #2
+    \override Stem.length-fraction = #0.5
     \override Stem.color = #blue
     \override Stem.direction = #UP
     \override Stem.transparent = ##t
     \override NoteHead.Y-offset = #-0.65
-    \override Tie.details.height-limit = #1.1
+    \override Tie.details.height-limit = #1.3
+    %\override Slur.details.height-limit = #1.3
     \override TextScript.direction = #UP
     \override TextSpanner.direction = #UP
     \slurDown
@@ -302,11 +304,14 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \override Beam.transparent = ##f
     \override Beam.beam-thickness = #0.15
     \override Beam.length-fraction = #0.5
+    \override Beam.extra-offset = #'(0 . 0.65)
     \override TupletBracket.bracket-visibility = ##t
     \override Dots.staff-position = #2
     \override VerticalAxisGroup.default-staff-staff-spacing =
     #'((basic-distance . 0)
        (padding . 0.5))
+
+    \shapeII #'((0.05 0.25)(0 0.3)(0 0.3)(-0.05 0.25)) Slur
 
     \accepts SolmisasiVoice
   }

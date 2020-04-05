@@ -97,8 +97,8 @@
                  (ly:stencil-translate
                   octave-dot-stencil
                   (if (> diff-octave 0)
-                      (cons center-x (+ end-y (* mag 0.5)))
-                      (cons center-x (- start-y (* mag 0.5))))
+                      (cons center-x (+ end-y (* mag 0.4)))
+                      (cons center-x (- start-y (* mag 0.4))))
                   ))))
      ;; return
      number-stencil))
