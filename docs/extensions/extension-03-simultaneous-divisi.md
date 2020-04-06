@@ -27,7 +27,7 @@ Layout objects:
 > - _Close Divisi_ spanner: a spanner grob which indicates a change in the music from simultaneous music (limited to two voices) to one-voice music.
 > Notes:
 > - Originally, those spanners are **text spanners**. Some needed text spanners settings are incorporated and used in their internal calculation routine, such as the `'bound-details` settings (`left.padding` and `right.padding`).
-> - I decided to use dashed-line style in drawing those spanners in order to make it visually different with the Hairpin object.
+> - I decided to use dashed-line style in drawing those spanners in order to make it visually different from the Hairpin object.
 
 Main command(s):
 > - `\voiceOne`
