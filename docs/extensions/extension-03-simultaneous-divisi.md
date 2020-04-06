@@ -10,7 +10,7 @@ permalink: /extensions/extension-03-simultaneous-divisi.html
 # {{ page.title }}
 {: .no_toc .fs-6 }
 
-Bundled in **solmisasi-lily-v1.0.6-beta** and up
+Bundled since **solmisasi-lily-v1.0.6-beta**
 {: .label .label-green }
 
 <div class="code-example" markdown="1">

@@ -10,7 +10,7 @@ permalink: /extensions/extension-02-time-signature-summary.html
 # {{ page.title }}
 {: .no_toc .fs-6 }
 
-Bundled in **solmisasi-lily-v1.0.5.1-beta** and up
+Bundled since **solmisasi-lily-v1.0.5.1-beta**
 {: .label .label-green }
 
 <div class="code-example" markdown="1">

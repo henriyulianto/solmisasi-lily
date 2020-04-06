@@ -26,7 +26,7 @@ It is very possible that this library can't do some stuffs users want to produce
 An extension can be provided either as a _free_ product, or as a _paid_ one, by _anyone_. As the author of this library, I will always try to provide free extensions as many as possible. However, considering that some extended features are more complicated and require deeper knowledge in Lilypond/Scheme programming, there are possibilities that this kind of extensions will not be freely provided.
 {: .fs-5 }
 
-As of the latest _solmisasi-lily_ version ({{ site.archive_version }}), here is the list of available extensions, published by me.
+As of the latest _solmisasi-lily_ version ({{ site.github.latest_release.tag_name }}), here is the list of available extensions, published by me.
 {: .fs-5 }
 
 <style>
@@ -39,8 +39,9 @@ th:first-of-type, td:first-of-type {
 
 | Nr. | Name | Details | Free? | Bundled? |
 |:----|:-----|:--------|:------|:---------|
-|  1. | `key-signature-summary`  | [<i class="fas fa-external-link-alt"></i> Read This](./extension-01-key-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
-|  2. | `time-signature-summary` | [<i class="fas fa-external-link-alt"></i> Read This](./extension-02-time-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> in v1.0.5.1-beta and up |
+|  1. | `key-signature-summary`  | [<i class="fas fa-external-link-alt"></i> Read This](./extension-01-key-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> since v1.0.5.1-beta |
+|  2. | `time-signature-summary` | [<i class="fas fa-external-link-alt"></i> Read This](./extension-02-time-signature-summary.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> since v1.0.5.1-beta |
+|  3. | `simultaneous-divisi`    | [<i class="fas fa-external-link-alt"></i> Read This](./extension-03-simultaneous-divisi.html) | <i class="fas fa-check"></i> | <i class="fas fa-check"></i> since v1.0.6-beta   |
 
 ---
 
