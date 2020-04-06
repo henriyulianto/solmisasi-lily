@@ -112,37 +112,40 @@
           (span-length (- right-span left-span))
           (usable-length
            (- span-length
-             (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
-             (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
+              (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
+              (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
           (base-markup
-             ;(grob-interpret-markup grob
-             #{
-               \markup {
-                 \overlay {
-                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
-                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
-                 }
+           ;(grob-interpret-markup grob
+           #{
+             \markup {
+               \overlay {
+                 \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
+                 \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
                }
-             #})
+             }
+           #})
           (note-height
-           (* 1.8
-             (interval-length
-              (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
+           (* 1.85
+              (interval-length
+               (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
           (bottom-y 1.2)
           (top-y (- note-height bottom-y))
-          (middle-y (* 0.5 (+ bottom-y top-y))))
+          (middle-y (* 0.5 (+ bottom-y top-y)))
+          (inc-y 0.25)
+          (inc-x 0.2)
+          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a lineto stroke"
+                         0.15
+                         (+ 1.7 inc-x) 											(+ inc-y bottom-y)
+                         (+ 1.7 usable-length (* -1 inc-x)) 	(+ inc-y middle-y)
+                         (+ 1.7 inc-x) 											(+ inc-y top-y)))
+          )
      (grob-interpret-markup grob
-       (markup
-        #:line
-        (#:with-dimensions
-         (cons 1.0e-4 1.0e-4)
-         (cons 1.0e-4 1.0e-4)
-         (#:path
-          0.13
-          (list
-           (list (quote moveto) 1.7 (+ 0.25 bottom-y))
-           (list (quote lineto) (+ 1.7 usable-length) (+ 0.25 middle-y))
-           (list (quote lineto) 1.7 (+ 0.25 top-y)))))))
+                            #{
+                              \markup {
+                                \with-dimensions #'(0.0001 . 0.0001) #'(0.0001 . 0.0001)
+                                \postscript #pscmd
+                              }
+                            #})
      ))
 
 #(define (open-divisi-stencil grob)
@@ -154,37 +157,40 @@
           (span-length (- right-span left-span))
           (usable-length
            (- span-length
-             (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
-             (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
+              (if (zero? (ly:item-break-dir left-bound)) 0.4 0)
+              (if (zero? (ly:item-break-dir right-bound)) 0.4 0)))
           (base-markup
-             ;(grob-interpret-markup grob
-             #{
-               \markup {
-                 \overlay {
-                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
-                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
-                 }
+           ;(grob-interpret-markup grob
+           #{
+             \markup {
+               \overlay {
+                 \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
+                 \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
                }
-             #})
+             }
+           #})
           (note-height
-           (* 1.8
-             (interval-length
-              (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
+           (* 1.85
+              (interval-length
+               (ly:stencil-extent (grob-interpret-markup grob base-markup) Y))))
           (bottom-y 1.2)
           (top-y (- note-height bottom-y))
-          (middle-y (* 0.5 (+ bottom-y top-y))))
+          (middle-y (* 0.5 (+ bottom-y top-y)))
+          (inc-y 0.1)
+          (inc-x 0.2)
+          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a lineto stroke"
+                         0.15
+                         (+ 1.7 usable-length (* -1 inc-x))		(+ inc-y bottom-y)
+                         (+ 1.7 inc-x) 									  		(+ inc-y middle-y)
+                         (+ 1.7 usable-length (* -1 inc-x))		(+ inc-y top-y)))
+          )
      (grob-interpret-markup grob
-       (markup
-        #:line
-        (#:with-dimensions
-         (cons 1.0e-4 1.0e-4)
-         (cons 1.0e-4 1.0e-4)
-         (#:path
-          0.13
-          (list
-           (list (quote moveto) (+ 1.7 usable-length) bottom-y)
-           (list (quote lineto) 1.7 middle-y)
-           (list (quote lineto) (+ 1.7 usable-length) top-y))))))
+                            #{
+                              \markup {
+                                \with-dimensions #'(0.0001 . 0.0001) #'(0.0001 . 0.0001)
+                                \postscript #pscmd
+                              }
+                            #})
      ))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -253,17 +259,17 @@ music-cons =
                      (music-is-of-type? (car elems) 'sequential-music)))))
     (cond
      (rem (make-music 'SequentialMusic 'elements
-            (cons (music-cons el (car elems)) (cdr elems))))
+                      (cons (music-cons el (car elems)) (cdr elems))))
      (rel (make-music 'RelativeOctaveMusic 'element
-            (music-cons el elem)))
+                      (music-cons el elem)))
      (sim (make-music 'SimultaneousMusic 'elements
-            (if elsim
-                (append elelems elems)
-                (cons (music-cons el (car elems)) (cdr elems)))))
+                      (if elsim
+                          (append elelems elems)
+                          (cons (music-cons el (car elems)) (cdr elems)))))
      (seq (make-music 'SequentialMusic 'elements
-            (if elseq
-                (append elelems elems)
-                (cons el elems))))
+                      (if elseq
+                          (append elelems elems)
+                          (cons el elems))))
      (else (ly:error "Not a type of music to cons")))))
 
 silence =
@@ -319,83 +325,83 @@ beam_grouping_by_time_sig  =
 #(define-music-function (ts) (fraction?)
    (cond
     ((equal? ts (cons 2 4)) ; 2/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 3 4)) ; 3/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 ) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 ) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 4 4)) ; 4/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 5 4)) ; 5/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 6 4)) ; 6/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 2 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 2 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 7 4)) ; 7/4
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 2 2 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 2 2 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 2 3)) ; 2/2
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (2 2 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (2 2 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 3 8)) ; 3/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (1) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (1) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 5 8)) ; 6/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (3 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (3 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 6 8)) ; 6/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (3 3) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (3 3) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 7 8)) ; 6/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (3 2 2) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (3 2 2) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 9 8)) ; 9/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (3 3 3) ) )
-                                    ) )
-      #})
+                            #{
+                              \set beamExceptions = #'( (end .
+                                                             ( ( (1 . 8) . (3 3 3) ) )
+                                                             ) )
+                            #})
     ((equal? ts (cons 12 8)) ; 12/8
-      #{
-        \set beamExceptions = #'( (end .
-                                    ( ( (1 . 8) . (3 3 3 3) ) )
-                                    ) )
-      #})
+                             #{
+                               \set beamExceptions = #'( (end .
+                                                              ( ( (1 . 8) . (3 3 3 3) ) )
+                                                              ) )
+                             #})
     (else
      #{ {} #})
     ))

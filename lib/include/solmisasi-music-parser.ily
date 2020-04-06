@@ -155,7 +155,7 @@
                 \once\override Beam.stencil =
                 #(lambda (grob)
                    (ly:stencil-combine-at-edge
-                    (ly:stencil-translate-axis (ly:beam::print grob) 0.4 Y)
+                    (ly:stencil-translate-axis (ly:beam::print grob) 0.0 Y)
                     Y DOWN
                     (ly:beam::print grob)
                     3.2))

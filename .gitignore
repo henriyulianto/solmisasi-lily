@@ -29,3 +29,5 @@ snippets/
 test\.txt
 
 examples/
+
+jekyll_serve.sh

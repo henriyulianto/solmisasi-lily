@@ -223,37 +223,6 @@
                                                              #})))
            ))))))
 
-% #(define Solmisasi_rest_engraver
-%    (make-engraver
-%     (acknowledgers
-%      ((rest-interface engraver grob source-engraver)
-%       ;; make sure \omit is not in effect (stencil is not #f)
-%       (if (ly:grob-property-data grob 'stencil)
-%           (let* ((staff-context (ly:translator-context engraver))
-%                  (event (event-cause grob))
-%                  (solmisasi-rest? (ly:event-property event _REST_PROP #f))
-%                  (stl
-%                   (grob-interpret-markup grob
-%                     #{ \markup {
-%                       \lower #0.65 \concat {
-%                         \fontsize #-8 " " \solmisasi "0"
-%                       }
-%                     } #}))
-%                  (stl-x (ly:stencil-extent stl X))
-%                  (stl-y (ly:stencil-extent stl Y)))
-%             ; set stencil
-%             ;(if solmisasi-rest?
-%             ;(begin
-%             (ly:grob-set-property! grob 'Y-extent stl-y)
-%             (ly:grob-set-property! grob 'X-extent stl-x)
-%             (ly:grob-set-property! grob 'staff-position -1)
-%             (ly:grob-set-property! grob 'stencil stl)
-%             ;)) ; end if solmisasi-rest?
-%             ) ; end let
-%           ) ; end if stencil
-%       ))) ; end make-engraver
-%    ) % end define
-
 #(define Solmisasi_key_engraver
    (let* ((current-key-sig (cons 1 (ly:make-pitch -6 0 0)))
           (last-event-mom (ly:make-moment 99999))
