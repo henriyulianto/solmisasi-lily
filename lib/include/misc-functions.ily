@@ -132,12 +132,15 @@
           (top-y (- note-height bottom-y))
           (middle-y (* 0.5 (+ bottom-y top-y)))
           (inc-y 0.25)
-          (inc-x 0.2)
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a lineto stroke"
+          (inc-x 0.0)
+          (left-x 1.5)
+          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
-                         (+ 1.7 inc-x) 											(+ inc-y bottom-y)
-                         (+ 1.7 usable-length (* -1 inc-x)) 	(+ inc-y middle-y)
-                         (+ 1.7 inc-x) 											(+ inc-y top-y)))
+                         (+ left-x usable-length (* -1 inc-x)) 	(+ inc-y middle-y)
+                         (+ left-x inc-x) 											(+ inc-y bottom-y)
+                         (+ left-x usable-length (* -1 inc-x))	(+ inc-y middle-y)
+                         (+ left-x inc-x)											(+ inc-y top-y)
+                         ))
           )
      (grob-interpret-markup grob
                             #{
@@ -178,11 +181,14 @@
           (middle-y (* 0.5 (+ bottom-y top-y)))
           (inc-y 0.1)
           (inc-x 0.2)
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a lineto stroke"
+          (left-x 1.5)
+          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
-                         (+ 1.7 usable-length (* -1 inc-x))		(+ inc-y bottom-y)
-                         (+ 1.7 inc-x) 									  		(+ inc-y middle-y)
-                         (+ 1.7 usable-length (* -1 inc-x))		(+ inc-y top-y)))
+                         (+ left-x inc-x) 									  		(+ inc-y middle-y)
+                         (+ left-x usable-length (* -1 inc-x))	(+ inc-y bottom-y)
+                         (+ left-x inc-x) 									  		(+ inc-y middle-y)
+                         (+ left-x usable-length (* -1 inc-x))	(+ inc-y top-y)
+                         ))
           )
      (grob-interpret-markup grob
                             #{
