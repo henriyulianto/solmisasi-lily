@@ -35,6 +35,8 @@
 
 #(define Solmisasi_note_head_engraver
    (make-engraver
+    ((initialize trans)
+     (solmisasi:log "- Engraving solmisasi notes in context ~a" (ly:translator-context trans)))
     (acknowledgers
      ((note-head-interface engraver grob source-engraver)
       ;(display (event-cause grob))(newline)
@@ -228,6 +230,8 @@
           (last-event-mom (ly:make-moment 99999))
           (key-printed? #f))
      (make-engraver
+      ((initialize trans)
+       (solmisasi:log "- Engraving key-signatures in context ~a" (ly:translator-context trans)))
       (acknowledgers
        ((key-signature-interface engraver grob source-engraver)
         ;; make sure \omit is not in effect (stencil is not #f)
@@ -335,6 +339,8 @@
 #(define Solmisasi_time_signature_engraver
    (let ((current-time-sig (cons 4 4)))
      (make-engraver
+      ((initialize trans)
+       (solmisasi:log "- Engraving time signatures in context ~a" (ly:translator-context trans)))
       (acknowledgers
        ( (time-signature-interface engraver grob source-engraver)
          ;; make sure \omit is not in effect (stencil is not #f)
@@ -391,4 +397,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_ENGRAVER_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi engraver module has been loaded.\n"))
+     (solmisasi:log "* Solmisasi engraver module has been loaded."))

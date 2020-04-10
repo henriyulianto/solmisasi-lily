@@ -23,11 +23,14 @@
 
 %% Taken from openLilyLib's os-path.scm
 
+#(define-public (ly:programming-error fmt . vals)
+   #f)
+
 #(use-modules
   (lily)
   (ice-9 regex))
 
-#(define _VERSION "1.0.6-beta")
+#(define _VERSION "1.0.8-beta")
 #(define _SOLMISASI_LILY_LOADED #f)
 
 %% #t when running a Windows OS
@@ -213,12 +216,13 @@
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
     _SOLMISASI_LIB_DIR
-    "solmisasi-music-parser"))
+    "solmisasi-layout-definition"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
     _SOLMISASI_LIB_DIR
-    "solmisasi-layout-definition"))
+    "solmisasi-music-parser"))
 
 #(set! _SOLMISASI_LILY_LOADED #t)
-#(ly:message "Finished loading \"solmisasi\" library.\n")
+#(ly:message "Finished loading core \"solmisasi\" library.
+==========================================")

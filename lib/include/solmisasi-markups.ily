@@ -195,4 +195,4 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MARKUPS_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi markups module has been loaded.\n"))
+     (solmisasi:log "* Solmisasi markups module has been loaded."))

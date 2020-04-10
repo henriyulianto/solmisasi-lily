@@ -58,8 +58,8 @@ openLogfile =
             (begin
              ;; console output
              (ly:error location
-               (format
-                (string-append "solmisasi-lily: " fmt) vals))
+                       (format
+                        (string-append "solmisasi-lily: " fmt) vals))
              ;; logfile output
              (format solmisasi-logfile fmt vals))
             (begin
@@ -69,7 +69,7 @@ openLogfile =
               (format
                (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
-               (format "error: ~a\n" (*location*)) fmt))))))
+                     (format "error: ~a\n" (*location*)) fmt))))))
 
 % Warning
 #(define (solmisasi:warn fmt . vals)
@@ -79,23 +79,24 @@ openLogfile =
         (if (ly:input-location? (*location*))
             (begin
              (ly:input-warning (*location*)
-               (format
-                (string-append "solmisasi-lily: " fmt) vals))
+                               (format
+                                (string-append "solmisasi-lily: " fmt) vals))
              (format solmisasi-logfile fmt vals))
             (begin
              (ly:warning
               (format
                (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
-               (format "warning: ~a\n" (*location*)) fmt))))))
+                     (format "warning: ~a\n" (*location*)) fmt))))))
 
 % Logging
 #(define (solmisasi:log fmt . vals)
    (if (>= solmisasi-loglevel solmisasi-loglevel-log)
        (begin
         (openLogfile)
-        (ly:message
-         (format (string-append "solmisasi-lily: " fmt) vals))
+        (format (current-error-port) "solmisasi-lily: ")
+        (format (current-error-port) fmt vals)
+        (format (current-error-port) "\n")
         (format solmisasi-logfile fmt vals))))
 
 % Debug output
@@ -106,17 +107,17 @@ openLogfile =
         (if (ly:input-location? (*location*))
             (begin
              (ly:input-message (*location*)
-               (format
-                (string-append "solmisasi-lily: " fmt) vals))
+                               (format
+                                (string-append "solmisasi-lily: " fmt) vals))
              (format solmisasi-logfile fmt vals))
             (begin
              (ly:message
               (format
                (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
-               (format "log: ~a\n" (*location*)) fmt))))))
+                     (format "log: ~a\n" (*location*)) fmt))))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define LOGGING_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Logging module has been loaded.\n"))
+     (solmisasi:log "* Logging module has been loaded."))

@@ -25,11 +25,10 @@ Gemfile.lock
 jekyll_serve.bat
 
 snippets/
-
-test\.txt
-
 examples/
-
+production/
+test\.txt
 jekyll_serve.sh
-
 favicon_150x150.ps
+
+bugs/

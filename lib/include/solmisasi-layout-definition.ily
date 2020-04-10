@@ -61,7 +61,6 @@ DbBars =
    (let ((line-count 0))
      (if (ly:grob? staff)
          (let ((line-pos (ly:grob-property staff 'line-positions '())))
-
            (set! line-count (if (pair? line-pos)
                                 (length line-pos)
                                 (ly:grob-property staff 'line-count 0)))))
@@ -87,9 +86,9 @@ of X and a line-position of X indicate the same vertical position."
       (lambda (dp)
         (if (equal? #t transparent) (set! dy -0.35))
         (set! stencil (ly:stencil-add stencil
-                        (ly:stencil-translate-axis dot
-                          (+ (* dp (/ staff-space 2)) dy)
-                          Y))))
+                                      (ly:stencil-translate-axis dot
+                                                                 (+ (* dp (/ staff-space 2)) dy)
+                                                                 Y))))
       dot-positions)
      stencil))
 
@@ -134,6 +133,85 @@ of X and a line-position of X indicate the same vertical position."
     solmisasi-translation-properties))
 
 forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
+
+solmisasiStaffContextMods = \with {
+  \consists #Solmisasi_note_head_engraver
+  \consists #Solmisasi_equivalence_key_engraver
+  \remove "Ledger_line_engraver"
+
+  \omit Accidental
+  \omit Clef
+  \omit ClefModifier
+  \omit TimeSignature
+  \omit Flag
+  \omit KeyCancellation
+
+  %% Initialisasi property male-vocal
+  male-vocal = ##f
+  transposed-up = ##f
+
+  explicitKeySignatureVisibility = #begin-of-line-invisible
+
+  \override Stem.thickness = #14
+  \override Stem.X-offset = #0.65
+  \override Stem.length = #2
+  \override Stem.length-fraction = #0.5
+  \override Stem.color = #blue
+  \override Stem.direction = #UP
+  \override Stem.transparent = ##t
+  \override NoteHead.Y-offset = #-0.65
+  \override Tie.details.height-limit = #1.3
+  %\override Slur.details.height-limit = #1.3
+  \override TextScript.direction = #UP
+  \override TextSpanner.direction = #UP
+  \slurDown
+  \tupletUp
+
+  \override StaffSymbol.line-count = #5
+  \override StaffSymbol.transparent = ##t
+  \override BarLine.bar-extent = #'(-2 . 2)
+  \override BarLine.gap = #0.8
+  \override BarLine.space-alist.next-note = #'(semi-fixed-space . 1.5)
+  \override InstrumentName.extra-offset = #'(0 . -0.35)
+  \override Beam.transparent = ##f
+  \override Beam.beam-thickness = #0.15
+  \override Beam.length-fraction = #0.5
+  \override Beam.extra-offset = #'(0 . 0.65)
+  \override TupletBracket.bracket-visibility = ##t
+  \override Dots.staff-position = #2
+  \override VerticalAxisGroup.default-staff-staff-spacing =
+  #'((basic-distance . 0)
+     (padding . 0.5))
+
+  \shapeII #'((0.05 0.25)(0 0.3)(0 0.3)(-0.05 0.25)) Slur
+
+  \accepts SolmisasiVoice
+}
+
+solmisasiVoiceContextMods = \with {
+  \consists "Pitch_squash_engraver"
+
+  squashedPosition = #0
+
+  \override DynamicLineSpanner.staff-padding = #1.75
+  \override DynamicLineSpanner.Y-extent = #'(1.5 . -1.5)
+  \override DynamicText.extra-offset = #'(0 . -0.5)
+  \override Hairpin.extra-offset = #'(0 . -0.5)
+  %\override DynamicText.Y-offset = #-1.0
+  \override Hairpin.whiteout = #1.5
+  \override TextScript.Y-extent = #'(1.5 . -1.5)
+  \override TupletBracket.shorten-pair = #'(0 . 0)
+  \override TupletNumber.font-size = #0
+  \override Glissando.bound-details.left.Y = #-1.2
+  \override Glissando.bound-details.right.Y = #0.8
+  \override Glissando.bound-details.left.padding = #0.2
+  \override Glissando.bound-details.right.padding = #0.2
+  \override TieColumn.tie-configuration = #'((-2.65 . -1))
+  \override BreathingSign.text = \markup {
+    \translate #'(0 . -1.5)
+    \musicglyph #"comma"
+  }
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % here goes the snippet: %
@@ -220,28 +298,10 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \name "SolmisasiVoice"
     \alias Voice
 
-    \consists "Pitch_squash_engraver"
-
-    squashedPosition = #0
-
-    \override DynamicLineSpanner.staff-padding = #1.75
-    \override DynamicLineSpanner.Y-extent = #'(1.5 . -1.5)
-    \override DynamicText.extra-offset = #'(0 . -0.5)
-    \override Hairpin.extra-offset = #'(0 . -0.5)
-    %\override DynamicText.Y-offset = #-1.0
-    \override Hairpin.whiteout = #1.5
-    \override TextScript.Y-extent = #'(1.5 . -1.5)
-    \override TupletBracket.shorten-pair = #'(0 . 0)
-    \override TupletNumber.font-size = #0
-    \override Glissando.bound-details.left.Y = #-1.2
-    \override Glissando.bound-details.right.Y = #0.8
-    \override Glissando.bound-details.left.padding = #0.2
-    \override Glissando.bound-details.right.padding = #0.2
-    \override TieColumn.tie-configuration = #'((-2.65 . -1))
-    \override BreathingSign.text = \markup {
-      \translate #'(0 . -1.5)
-      \musicglyph #"comma"
+    \with {
+      \solmisasiVoiceContextMods
     }
+    %\applyMusic \solmisasiMusic \default
   }
 
   \context {
@@ -263,57 +323,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
     \name "SolmisasiStaff"
     \alias Staff
 
-    \consists #Solmisasi_note_head_engraver
-    \consists #Solmisasi_equivalence_key_engraver
-    \remove "Ledger_line_engraver"
-
-    \omit Accidental
-    \omit Clef
-    \omit ClefModifier
-    \omit TimeSignature
-    \omit Flag
-    \omit KeyCancellation
-
-    %% Initialisasi property male-vocal
-    male-vocal = ##f
-    transposed-up = ##f
-
-    explicitKeySignatureVisibility = #begin-of-line-invisible
-
-    \override Stem.thickness = #14
-    \override Stem.X-offset = #0.65
-    \override Stem.length = #2
-    \override Stem.length-fraction = #0.5
-    \override Stem.color = #blue
-    \override Stem.direction = #UP
-    \override Stem.transparent = ##t
-    \override NoteHead.Y-offset = #-0.65
-    \override Tie.details.height-limit = #1.3
-    %\override Slur.details.height-limit = #1.3
-    \override TextScript.direction = #UP
-    \override TextSpanner.direction = #UP
-    \slurDown
-    \tupletUp
-
-    \override StaffSymbol.line-count = #5
-    \override StaffSymbol.transparent = ##t
-    \override BarLine.bar-extent = #'(-2 . 2)
-    \override BarLine.gap = #0.8
-    \override BarLine.space-alist.next-note = #'(semi-fixed-space . 1.5)
-    \override InstrumentName.extra-offset = #'(0 . -0.35)
-    \override Beam.transparent = ##f
-    \override Beam.beam-thickness = #0.15
-    \override Beam.length-fraction = #0.5
-    \override Beam.extra-offset = #'(0 . 0.65)
-    \override TupletBracket.bracket-visibility = ##t
-    \override Dots.staff-position = #2
-    \override VerticalAxisGroup.default-staff-staff-spacing =
-    #'((basic-distance . 0)
-       (padding . 0.5))
-
-    \shapeII #'((0.05 0.25)(0 0.3)(0 0.3)(-0.05 0.25)) Slur
-
-    \accepts SolmisasiVoice
+    \with \solmisasiStaffContextMods
   }
 
   \context {
@@ -457,4 +467,4 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_LAYOUT_DEFINITION_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi layout module has been loaded.\n"))
+     (solmisasi:log "* Solmisasi layout module has been loaded."))

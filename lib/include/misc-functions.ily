@@ -199,6 +199,38 @@
                             #})
      ))
 
+#(define (get-list-index l el)
+   (if (null? l)
+       -1
+       (if (= (car l) el)
+           0
+           (let ((result (get-list-index (cdr l) el)))
+             (if (= result -1)
+                 -1
+                 (1+ result))))))
+
+#(define (count-element-less-than-or-equal el l)
+   (cond
+    ((null? l) 0)
+    (else
+     (+ (if (<= (car l) el) 1 0) (count-element-less-than-or-equal el (cdr l))))))
+
+#(define (get-first-context-id! mus)
+   "Find the name of a ContextSpeccedMusic, possibly naming it"
+   (let ((id (ly:music-property mus 'context-id)))
+     (if (eq? (ly:music-property mus 'name) 'ContextSpeccedMusic)
+         (if (and (string? id)
+                  (not (string-null? id)))
+             id
+             ;; We may reliably give a new context a unique name, but
+             ;; not an existing one
+             (if (ly:music-property mus 'create-new #f)
+                 (let ((id (get-next-unique-voice-name)))
+                   (set! (ly:music-property mus 'context-id) id)
+                   id)
+                 '()))
+         '())))
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% MUSIC/SCHEME/VOID FUNCTIONS
 
@@ -210,7 +242,7 @@ withExtensions =
       (ly:parser-parse-string
        (ly:parser-clone)
        (format "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
-      (solmisasi:log (format "* Extension \"~a\" has been loaded.\n" o))
+      (solmisasi:log (format "* Extension \"~a\" has been loaded." o))
       )
     exts))
 
@@ -433,4 +465,4 @@ beam_grouping_by_time_sig  =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)
 #(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Misc functions module has been loaded.\n"))
+     (solmisasi:log "* Misc functions module has been loaded."))
