@@ -37,6 +37,7 @@
                }
              }
            #})
+          (style (ly:grob-property grob 'style 'dashed-line))
           (note-height
            (* 2.4
               (interval-length
@@ -47,8 +48,9 @@
           (inc-y 0.3)
           (inc-x 0.0)
           (left-x (+ 1.7 left-padding))
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
+          (pscmd (format "~a setlinewidth 1 setlinecap ~a ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
+                         (if (equal? style 'dashed-line) "[0.5 0.5] 0 setdash" "")
                          (+ left-x usable-length (* -1 inc-x)) 	(+ inc-y middle-y)
                          (+ left-x inc-x) 											(+ inc-y bottom-y)
                          (+ left-x usable-length (* -1 inc-x))	(+ inc-y middle-y)
@@ -91,6 +93,7 @@
                }
              }
            #})
+          (style (ly:grob-property grob 'style 'dashed-line))
           (note-height
            (* 2.4
               (interval-length
@@ -101,8 +104,9 @@
           (inc-y -0.6)
           (inc-x 0.0)
           (left-x (+ 1.7 left-padding))
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
+          (pscmd (format "~a setlinewidth 1 setlinecap ~a ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
+                         (if (equal? style 'dashed-line) "[0.5 0.5] 0 setdash" "")
                          (+ left-x inc-x) 									  		(+ inc-y middle-y)
                          (+ left-x usable-length (* -1 inc-x))	(+ inc-y bottom-y)
                          (+ left-x inc-x) 									  		(+ inc-y middle-y)

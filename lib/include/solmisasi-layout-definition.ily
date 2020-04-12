@@ -135,8 +135,6 @@ of X and a line-position of X indicate the same vertical position."
 forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 
 solmisasiStaffContextMods = \with {
-  \consists #Solmisasi_note_head_engraver
-  \consists #Solmisasi_equivalence_key_engraver
   \remove "Ledger_line_engraver"
 
   \omit Accidental
@@ -322,6 +320,9 @@ solmisasiVoiceContextMods = \with {
     \Staff
     \name "SolmisasiStaff"
     \alias Staff
+
+    \consists #Solmisasi_note_head_engraver
+    \consists #Solmisasi_equivalence_key_engraver
 
     \with \solmisasiStaffContextMods
   }

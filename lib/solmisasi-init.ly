@@ -2,23 +2,23 @@
 
 %% switch on debugging.
 #(if (and #t (defined? 'set-debug-cell-accesses!))
-  (set-debug-cell-accesses! 5000))
+     (set-debug-cell-accesses! 5000))
 
 \version "2.20.0"
 
 #(if (guile-v2)
-  (use-modules (ice-9 curried-definitions)))
+     (use-modules (ice-9 curried-definitions)))
 
 #(session-initialize
   (lambda ()
-   ;; we can't use ly:parser-include-string here since that does not
-   ;; actually do any parsing but merely switches inputs, so the
-   ;; session saved by the session initializer after calling this
-   ;; function has not actually started.  A parser clone, in contrast,
-   ;; can run and complete synchronously and shares the module with
-   ;; the current parser.
-   (ly:parser-parse-string (ly:parser-clone)
-    "\\include \"declarations-init.ly\"")))
+    ;; we can't use ly:parser-include-string here since that does not
+    ;; actually do any parsing but merely switches inputs, so the
+    ;; session saved by the session initializer after calling this
+    ;; function has not actually started.  A parser clone, in contrast,
+    ;; can run and complete synchronously and shares the module with
+    ;; the current parser.
+    (ly:parser-parse-string (ly:parser-clone)
+                            "\\include \"declarations-init.ly\"")))
 
 #(note-names-language default-language)
 
@@ -37,8 +37,8 @@
 #(use-modules (ice-9 pretty-print))
 
 $(if (ly:get-option 'include-settings)
-  (ly:parser-include-string
-    (format #f "\\include \"~a\"" (ly:get-option 'include-settings))))
+     (ly:parser-include-string
+      (format #f "\\include \"~a\"" (ly:get-option 'include-settings))))
 
 #(ly:parser-include-string "\\include \"solmisasi.ily\"")
 
@@ -50,8 +50,8 @@ $(if (ly:get-option 'include-settings)
 %%
 
 #(if (and (not version-seen)
-      (defined? 'input-file-name))
-  (version-not-seen-message input-file-name))
+          (defined? 'input-file-name))
+     (version-not-seen-message input-file-name))
 
 #(ly:set-option 'protected-scheme-parsing #f)
 
@@ -78,7 +78,7 @@ $(if (ly:get-option 'include-settings)
             (book-handler book)))))
 
 #(if (eq? expect-error (ly:parser-has-error?))
-  (ly:parser-clear-error)
-  (if expect-error
-   (ly:parser-error (_ "expected error, but none found"))))
+     (ly:parser-clear-error)
+     (if expect-error
+         (ly:parser-error (_ "expected error, but none found"))))
 
