@@ -58,15 +58,13 @@
             (cdr-chords (ly:event-property event 'cdr-chords #f))
             (dur-log (ly:grob-property grob 'duration-log))
             (base-markup
-             ;(grob-interpret-markup grob
-             #{
-               \markup {
-                 \overlay {
-                   \solmisasi \not-angka #(ly:make-pitch 1 5 0) #0
-                   \solmisasi \not-angka #(ly:make-pitch -1 5 0) #0
-                 }
-               }
-             #})
+             (markup
+              #:line
+              (#:overlay
+               (#:solmisasi
+                (#:not-angka (ly:make-pitch 1 5) 0)
+                #:solmisasi
+                (#:not-angka (ly:make-pitch -1 5) 0)))))
             (stl-base (grob-interpret-markup grob base-markup))
             (stl-base-Y (ly:stencil-extent stl-base Y))
             (stl-base-height (interval-length stl-base-Y))
@@ -122,25 +120,20 @@
                  (stl
                   (grob-interpret-markup grob
                                          (if solmisasi-rest?
-                                             #{
-                                               \markup {
-                                                 \lower #0.5
-                                                 %\with-dimensions-from #base-markup
-                                                 \solmisasi "0"
-                                               }
-                                             #}
+                                             (markup
+                                              #:line
+                                              (#:lower
+                                               0.5
+                                               (#:solmisasi #:simple "0")))
+                                             ; not rest
                                              (if (or (not cdr-chords) (null? cdr-chords))
                                                  ; single note
-                                                 #{
-                                                   \markup {
-                                                     \lower #0.5
-                                                     \solmisasi {
-                                                       %\with-dimensions-from #base-markup
-                                                       %\hcenter-in
-                                                       \not-angka #grob-pitch-solmisasi #base-octave
-                                                     }
-                                                   }
-                                                 #}
+                                                 (markup
+                                                  #:line
+                                                  (#:lower
+                                                   0.5
+                                                   (#:solmisasi
+                                                    (#:not-angka grob-pitch-solmisasi base-octave))))
                                                  ; chords
                                                  (let* ((cm
                                                          #{

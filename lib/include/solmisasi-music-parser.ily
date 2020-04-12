@@ -95,13 +95,13 @@
       (not (null?
             (filter (lambda (a) (music-is-of-type? a 'tie-event)) articulations)))))
 
-  (define (append-articulations m a)
+  (define (append-articulations! m a)
     (ly:music-set-property! m 'articulations
                             (append
                              (ly:music-property m 'articulations)
                              (list a))))
 
-  (define (delete-articulations m a)
+  (define (delete-articulations! m a)
     (ly:music-set-property! m 'articulations
                             (delete
                              a (ly:music-property m 'articulations))))
@@ -399,30 +399,30 @@
               ;; Tambahkan/set properti musik baru: 'solmisasi-time-sig
               ((music-is-of-type? m 'time-signature-music)
 
-               (let*
-                ( (numerator-num (ly:music-property m 'numerator))
-                  (denominator-num (ly:music-property m 'denominator))
-                  (time-sig-fraction (cons numerator-num denominator-num)) )
+               (let* ((numerator-num (ly:music-property m 'numerator))
+                      (denominator-num (ly:music-property m 'denominator))
+                      (time-sig-fraction (cons numerator-num denominator-num)) )
 
-                (set! evaluated-moment ZERO-MOMENT)
-                (set! evaluated-dur 0)
-                (set! beat-structure-dur
-                      (if (and (= denominator-num 8)
-                               (= (modulo numerator-num 3) 0))
-                          1/8
-                          ; else
-                          1/4
-                          ))
-                (set! beat-structure-mom (ly:make-moment beat-structure-dur))
-                (set! current-time-sig (/ numerator-num denominator-num))
-                (if (defined? 'update-tanda-sukat-header)
-                    (update-tanda-sukat-header numerator-num denominator-num))
-                (ly:music-set-property! m _TIME_SIG_PROP (cons numerator-num denominator-num))
-                (set! m (make-sequential-music
-                         (append
-                          (list (beam_grouping_by_time_sig time-sig-fraction))
-                          (list m))))
-                ))
+                 (set! evaluated-moment ZERO-MOMENT)
+                 (set! evaluated-dur 0)
+                 (set! beat-structure-dur
+                       (if (and (= denominator-num 8)
+                                (= (modulo numerator-num 3) 0))
+                           1/8
+                           ; else
+                           1/4
+                           ))
+                 (set! beat-structure-mom (ly:make-moment beat-structure-dur))
+                 (set! current-time-sig (/ numerator-num denominator-num))
+                 (if (defined? 'update-tanda-sukat-header)
+                     (update-tanda-sukat-header numerator-num denominator-num))
+                 (ly:music-set-property! m _TIME_SIG_PROP (cons numerator-num denominator-num))
+                 (set! m (make-sequential-music
+                          (append
+                           (list (beam_grouping_by_time_sig time-sig-fraction))
+                           (list m))))
+                 m)
+               ) ; end cond
               ;-----------------------------------------------------------
 
               ;-----------------------------------------------------------
@@ -430,65 +430,65 @@
               ;; Tambahkan/set properti musik baru: 'solmisasi-key-sig
               ((music-is-of-type? m 'key-change-event)
 
-               (let*
-                ( (pitch-alist (ly:music-property m 'pitch-alist))
-                  (key-alts (filter (lambda (a) (not (= 0 (cdr a)))) pitch-alist))
-                  (keysig-alt-count (get-keysig-alt-count key-alts))
-                  (major-tonic-number (get-major-tonic keysig-alt-count))
-                  (tonic (ly:music-property m 'tonic))
-                  (tonic-num (ly:pitch-notename tonic))
-                  ;; mode 1-7, 1=major 6=minor
-                  (mode (+ 1 (modulo (- tonic-num major-tonic-number) 7)))
-                  (transposed-last-pitch #f)
-                  (last-major-tonic-pitch major-tonic-pitch)
-                  (key-sig-string ""))
-                (set! major-tonic-pitch
-                      (ly:make-pitch
-                       0
-                       major-tonic-number
-                       (or (assoc-ref key-alts major-tonic-number) 0)
-                       ))
-                (set! key-sig-string
-                      (format "~a = ~a"
-                              (number->string mode)
-                              (get-key-sig-string tonic)))
-                (set! transposed-last-pitch
-                      (if last-pitch
-                          (ly:pitch-diff last-pitch major-tonic-pitch)
-                          #f
-                          ))
-                (if (not (string=? key-sig-string last-key-str))
-                    (begin
-                     (set! last-key-str key-sig-string)
-                     (set! mus-key-changes
-                           (append mus-key-changes
-                                   (list (cons evaluated-moment last-key-str))))
-                     ))
+               (let* ((pitch-alist (ly:music-property m 'pitch-alist))
+                      (key-alts (filter (lambda (a) (not (= 0 (cdr a)))) pitch-alist))
+                      (keysig-alt-count (get-keysig-alt-count key-alts))
+                      (major-tonic-number (get-major-tonic keysig-alt-count))
+                      (tonic (ly:music-property m 'tonic))
+                      (tonic-num (ly:pitch-notename tonic))
+                      ;; mode 1-7, 1=major 6=minor
+                      (mode (+ 1 (modulo (- tonic-num major-tonic-number) 7)))
+                      (transposed-last-pitch #f)
+                      (last-major-tonic-pitch major-tonic-pitch)
+                      (key-sig-string ""))
+                 (set! major-tonic-pitch
+                       (ly:make-pitch
+                        0
+                        major-tonic-number
+                        (or (assoc-ref key-alts major-tonic-number) 0)
+                        ))
+                 (set! key-sig-string
+                       (format "~a = ~a"
+                               (number->string mode)
+                               (get-key-sig-string tonic)))
+                 (set! transposed-last-pitch
+                       (if last-pitch
+                           (ly:pitch-diff last-pitch major-tonic-pitch)
+                           #f
+                           ))
+                 (if (not (string=? key-sig-string last-key-str))
+                     (begin
+                      (set! last-key-str key-sig-string)
+                      (set! mus-key-changes
+                            (append mus-key-changes
+                                    (list (cons evaluated-moment last-key-str))))
+                      ))
 
-                ;; simpan key aktual untuk digunakan dalam penulisan nada dasar sistem solmisasi
-                (ly:music-set-property! m 'solmisasi-key-sig (cons mode tonic))
-                (ly:music-set-property! m 'last-pitch last-pitch)
-                (ly:music-set-property! m 'last-pitch-solmisasi transposed-last-pitch)
+                 ;; simpan key aktual untuk digunakan dalam penulisan nada dasar sistem solmisasi
+                 (ly:music-set-property! m 'solmisasi-key-sig (cons mode tonic))
+                 (ly:music-set-property! m 'last-pitch last-pitch)
+                 (ly:music-set-property! m 'last-pitch-solmisasi transposed-last-pitch)
 
-                ;; konversi key sig ke c major, perlukah?
-                ;(ly:music-set-property! m 'pitch-alist '((0 . 0) (1 . 0) (2 . 0) (3 . 0) (4 . 0) (5 . 0) (6 . 0)))
-                ;(ly:music-set-property! m 'tonic (ly:make-pitch 0 0 0))
+                 ;; konversi key sig ke c major, perlukah?
+                 ;(ly:music-set-property! m 'pitch-alist '((0 . 0) (1 . 0) (2 . 0) (3 . 0) (4 . 0) (5 . 0) (6 . 0)))
+                 ;(ly:music-set-property! m 'tonic (ly:make-pitch 0 0 0))
 
-                ))
+                 m)
+               ) ; end cond
               ;-----------------------------------------------------------
 
               ;-----------------------------------------------------------
               ;; Event: Skip event
               ((music-is-of-type? m 'skip-event)
 
-               (let
-                ((dur (ly:moment-main (ly:music-duration-length m))))
-                (set! last-pitch #f)
-                (set! last-dur dur)
-                (set! last-moment (ly:make-moment last-dur))
-                (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))
-                (set! evaluated-dur (+ evaluated-dur last-dur))
-                ))
+               (let ((dur (ly:moment-main (ly:music-duration-length m))))
+                 (set! last-pitch #f)
+                 (set! last-dur dur)
+                 (set! last-moment (ly:make-moment last-dur))
+                 (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))
+                 (set! evaluated-dur (+ evaluated-dur last-dur))
+                 m)
+               ) ; end cond
 
               ;-----------------------------------------------------------
               ;; Event: Picthed NOTE atau REST
@@ -497,459 +497,462 @@
 
                ;; Div spanner stop
                (if (ly:music-property m 'div-span-stop #f)
-                   (append-articulations m (div-span-stop)))
+                   (append-articulations! m (div-span-stop)))
                (if (ly:music-property m 'open-div-start #f)
-                   (append-articulations m (open-div-start)))
+                   (append-articulations! m (open-div-start)))
                (if (ly:music-property m 'close-div-start #f)
-                   (append-articulations m (close-div-start)))
+                   (append-articulations! m (close-div-start)))
 
                (if (note-event? m) (set! last-note m))
 
-               (let*
-                ( (dur (ly:moment-main (ly:music-duration-length m)))
-                  (dur4 (ly:make-duration 2 0 1))
-                  (dur8 (ly:make-duration 3 0 1))
-                  (dur16 (ly:make-duration 4 0 1))
-                  (dur32 (ly:make-duration 5 0 1))
-                  (dotpitch (if (tied-note? m)
-                                (ly:make-pitch -6 0 0)
-                                (ly:music-property m 'pitch)))
-                  (q4 (make-music   		'NoteEvent
-                                      'duration dur4
-                                      'origin (ly:music-property m 'origin)
-                                      ;'pitch pitchProp
-                                      'pitch dotpitch
-                                      _DOT_NOTE_PROP #t))
-                  (q8 (make-music   		'NoteEvent
-                                      'duration dur8
-                                      'origin (ly:music-property m 'origin)
-                                      ;'pitch pitchProp
-                                      'pitch dotpitch
-                                      _DOT_NOTE_PROP #t))
-                  (q16 (make-music  		'NoteEvent
-                                      'duration dur16
-                                      'origin (ly:music-property m 'origin)
-                                      ;'pitch pitchProp
-                                      'pitch dotpitch
-                                      _DOT_NOTE_PROP #t))
-                  (q32 (make-music  		'NoteEvent
-                                      'duration dur32
-                                      'origin (ly:music-property m 'origin)
-                                      ;'pitch pitchProp
-                                      'pitch dotpitch
-                                      _DOT_NOTE_PROP #t))
-                  (q4-rest
-                   (if _EXPERIMENTAL
-                       (make-music 'RestEvent
-                                   'duration (ly:make-duration 2))
-                       (make-music 'NoteEvent
-                                   'duration dur4
-                                   'origin (ly:music-property m 'origin)
-                                   ;'tags (list (quote do-not-print))
-                                   _REST_PROP #t)))
-                  (q8-rest
-                   (if _EXPERIMENTAL
-                       (make-music 'RestEvent
-                                   'duration (ly:make-duration 3))
-                       (make-music 'NoteEvent
-                                   'duration dur8
-                                   'origin (ly:music-property m 'origin)
-                                   ;'tags (list (quote do-not-print))
-                                   _REST_PROP #t)))
-                  (q16-rest
-                   (if _EXPERIMENTAL
-                       (make-music 'RestEvent
-                                   'duration (ly:make-duration 4))
-                       (make-music 'NoteEvent
-                                   'duration dur16
-                                   'origin (ly:music-property m 'origin)
-                                   ;'tags (list (quote do-not-print))
-                                   _REST_PROP #t)))
-                  (q32-rest
-                   (if _EXPERIMENTAL
-                       (make-music 'RestEvent
-                                   'duration (ly:make-duration 5))
-                       (make-music 'NoteEvent
-                                   'duration dur32
-                                   'origin (ly:music-property m 'origin)
-                                   ;'tags (list (quote do-not-print))
-                                   _REST_PROP #t)))
-                  (skipRest (make-music 'SkipEvent 'duration (ly:make-duration 2 0 1)))
-                  (cdr-chords (ly:music-property m 'cdr-chords #f))
-                  )
-
-                ;; utk rest, set properti 'solmisasi-rest
-                (if (rest-event? m)
-                    (begin
-                     (set! is-rest? #t)
-                     (set! m (make-music 'RestEvent m))
-                     (if _EXPERIMENTAL
-                         (ly:music-set-property! m 'name 'RestEvent)
-                         (ly:music-set-property! m 'name 'NoteEvent))
-                     (ly:music-set-property! m 'pitch
-                                             (if (not (null? (ly:music-property m 'pitch)))
-                                                 (ly:music-property m 'pitch)
-                                                 last-pitch))
-                     (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)
-                     (ly:music-set-property! m _REST_PROP #t)
-                     (set! skipRest (skip-of-length m))
-                     (set! q4 q4-rest)
-                     (set! q8 q8-rest)
-                     (set! q16 q16-rest)
-                     (set! q32 q32-rest)
-                     )
-                    ;; else: pitched note event
-                    (begin
-                     (if (ly:pitch? (ly:music-property m 'pitch))
-                         (begin
-                          (set! last-pitch (ly:music-property m 'pitch))
-                          (set! last-pitch-solmisasi (ly:music-property m 'pitch-solmisasi)))
-                         (begin
-                          (ly:music-set-property! m 'pitch last-pitch)
-                          (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)))
-                     (if (not (null? (ly:music-property m 'last-pitch-for-volta)))
-                         (set! last-pitch (ly:music-property m 'last-pitch-for-volta)))
-
-                     ;; transpose ke c major agar lebih mudah penanganannya
-                     (ly:music-set-property! m 'pitch-solmisasi
-                                             (ly:pitch-transpose (ly:music-property m 'pitch)
-                                                                 (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
-                                                                                                 (ly:make-pitch 0 0 0)))))
-                     (set! last-pitch-solmisasi (ly:music-property m 'pitch-solmisasi))
-                     ; FOR CHORDS
-                     (if (and cdr-chords
-                              (not (null? cdr-chords)))
-                         (begin
-                          (map!
-                           (lambda (e)
-                             (ly:music-set-property! e 'pitch-solmisasi
-                                                     (ly:pitch-transpose (ly:music-property e 'pitch)
-                                                                         (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
-                                                                                                         (ly:make-pitch 0 0 0))))))
-                           cdr-chords)
-                          (ly:music-set-property! m 'cdr-chords cdr-chords)
-                          (ly:music-set-property! q4 'cdr-chords cdr-chords)
-                          (ly:music-set-property! q8 'cdr-chords cdr-chords)
-                          (ly:music-set-property! q16 'cdr-chords cdr-chords)
-                          (ly:music-set-property! q32 'cdr-chords cdr-chords)
-                          ))
-                     ))
-
-                ;; untuk NOTE maupun REST ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-                ;; split durasi nada
-                (let*
-                 ((duradot4 (floor (ly:moment-main
-                                    (ly:moment-div
-                                     (ly:moment-sub (ly:make-moment dur) (ly:make-moment 1/4))
-                                     (ly:make-moment 1/4)
-                                     ))))
-                  (duradot8 (floor (ly:moment-main
-                                    (ly:moment-div
-                                     (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/4))
-                                     (ly:make-moment 1/8)
-                                     ))))
-                  (duradot16 (floor (ly:moment-main
-                                     (ly:moment-div
-                                      (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/8))
-                                      (ly:make-moment 1/16)
-                                      ))))
-                  (duradot32 (floor (ly:moment-main
-                                     (ly:moment-div
-                                      (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/16))
-                                      (ly:make-moment 1/32)
-                                      ))))
-                  (duradot4-extra 0)
-                  (duradot8-extra 0)
-                  (duradot16-extra 0)
-                  (duradot32-extra 0)
-                  (dots-list (empty-music))
-                  ;; TODO: nilai nada/durasi lain?
-
-                  (current-moment   (ly:make-moment dur))
-                  (delta-moment     (ly:moment-mod evaluated-moment beat-structure-mom))
-                  (now-sum-moment   (ly:moment-add delta-moment current-moment))
-                  (remainder-moment (ly:moment-sub beat-structure-mom delta-moment))
-                  (must-reverse
-                   (and  ;(ly:moment<? last-moment beat-structure-mom)
-                         (ly:moment<? ZERO-MOMENT delta-moment)
-                         (or (ly:moment<? beat-structure-mom now-sum-moment)
-                             (equal? beat-structure-mom now-sum-moment))))
-                  (still-remainder-moment ZERO-MOMENT)
-                  ;; apakah ada extra durasi setelah reverse?
-                  (has-extra-job #f)
-                  (dots-list-car #f)
-                  )
-
-                 (if (not (ly:music-property m 'duration #f)) ; strange case
-                     (display ""))
-
-
-                 (if (equal? (cdr (ly:duration-factor (ly:music-property m 'duration))) 1)
-                     (begin
-                      (if (equal? beat-structure-dur 1/4)
-                          (begin
-                           (cond
-                            ( ( >= dur beat-structure-dur) ;------------------------------------------------
-                                                           (ly:music-set-property! m 'duration dur4)
-                                                           (if (equal? must-reverse #t)
-                                                               (cond
-                                                                ((equal? (ly:moment-main-denominator remainder-moment) 8)
-                                                                 (ly:music-set-property! m 'duration dur8)
-                                                                 (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/8)))
-                                                                 (set! duradot32 0)
-                                                                 (set! duradot16 0)
-                                                                 (set! duradot8 0)
-                                                                 (set! duradot4 (floor
-                                                                                 (ly:moment-main
-                                                                                  (ly:moment-div current-moment beat-structure-mom))))
-                                                                 (set! still-remainder-moment (ly:moment-sub
-                                                                                               current-moment (ly:make-moment (* duradot4 1/4))))
-                                                                 (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
-                                                                 (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
-                                                                              current-moment duradot4 still-remainder-moment has-extra-job)
-
-                                                                 (if (equal? has-extra-job #t)
-                                                                     (begin
-                                                                      (set! duradot8-extra (floor
-                                                                                            (ly:moment-main
-                                                                                             (ly:moment-div still-remainder-moment (ly:make-moment 1/8)))))
-                                                                      (set! duradot16-extra (* 16
-                                                                                               (ly:moment-main
-                                                                                                (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
-                                                                      (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
-                                                                      )
-                                                                     )
-                                                                 )
-                                                                ((equal? (ly:moment-main-denominator remainder-moment) 16)
-                                                                 (ly:music-set-property! m 'duration dur16)
-                                                                 (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
-                                                                 (set! duradot32 0)
-                                                                 (set! duradot16 0)
-                                                                 (set! duradot4 (floor
-                                                                                 (ly:moment-main
-                                                                                  (ly:moment-div current-moment beat-structure-mom))))
-                                                                 (set! duradot8 (floor
-                                                                                 (ly:moment-main
-                                                                                  (ly:moment-div remainder-moment (ly:make-moment 1/8)))))
-                                                                 (set! still-remainder-moment (ly:moment-sub
-                                                                                               (ly:moment-sub current-moment (ly:make-moment (* duradot4 1/4)))
-                                                                                               (ly:make-moment (* duradot8 1/8))))
-                                                                 (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
-                                                                 (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
-                                                                              current-moment duradot4 still-remainder-moment has-extra-job)
-
-                                                                 (if (equal? has-extra-job #t)
-                                                                     (begin
-                                                                      (set! duradot8-extra (floor
-                                                                                            (ly:moment-main
-                                                                                             (ly:moment-div still-remainder-moment (ly:make-moment 1/8)))))
-                                                                      (set! duradot16-extra (* 16
-                                                                                               (ly:moment-main
-                                                                                                (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
-                                                                      (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
-                                                                      )
-                                                                     )
-                                                                 )
-                                                                )
-                                                               )
-                                                           )
-
-                            ( (>= dur (* beat-structure-dur 1/2)) ;------------------------------------------------
-                                                                  (set! duradot4 0)
-                                                                  (set! duradot8 0)
-                                                                  (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
-                                                                  (ly:music-set-property! m 'duration dur8)
-                                                                  (if (equal? must-reverse #t)
-                                                                      (if (equal? (ly:moment-main-denominator remainder-moment) 16)
-                                                                          (begin
-                                                                           (ly:music-set-property! m 'duration dur16)
-                                                                           (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
-                                                                           (set! duradot16 0)
-                                                                           (set! duradot8 1)
-                                                                           (set! duradot4 0)
-                                                                           )
-                                                                          )
-                                                                      )
-                                                                  )
-
-                            ( (>= dur (* beat-structure-dur 1/4)) ;------------------------------------------------
-                                                                  (set! duradot4 0)
-                                                                  (set! duradot8 0)
-                                                                  (set! duradot16 0)
-                                                                  (ly:music-set-property! m 'duration dur16)
-                                                                  )
-
-                            ( (>= dur (* beat-structure-dur 1/8)) ;------------------------------------------------
-                                                                  (set! duradot4 0)
-                                                                  (set! duradot8 0)
-                                                                  (set! duradot16 0)
-                                                                  (set! duradot32 0)
-                                                                  (ly:music-set-property! m 'duration dur32)
-                                                                  )
-                            ) ;; end cond dur
-                           )
-                          ;; else: untuk yang berbasis 3/8
-                          (begin
-                           ;; disable duradot4
-                           (set! duradot4 0)
-                           (cond
-                            ( ( >= dur beat-structure-dur) ;------------------------------------------------
-                                                           (ly:music-set-property! m 'duration dur8)
-                                                           (if (equal? dur 3/8) ; 3/8
-                                                               (begin
-                                                                (set! duradot8 0)
-                                                                (set! duradot16 0)
-                                                                (set! duradot8-extra 0)
-                                                                (set! duradot16-extra 0)
-                                                                (set! must-reverse #f)
-                                                                (set! m (make-sequential-music
-                                                                         (append
-                                                                          (list m)
-                                                                          (make-list 2 q8))))
-                                                                )
-                                                               (begin
-                                                                (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/8)))
-                                                                (set! duradot8 (floor
-                                                                                (ly:moment-main
-                                                                                 (ly:moment-div current-moment (ly:make-moment beat-structure-dur)))))
-                                                                ))
-
-                                                           (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
-
-                                                           (if (equal? must-reverse #t)
-                                                               (if (equal? (ly:moment-main-denominator remainder-moment) 16)
-                                                                   (begin
-                                                                    (ly:music-set-property! m 'duration dur16)
-                                                                    (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
-                                                                    (set! duradot16 0)
-                                                                    (set! duradot8 1)
-                                                                    (set! duradot4 0)
-                                                                    )
-                                                                   )
-                                                               )
-                                                           )
-                            ;; 1/16
-                            ( ( >= dur (* beat-structure-dur 1/2)) ;------------------------------------------------
-                                                                   (set! duradot8 0)
-                                                                   (set! duradot16 0)
-                                                                   (ly:music-set-property! m 'duration dur16)
-                                                                   )
-                            ) ;; end cond dur
-                           ) ;; end begin
-                          )
-
-                      (set! note-in-tie? (or note-in-tie? (tied-note? m)))
-                      (set! slur-stopped? (slur-stop-note? m))
-                      ;(set! is-last-note-end-of-slur? (slur-stop-note? m))
-                      (set! in-slur? (and slur-started? (not slur-stopped?)))
-                      (set! slur-started? (slur-start-note? m))
-
-                      (set! duradot-sum ;(1-
-                            (+ duradot4
-                               duradot8
-                               duradot16
-                               duradot32
-                               duradot4-extra
-                               duradot8-extra
-                               duradot16-extra
-                               duradot32-extra));)
-
-                      ;(if slur-stopped?
-                      ; end of slur, perhaps have dots
-                      ;(if (> duradot-sum 0)
-                      (set! dots-list
-                            (if (> duradot-sum 0)
-                                (append
-                                 (if (not must-reverse)
-                                     (append
-                                      (make-list duradot4  q4)
-                                      (make-list duradot8  q8)
-                                      (make-list duradot16 q16)
-                                      (make-list duradot32 q32))
-                                     (append
-                                      (make-list duradot32 			q32)
-                                      (make-list duradot16 			q16)
-                                      (make-list duradot8  			q8)
-                                      (make-list duradot4  			q4)
-                                      (make-list duradot4-extra  q4)
-                                      (make-list duradot8-extra  q8)
-                                      (make-list duradot16-extra q16)
-                                      (make-list duradot32-extra q32))))
-                                #f))
-
-                      (if (and dots-list
-                               (not (null? dots-list)))
-                          (begin
-                           ; move div starts to the last dot
-                           (cond
-                            ((ly:music-property m 'open-div-start #f)
-                             (delete-articulations m (open-div-start))
-                             (set! dots-list (reverse dots-list))
-                             (set! dots-list-car (car dots-list))
-                             (append-articulations dots-list-car (open-div-start))
-                             (set! dots-list (reverse (append (list dots-list-car) (cdr dots-list)))))
-                            ((ly:music-property m 'close-div-start #f)
-                             (delete-articulations m (close-div-start))
-                             (set! dots-list (reverse dots-list))
-                             (set! dots-list-car (car dots-list))
-                             (append-articulations dots-list-car (close-div-start))
-                             (set! dots-list (reverse (append (list dots-list-car) (cdr dots-list)))))
-                            ) ; end cond
-                           (set! dots-list
-                                 (append
-                                  ;(if (not (rest-event? m))
-                                  (list (make-music
-                                         'ContextSpeccedMusic
-                                         'context-type
-                                         'Bottom
-                                         'element
-                                         (make-music
-                                          'PropertySet
-                                          'value
-                                          #t
-                                          'symbol
-                                          'melismaBusy)))
-                                  ;(list (empty-music)))
-                                  dots-list ;;;;;;;;;;
-                                  ;(if (not (rest-event? m))
-                                  (list (make-music
-                                         'ContextSpeccedMusic
-                                         'context-type
-                                         'Bottom
-                                         'element
-                                         (make-music
-                                          'PropertyUnset
-                                          'symbol
-                                          'melismaBusy)))
-
-                                  ))
-                           (set! m (make-sequential-music
-                                    (append
-                                     (list m)
-                                     dots-list
-                                     ))))
-                          m)
-
-                      ;; else must-reverse = #t
-
-                      ;; RESET
-                      (if slur-stopped?
-                          (begin
-                           (set! duradot-sum 0)
-                           (set! slur-started? #f)
-                           (set! slur-stopped? #f)
-                           (set! in-slur? #f)))
-                      (set! note-in-tie? (tied-note? m))
+               (let* ((dur (ly:moment-main (ly:music-duration-length m)))
+                      (dur4 (ly:make-duration 2 0 1))
+                      (dur8 (ly:make-duration 3 0 1))
+                      (dur16 (ly:make-duration 4 0 1))
+                      (dur32 (ly:make-duration 5 0 1))
+                      (dotpitch (if (tied-note? m)
+                                    (ly:make-pitch -6 0 0)
+                                    (ly:music-property m 'pitch)))
+                      (q4 (make-music   		'NoteEvent
+                                          'duration dur4
+                                          'origin (ly:music-property m 'origin)
+                                          ;'pitch pitchProp
+                                          'pitch dotpitch
+                                          _DOT_NOTE_PROP #t))
+                      (q8 (make-music   		'NoteEvent
+                                          'duration dur8
+                                          'origin (ly:music-property m 'origin)
+                                          ;'pitch pitchProp
+                                          'pitch dotpitch
+                                          _DOT_NOTE_PROP #t))
+                      (q16 (make-music  		'NoteEvent
+                                          'duration dur16
+                                          'origin (ly:music-property m 'origin)
+                                          ;'pitch pitchProp
+                                          'pitch dotpitch
+                                          _DOT_NOTE_PROP #t))
+                      (q32 (make-music  		'NoteEvent
+                                          'duration dur32
+                                          'origin (ly:music-property m 'origin)
+                                          ;'pitch pitchProp
+                                          'pitch dotpitch
+                                          _DOT_NOTE_PROP #t))
+                      (q4-rest
+                       (if _EXPERIMENTAL
+                           (make-music 'RestEvent
+                                       'duration (ly:make-duration 2))
+                           (make-music 'NoteEvent
+                                       'duration dur4
+                                       'origin (ly:music-property m 'origin)
+                                       ;'tags (list (quote do-not-print))
+                                       _REST_PROP #t)))
+                      (q8-rest
+                       (if _EXPERIMENTAL
+                           (make-music 'RestEvent
+                                       'duration (ly:make-duration 3))
+                           (make-music 'NoteEvent
+                                       'duration dur8
+                                       'origin (ly:music-property m 'origin)
+                                       ;'tags (list (quote do-not-print))
+                                       _REST_PROP #t)))
+                      (q16-rest
+                       (if _EXPERIMENTAL
+                           (make-music 'RestEvent
+                                       'duration (ly:make-duration 4))
+                           (make-music 'NoteEvent
+                                       'duration dur16
+                                       'origin (ly:music-property m 'origin)
+                                       ;'tags (list (quote do-not-print))
+                                       _REST_PROP #t)))
+                      (q32-rest
+                       (if _EXPERIMENTAL
+                           (make-music 'RestEvent
+                                       'duration (ly:make-duration 5))
+                           (make-music 'NoteEvent
+                                       'duration dur32
+                                       'origin (ly:music-property m 'origin)
+                                       ;'tags (list (quote do-not-print))
+                                       _REST_PROP #t)))
+                      (skipRest (make-music 'SkipEvent 'duration (ly:make-duration 2 0 1)))
+                      (cdr-chords (ly:music-property m 'cdr-chords #f))
                       )
-                     )
 
-                 (set! last-dur dur)
-                 (set! last-moment (ly:make-moment last-dur))
-                 (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))
-                 (set! evaluated-dur (+ evaluated-dur last-dur))
+                 ;; utk rest, set properti 'solmisasi-rest
+                 (if (rest-event? m)
+                     (begin
+                      (set! is-rest? #t)
+                      (set! m (make-music 'RestEvent m))
+                      (if _EXPERIMENTAL
+                          (ly:music-set-property! m 'name 'RestEvent)
+                          (ly:music-set-property! m 'name 'NoteEvent))
+                      (ly:music-set-property! m 'pitch
+                                              (if (not (null? (ly:music-property m 'pitch)))
+                                                  (ly:music-property m 'pitch)
+                                                  last-pitch))
+                      (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)
+                      (ly:music-set-property! m _REST_PROP #t)
+                      (set! skipRest (skip-of-length m))
+                      (set! q4 q4-rest)
+                      (set! q8 q8-rest)
+                      (set! q16 q16-rest)
+                      (set! q32 q32-rest)
+                      )
+                     ;; else: pitched note event
+                     (begin
+                      (if (ly:pitch? (ly:music-property m 'pitch))
+                          (begin
+                           (set! last-pitch (ly:music-property m 'pitch))
+                           (set! last-pitch-solmisasi (ly:music-property m 'pitch-solmisasi)))
+                          (begin
+                           (ly:music-set-property! m 'pitch last-pitch)
+                           (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)))
+                      (if (not (null? (ly:music-property m 'last-pitch-for-volta)))
+                          (set! last-pitch (ly:music-property m 'last-pitch-for-volta)))
+
+                      ;; transpose ke c major agar lebih mudah penanganannya
+                      (ly:music-set-property! m 'pitch-solmisasi
+                                              (ly:pitch-transpose (ly:music-property m 'pitch)
+                                                                  (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
+                                                                                                  (ly:make-pitch 0 0 0)))))
+                      (set! last-pitch-solmisasi (ly:music-property m 'pitch-solmisasi))
+                      ; FOR CHORDS
+                      (if (and cdr-chords (not (null? cdr-chords)))
+                          (begin
+                           (map!
+                            (lambda (e)
+                              (ly:music-set-property! e 'pitch-solmisasi
+                                                      (ly:pitch-transpose (ly:music-property e 'pitch)
+                                                                          (ly:pitch-negate (ly:pitch-diff major-tonic-pitch
+                                                                                                          (ly:make-pitch 0 0 0))))))
+                            cdr-chords)
+                           (ly:music-set-property! m 'cdr-chords cdr-chords)
+                           (ly:music-set-property! q4 'cdr-chords cdr-chords)
+                           (ly:music-set-property! q8 'cdr-chords cdr-chords)
+                           (ly:music-set-property! q16 'cdr-chords cdr-chords)
+                           (ly:music-set-property! q32 'cdr-chords cdr-chords)
+                           ))
+                      ))
+
+                 ;; untuk NOTE maupun REST ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                 ;; split durasi nada
+                 (let*
+                  ((duradot4 (floor (ly:moment-main
+                                     (ly:moment-div
+                                      (ly:moment-sub (ly:make-moment dur) (ly:make-moment 1/4))
+                                      (ly:make-moment 1/4)
+                                      ))))
+                   (duradot8 (floor (ly:moment-main
+                                     (ly:moment-div
+                                      (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/4))
+                                      (ly:make-moment 1/8)
+                                      ))))
+                   (duradot16 (floor (ly:moment-main
+                                      (ly:moment-div
+                                       (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/8))
+                                       (ly:make-moment 1/16)
+                                       ))))
+                   (duradot32 (floor (ly:moment-main
+                                      (ly:moment-div
+                                       (ly:moment-mod (ly:make-moment dur) (ly:make-moment 1/16))
+                                       (ly:make-moment 1/32)
+                                       ))))
+                   (duradot4-extra 0)
+                   (duradot8-extra 0)
+                   (duradot16-extra 0)
+                   (duradot32-extra 0)
+                   (dots-list (empty-music))
+                   ;; TODO: nilai nada/durasi lain?
+
+                   (current-moment   (ly:make-moment dur))
+                   (delta-moment     (ly:moment-mod evaluated-moment beat-structure-mom))
+                   (now-sum-moment   (ly:moment-add delta-moment current-moment))
+                   (remainder-moment (ly:moment-sub beat-structure-mom delta-moment))
+                   (must-reverse
+                    (and  ;(ly:moment<? last-moment beat-structure-mom)
+                          (ly:moment<? ZERO-MOMENT delta-moment)
+                          (or (ly:moment<? beat-structure-mom now-sum-moment)
+                              (equal? beat-structure-mom now-sum-moment))))
+                   (still-remainder-moment ZERO-MOMENT)
+                   ;; apakah ada extra durasi setelah reverse?
+                   (has-extra-job #f)
+                   (dots-list-car #f)
+                   )
+
+                  (if (not (ly:music-property m 'duration #f)) ; strange case
+                      (display ""))
+
+                  (if (equal? (cdr (ly:duration-factor (ly:music-property m 'duration))) 1)
+                      (begin
+                       (if (equal? beat-structure-dur 1/4)
+                           (begin
+                            (cond
+                             ( ( >= dur beat-structure-dur)
+                               ;------------------------------------------------
+                               (ly:music-set-property! m 'duration dur4)
+                               (if (equal? must-reverse #t)
+                                   (cond
+                                    ((equal? (ly:moment-main-denominator remainder-moment) 8)
+                                     (ly:music-set-property! m 'duration dur8)
+                                     (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/8)))
+                                     (set! duradot32 0)
+                                     (set! duradot16 0)
+                                     (set! duradot8 0)
+                                     (set! duradot4 (floor
+                                                     (ly:moment-main
+                                                      (ly:moment-div current-moment beat-structure-mom))))
+                                     (set! still-remainder-moment (ly:moment-sub
+                                                                   current-moment (ly:make-moment (* duradot4 1/4))))
+                                     (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
+                                     (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
+                                                  current-moment duradot4 still-remainder-moment has-extra-job)
+
+                                     (if (equal? has-extra-job #t)
+                                         (begin
+                                          (set! duradot8-extra (floor
+                                                                (ly:moment-main
+                                                                 (ly:moment-div still-remainder-moment (ly:make-moment 1/8)))))
+                                          (set! duradot16-extra (* 16
+                                                                   (ly:moment-main
+                                                                    (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
+                                          (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
+                                          )
+                                         )
+                                     )
+                                    ((equal? (ly:moment-main-denominator remainder-moment) 16)
+                                     (ly:music-set-property! m 'duration dur16)
+                                     (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
+                                     (set! duradot32 0)
+                                     (set! duradot16 0)
+                                     (set! duradot4 (floor
+                                                     (ly:moment-main
+                                                      (ly:moment-div current-moment beat-structure-mom))))
+                                     (set! duradot8 (floor
+                                                     (ly:moment-main
+                                                      (ly:moment-div remainder-moment (ly:make-moment 1/8)))))
+                                     (set! still-remainder-moment (ly:moment-sub
+                                                                   (ly:moment-sub current-moment (ly:make-moment (* duradot4 1/4)))
+                                                                   (ly:make-moment (* duradot8 1/8))))
+                                     (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
+                                     (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
+                                                  current-moment duradot4 still-remainder-moment has-extra-job)
+
+                                     (if (equal? has-extra-job #t)
+                                         (begin
+                                          (set! duradot8-extra (floor
+                                                                (ly:moment-main
+                                                                 (ly:moment-div still-remainder-moment (ly:make-moment 1/8)))))
+                                          (set! duradot16-extra (* 16
+                                                                   (ly:moment-main
+                                                                    (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
+                                          (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
+                                          )
+                                         )
+                                     )
+                                    )
+                                   )
+                               )
+
+                             ( (>= dur (* beat-structure-dur 1/2))
+                               ;------------------------------------------------
+                               (set! duradot4 0)
+                               (set! duradot8 0)
+                               (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
+                               (ly:music-set-property! m 'duration dur8)
+                               (if (equal? must-reverse #t)
+                                   (if (equal? (ly:moment-main-denominator remainder-moment) 16)
+                                       (begin
+                                        (ly:music-set-property! m 'duration dur16)
+                                        (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
+                                        (set! duradot16 0)
+                                        (set! duradot8 1)
+                                        (set! duradot4 0)
+                                        )
+                                       )
+                                   )
+                               )
+
+                             ( (>= dur (* beat-structure-dur 1/4))
+                               ;------------------------------------------------
+                               (set! duradot4 0)
+                               (set! duradot8 0)
+                               (set! duradot16 0)
+                               (ly:music-set-property! m 'duration dur16)
+                               )
+
+                             ( (>= dur (* beat-structure-dur 1/8))
+                               ;------------------------------------------------
+                               (set! duradot4 0)
+                               (set! duradot8 0)
+                               (set! duradot16 0)
+                               (set! duradot32 0)
+                               (ly:music-set-property! m 'duration dur32)
+                               )
+                             ) ;; end cond dur
+                            )
+                           ;; else: untuk yang berbasis 3/8
+                           (begin
+                            ;; disable duradot4
+                            (set! duradot4 0)
+                            (cond
+                             ( ( >= dur beat-structure-dur)
+                               ;------------------------------------------------
+                               (ly:music-set-property! m 'duration dur8)
+                               (if (equal? dur 3/8) ; 3/8
+                                   (begin
+                                    (set! duradot8 0)
+                                    (set! duradot16 0)
+                                    (set! duradot8-extra 0)
+                                    (set! duradot16-extra 0)
+                                    (set! must-reverse #f)
+                                    (set! m (make-sequential-music
+                                             (append
+                                              (list m)
+                                              (make-list 2 q8))))
+                                    )
+                                   (begin
+                                    (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/8)))
+                                    (set! duradot8 (floor
+                                                    (ly:moment-main
+                                                     (ly:moment-div current-moment (ly:make-moment beat-structure-dur)))))
+                                    ))
+
+                               (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
+
+                               (if (equal? must-reverse #t)
+                                   (if (equal? (ly:moment-main-denominator remainder-moment) 16)
+                                       (begin
+                                        (ly:music-set-property! m 'duration dur16)
+                                        (set! current-moment (ly:moment-sub current-moment (ly:make-moment 1/16)))
+                                        (set! duradot16 0)
+                                        (set! duradot8 1)
+                                        (set! duradot4 0)
+                                        )
+                                       )
+                                   )
+                               )
+                             ;; 1/16
+                             ( ( >= dur (* beat-structure-dur 1/2))
+                               ;------------------------------------------------
+                               (set! duradot8 0)
+                               (set! duradot16 0)
+                               (ly:music-set-property! m 'duration dur16)
+                               )
+                             ) ;; end cond dur
+                            ) ;; end begin
+                           )
+
+                       (set! note-in-tie? (or note-in-tie? (tied-note? m)))
+                       (set! slur-stopped? (slur-stop-note? m))
+                       ;(set! is-last-note-end-of-slur? (slur-stop-note? m))
+                       (set! in-slur? (and slur-started? (not slur-stopped?)))
+                       (set! slur-started? (slur-start-note? m))
+
+                       (set! duradot-sum ;(1-
+                             (+ duradot4
+                                duradot8
+                                duradot16
+                                duradot32
+                                duradot4-extra
+                                duradot8-extra
+                                duradot16-extra
+                                duradot32-extra));)
+
+                       ;(if slur-stopped?
+                       ; end of slur, perhaps have dots
+                       ;(if (> duradot-sum 0)
+                       (set! dots-list
+                             (if (> duradot-sum 0)
+                                 (append
+                                  (if (not must-reverse)
+                                      (append
+                                       (make-list duradot4  q4)
+                                       (make-list duradot8  q8)
+                                       (make-list duradot16 q16)
+                                       (make-list duradot32 q32))
+                                      (append
+                                       (make-list duradot32 			q32)
+                                       (make-list duradot16 			q16)
+                                       (make-list duradot8  			q8)
+                                       (make-list duradot4  			q4)
+                                       (make-list duradot4-extra  q4)
+                                       (make-list duradot8-extra  q8)
+                                       (make-list duradot16-extra q16)
+                                       (make-list duradot32-extra q32))))
+                                 #f))
+
+                       (if (and dots-list
+                                (not (null? dots-list)))
+                           (begin
+                            ; move div starts to the last dot
+                            (cond
+                             ((ly:music-property m 'open-div-start #f)
+                              (delete-articulations! m (open-div-start))
+                              (set! dots-list (reverse dots-list))
+                              (set! dots-list-car (car dots-list))
+                              (append-articulations! dots-list-car (open-div-start))
+                              (set! dots-list (reverse (append (list dots-list-car) (cdr dots-list)))))
+                             ((ly:music-property m 'close-div-start #f)
+                              (delete-articulations! m (close-div-start))
+                              (set! dots-list (reverse dots-list))
+                              (set! dots-list-car (car dots-list))
+                              (append-articulations! dots-list-car (close-div-start))
+                              (set! dots-list (reverse (append (list dots-list-car) (cdr dots-list)))))
+                             ) ; end cond
+                            (set! dots-list
+                                  (append
+                                   ;(if (not (rest-event? m))
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertySet
+                                           'value
+                                           #t
+                                           'symbol
+                                           'melismaBusy)))
+                                   ;(list (empty-music)))
+                                   dots-list ;;;;;;;;;;
+                                   ;(if (not (rest-event? m))
+                                   (list (make-music
+                                          'ContextSpeccedMusic
+                                          'context-type
+                                          'Bottom
+                                          'element
+                                          (make-music
+                                           'PropertyUnset
+                                           'symbol
+                                           'melismaBusy)))
+
+                                   ))
+                            (set! m (make-sequential-music
+                                     (append
+                                      (list m)
+                                      dots-list
+                                      ))))
+                           m)
+
+                       ;; else must-reverse = #t
+
+                       ;; RESET
+                       (if slur-stopped?
+                           (begin
+                            (set! duradot-sum 0)
+                            (set! slur-started? #f)
+                            (set! slur-stopped? #f)
+                            (set! in-slur? #f)))
+                       (set! note-in-tie? (tied-note? m))
+                       )
+                      )
+
+                  (set! last-dur dur)
+                  (set! last-moment (ly:make-moment last-dur))
+                  (set! evaluated-moment (ly:moment-add evaluated-moment last-moment))
+                  (set! evaluated-dur (+ evaluated-dur last-dur))
+                  )
                  )
-                )
                )
               ;-----------------------------------------------------------
               ) ;; end cond

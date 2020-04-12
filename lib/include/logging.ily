@@ -93,11 +93,12 @@ openLogfile =
 #(define (solmisasi:log fmt . vals)
    (if (>= solmisasi-loglevel solmisasi-loglevel-log)
        (begin
-        (openLogfile)
-        (format (current-error-port) "solmisasi-lily: ")
-        (format (current-error-port) fmt vals)
-        (format (current-error-port) "\n")
-        (format solmisasi-logfile fmt vals))))
+        ;(openLogfile)
+        (format (current-output-port) "solmisasi-lily: ")
+        (format (current-output-port) fmt vals)
+        (format (current-output-port) "\n")
+        ;(format solmisasi-logfile fmt vals)
+        )))
 
 % Debug output
 #(define (solmisasi:debug fmt . vals)

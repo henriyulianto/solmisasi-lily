@@ -100,8 +100,8 @@
              (for-each
               (lambda (e)
                 (set! ret (cond ((equal? e "..")(if (> (length ret) 1) (cdr ret) (cdr (reverse (get-cwd-list)))))
-                            ((equal? e ".") (if (= (length ret) 0) (reverse (get-cwd-list)) ret))
-                            (else `(,e ,@ret))))) path-list)
+                                ((equal? e ".") (if (= (length ret) 0) (reverse (get-cwd-list)) ret))
+                                (else `(,e ,@ret))))) path-list)
              (reverse ret))))
      (if (string? path)
          (string-join normalized "/" 'infix)
@@ -138,8 +138,8 @@
           (dirname (if (regexp-match? dirmatch)
                        (let ((full-string (match:substring dirmatch 1)))
                          (substring full-string
-                           0
-                           (- (string-length full-string) 1)))
+                                    0
+                                    (- (string-length full-string) 1)))
                        ".")))
      (normalize-path dirname)))
 
@@ -185,43 +185,51 @@
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "logging"))
+          _SOLMISASI_LIB_DIR
+          "logging"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "define-pitch-names"))
+          _SOLMISASI_LIB_DIR
+          "define-pitch-names"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "misc-functions"))
+          _SOLMISASI_LIB_DIR
+          "misc-functions"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "solmisasi-script-alist"))
+          _SOLMISASI_LIB_DIR
+          "solmisasi-script-alist"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "solmisasi-markups"))
+          _SOLMISASI_LIB_DIR
+          "solmisasi-markups"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "solmisasi-engraver"))
+          _SOLMISASI_LIB_DIR
+          "solmisasi-engraver"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "solmisasi-layout-definition"))
+          _SOLMISASI_LIB_DIR
+          "solmisasi-layout-definition"))
 
 #(ly:parser-include-string
   (format #f "\\include \"~a/include/~a.ily\""
-    _SOLMISASI_LIB_DIR
-    "solmisasi-music-parser"))
+          _SOLMISASI_LIB_DIR
+          "solmisasi-music-parser"))
+
+% #(define-public (scorify-music music)
+%    "Preprocess @var{music}."
+%    (set! music (solmisasiMusic music))
+%    (ly:make-score
+%     (fold (lambda (f m) (f m))
+%           music
+%           toplevel-music-functions)))
 
 #(set! _SOLMISASI_LILY_LOADED #t)
 #(ly:message "Finished loading core \"solmisasi\" library.

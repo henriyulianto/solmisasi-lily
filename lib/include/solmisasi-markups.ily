@@ -29,14 +29,14 @@
           (mag (magstep font-size))
           (mag-diff (- mag 1.0))
           (thickness (* mag
-                       (ly:output-def-lookup layout 'line-thickness)
-                       thickness))
+                        (ly:output-def-lookup layout 'line-thickness)
+                        thickness))
           ;; backward slashes might use slope and point in the other direction!
           (dy (* mag (if forward 0.65 -0.65)))
           (number-stencil (interpret-markup layout props
-                            (markup
-                             (make-fontsize-markup font-size
-                               (number->string num)))))
+                                            (markup
+                                             (make-fontsize-markup font-size
+                                                                   (number->string num)))))
           (octave-dot-radius (+ 0.18 (* mag-diff 0.25)))
           (octave-dot-padding (+ 0.2 (* mag-diff 0.6)))
           (octave-dot-stencil
@@ -78,8 +78,8 @@
           (is-sane (and (interval-sane? num-x) (interval-sane? num-y)))
           (slash-stencil (if is-sane
                              (make-line-stencil thickness
-                               (car num-x) (- (interval-center num-y) dy)
-                               (cdr num-x) (+ (interval-center num-y) dy))
+                                                (car num-x) (- (interval-center num-y) dy)
+                                                (cdr num-x) (+ (interval-center num-y) dy))
                              #f)))
      ;; chromatic
      (if (and to-be-slashed (ly:stencil? slash-stencil))
@@ -94,68 +94,66 @@
               (ly:stencil? octave-dot-stencil))
          (set! number-stencil
                (ly:stencil-add number-stencil
-                 (ly:stencil-translate
-                  octave-dot-stencil
-                  (if (> diff-octave 0)
-                      (cons center-x (+ end-y (* mag 0.4)))
-                      (cons center-x (- start-y (* mag 0.4))))
-                  ))))
+                               (ly:stencil-translate
+                                octave-dot-stencil
+                                (if (> diff-octave 0)
+                                    (cons center-x (+ end-y (* mag 0.4)))
+                                    (cons center-x (- start-y (* mag 0.4))))
+                                ))))
      ;; return
      number-stencil))
 
+#(define-public (sol:pitch? x)
+   (or (string? x) (list? x) (pair? x) (ly:pitch? x)))
+
 #(define-markup-command (not-angka layout props pitch base-octave)
-   (ly:pitch? number?)
+   (sol:pitch? number?)
    #:properties ((font-size 0)
                  (thickness 1.5))
-   (let*
-    ((pitch-name
-      (and (ly:pitch? pitch)
-           (ly:pitch-notename pitch)))
-     (pitch-alter
-      (and (ly:pitch? pitch)
-           (ly:pitch-alteration pitch)))
-     (pitch-octave
-      (and (ly:pitch? pitch)
-           (ly:pitch-octave pitch)))
-     (note-number (+ 1 pitch-name))
-     (diff-octave (- pitch-octave base-octave))
-     (not-angka-stencil empty-stencil))
-    (set! not-angka-stencil
-          (not-angka-internal layout props
-            note-number pitch-alter diff-octave thickness))
-    not-angka-stencil))
+   (let* ((pit (if (ly:pitch? pitch)
+                   pitch
+                   (ly:make-pitch 0 0 0)))
+          (pitch-name 		(ly:pitch-notename pit))
+          (pitch-alter 		(ly:pitch-alteration pit))
+          (pitch-octave 	(ly:pitch-octave pit))
+          (note-number 		(+ 1 pitch-name))
+          (diff-octave 		(- pitch-octave base-octave))
+          (not-angka-stencil
+           (not-angka-internal layout props
+                               note-number pitch-alter diff-octave thickness)))
+     not-angka-stencil))
 
 #(define-markup-command (infoNadaBaru layout props nada oktafDasar)
    (ly:pitch? number?)
    (interpret-markup layout props
-     #{
-       \markup {
-         \pad-around #0.1
-         \center-align \concat {
-           \hspace #0.2
-           "="
-           \hspace #0.2
-           \solmisasi \not-angka #nada #oktafDasar
-           \hspace #0.2
-         }
-       }
-     #}))
+                     #{
+                       \markup {
+                         \pad-around #0.1
+                         \center-align \concat {
+                           \hspace #0.2
+                           "="
+                           \hspace #0.2
+                           \solmisasi \not-angka #nada #oktafDasar
+                           \hspace #0.2
+                         }
+                       }
+                     #}))
 
 #(define-markup-command (ekuivalensiNada layout props nada oktafDasar)
    (ly:pitch? number?)
    (interpret-markup layout props
-     #{
-       \markup {
-         \override #'(thickness . 1.5)
-         \box
-         \with-dimensions-from
-         \overlay {
-           \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
-           \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
-         }
-         \infoNadaBaru #nada #oktafDasar
-       }
-     #}))
+                     #{
+                       \markup {
+                         \override #'(thickness . 1.5)
+                         \box
+                         \with-dimensions-from
+                         \overlay {
+                           \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
+                           \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
+                         }
+                         \infoNadaBaru #nada #oktafDasar
+                       }
+                     #}))
 
 #(define-markup-command (boxNadaDasar layout props keySigPair)
    (pair?)
@@ -163,34 +161,34 @@
      (ly:number->string (car keySigPair)))
    (define key-sig-string (get-key-sig-string (cdr keySigPair)))
    (interpret-markup layout props
-     #{
-       \markup {
-         \override #'(thickness . 1.3)
-         \override #'(box-padding . 0.5)
-         \box
-         % \with-dimensions-from
-         %          \pad-x #1.5
-         %          \overlay {
-         %            \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
-         %            \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
-         %          }
-         \center-align \concat \bold \larger {
-           #key-sig-number-string "=" #key-sig-string
-         }
-       }
-     #}))
+                     #{
+                       \markup {
+                         \override #'(thickness . 1.3)
+                         \override #'(box-padding . 0.5)
+                         \box
+                         % \with-dimensions-from
+                         %          \pad-x #1.5
+                         %          \overlay {
+                         %            \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
+                         %            \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
+                         %          }
+                         \center-align \concat \bold \larger {
+                           #key-sig-number-string "=" #key-sig-string
+                         }
+                       }
+                     #}))
 
 #(if (not (defined? 'make-solmisasi-markup))
      (define-markup-command (solmisasi layout props arg)
        (markup?)
        (interpret-markup layout props
-         (markup arg))))
+                         (markup arg))))
 
 #(if (not (defined? 'make-ekspresi-markup))
      (define-markup-command (ekspresi layout props arg)
        (markup?)
        (interpret-markup layout props
-         (markup arg))))
+                         (markup arg))))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MARKUPS_LOADED #t)
