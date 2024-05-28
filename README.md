@@ -11,7 +11,5 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/henriyulianto/solmisasi-lily/total?style=for-the-badge&color=454546&labelColor=343435)
 
 
-For documentation, please head over to [https://henriyulianto.github.io/solmisasi-lily/](https://henriyulianto.github.io/solmisasi-lily/)
-
 [![GitHub license](https://img.shields.io/github/license/henriyulianto/solmisasi-lily)](https://github.com/henriyulianto/solmisasi-lily/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.me/AHenriYulianto)
