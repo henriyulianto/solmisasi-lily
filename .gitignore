@@ -10,6 +10,10 @@ test*/
 /docs/*/*.pdf
 /docs/ly
 /examples/*.pdf
+/examples/*.mp4
+/examples/*.avi
+/examples/*.mid
+/examples/*.midi
 /releases
 /repository-open-graph-template.png
 /solmisasi-art.png
