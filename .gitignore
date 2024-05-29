@@ -25,7 +25,6 @@ Gemfile.lock
 jekyll_serve.bat
 
 snippets/
-examples/
 production/
 test\.txt
 jekyll_serve.sh
