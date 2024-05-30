@@ -1,6 +1,3 @@
-%%% extract-chords.ily
-\version "2.20.0"
-
 #(define (noteEvent? music)
    (eq? (ly:music-property music 'name) 'NoteEvent))
 

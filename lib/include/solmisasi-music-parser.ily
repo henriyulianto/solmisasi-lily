@@ -1,4 +1,3 @@
-\version "2.20.0"
 %% solmisasi-music-parser.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
@@ -18,7 +17,11 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(use-modules (scm song-util))
+#(if 
+  (ly:version? < (list 2 21 0))
+    (use-modules (scm song-util))
+    (use-modules (lily song-util))
+)
 
 #(define (sol:message arg . rest)
    #f)
@@ -304,9 +307,9 @@
                (duradot-sum 0)
                )
 
-          (solmisasi:log (_ "- Parsing music -> solmisasi ..."))
+          (solmisasi:log "- Parsing music -> solmisasi ...")
 
-          (solmisasi:log (_ "  - Getting repeat-vola structure, if any"))
+          (solmisasi:log "  - Getting repeat-vola structure, if any")
 
           ;; Get last pitch untuk repeat-volta
           (set! muscopy (prepare-repeat-volta-last-pitch muscopy))
@@ -323,7 +326,7 @@
           ;; Initialize chord-pos
           (set! chord-pos (list))
 
-          (solmisasi:log (_ "  - Processing chords, if any"))
+          (solmisasi:log "  - Processing chords, if any")
 
           ;-----------------------------------------------------------
           ; Event: ChordEvent
@@ -346,7 +349,7 @@
                           (ly:music-property m 'elements (list (empty-music)))))))
                  musvolta))
 
-          (solmisasi:log (_ "  - Populating rests"))
+          (solmisasi:log "  - Populating rests")
 
           (for-some-music
            (lambda (m)
@@ -387,7 +390,7 @@
 ;;;;; MAIN ALGORITHM ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-          (solmisasi:log (_ "  - Formatting the music"))
+          (solmisasi:log "  - Formatting the music")
 
           (music-map
            (lambda (m)
@@ -704,8 +707,8 @@
                                      (set! still-remainder-moment (ly:moment-sub
                                                                    current-moment (ly:make-moment (* duradot4 1/4))))
                                      (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
-                                     (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
-                                                  current-moment duradot4 still-remainder-moment has-extra-job)
+                                     ;;(sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
+                                     ;;             current-moment duradot4 still-remainder-moment has-extra-job)
 
                                      (if (equal? has-extra-job #t)
                                          (begin
@@ -715,7 +718,7 @@
                                           (set! duradot16-extra (* 16
                                                                    (ly:moment-main
                                                                     (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
-                                          (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
+                                          ;;(sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
                                           )
                                          )
                                      )
@@ -734,8 +737,8 @@
                                                                    (ly:moment-sub current-moment (ly:make-moment (* duradot4 1/4)))
                                                                    (ly:make-moment (* duradot8 1/8))))
                                      (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
-                                     (sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
-                                                  current-moment duradot4 still-remainder-moment has-extra-job)
+                                     ;;(sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
+                                      ;;            current-moment duradot4 still-remainder-moment has-extra-job)
 
                                      (if (equal? has-extra-job #t)
                                          (begin
@@ -745,7 +748,7 @@
                                           (set! duradot16-extra (* 16
                                                                    (ly:moment-main
                                                                     (ly:moment-sub still-remainder-moment (ly:make-moment (* duradot8-extra 1/8))))))
-                                          (sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
+                                          ;;(sol:message (_ "  [solmisasiMusic] duradot8-extra=~a | duradot16-extra=~a\n") duradot8-extra duradot16-extra)
                                           )
                                          )
                                      )
@@ -757,7 +760,7 @@
                                ;------------------------------------------------
                                (set! duradot4 0)
                                (set! duradot8 0)
-                               (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
+                               ;;(sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
                                (ly:music-set-property! m 'duration dur8)
                                (if (equal? must-reverse #t)
                                    (if (equal? (ly:moment-main-denominator remainder-moment) 16)
@@ -817,7 +820,7 @@
                                                      (ly:moment-div current-moment (ly:make-moment beat-structure-dur)))))
                                     ))
 
-                               (sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
+                               ;;(sol:message (_ "  [solmisasiMusic] GREATER THAN 1/8: ~a ~a mod=~a\n") evaluated-moment dur delta-moment)
 
                                (if (equal? must-reverse #t)
                                    (if (equal? (ly:moment-main-denominator remainder-moment) 16)
@@ -985,7 +988,7 @@
              (rp rest-pos)
              (ri 0))
 
-        (solmisasi:log (_ "  - Adjusting lyrics"))
+        (solmisasi:log "  - Adjusting lyrics")
 
         (for-each
          (lambda (l)

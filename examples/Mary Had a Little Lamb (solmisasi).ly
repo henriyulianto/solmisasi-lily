@@ -1,5 +1,7 @@
 \version "2.24.3"
 
+\include "solmisasi.ily"
+
 \paper {
   % some paper settings goes here...
 }
@@ -13,6 +15,8 @@
       \concat {
         "Engraved using GNU Lilypond "
         #(lilypond-version) "."
+        " — with solmisasi-lily v"
+        #_VERSION
       }
     }
   }
@@ -55,19 +59,29 @@ mary_lyric = \lyricmode {
 
 \score {
   <<
-    \new Staff {
-      \new Voice { \mary_music }
-      \addlyrics { \mary_lyric }
+    \new SolmisasiTimeAndKeySignature {
+      \solmisasiMusic \mary_music
     }
+    \new SolmisasiStaff <<
+      \new SolmisasiVoice {
+        \solmisasiMusic \mary_music
+      }
+      \new NullVoice = "melodi" {
+        \mary_music
+      }
+      \new Lyrics \lyricsto "melodi" {
+        \mary_lyric
+      }
+    >>
   >>
   \layout {
     \context {
       \Lyrics
+      \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.basic-distance = #0
       \override LyricText.font-family = #'sans
       \override LyricText.font-size = #0
       \override LyricHyphen.Y-offset = #0.2
       \override LyricHyphen.minimum-distance = #2.0
     }
   }
-  \midi {}
 }

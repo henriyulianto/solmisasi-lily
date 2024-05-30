@@ -1,4 +1,3 @@
-\version "2.20.0"
 %% solmisasi-engraver.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)

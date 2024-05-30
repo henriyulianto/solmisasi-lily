@@ -1,4 +1,3 @@
-\version "2.20.0"
 %%% solmisasi-key-signature-summary.ily
 %%% A solmisasi-lily extension
 %%% By Henri Yulianto, 2020

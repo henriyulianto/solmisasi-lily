@@ -1,4 +1,3 @@
-\version "2.20.0"
 %%% solmisasi-simultaneous-divisi.ily
 %%% A solmisasi-lily extension (separated from release bundle)
 %%% By Henri Yulianto, 2020

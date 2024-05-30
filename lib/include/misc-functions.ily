@@ -1,4 +1,3 @@
-\version "2.20.0"
 %% misc-functions.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)

@@ -1,5 +1,3 @@
-\version "2.20.0"
-
 % This is a duplication of code introduced for \offset.
 % TODO: make that function (in scm/music-functions.scm) define-public
 #(define (find-value-to-offset prop self alist)

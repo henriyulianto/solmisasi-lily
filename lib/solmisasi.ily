@@ -1,4 +1,3 @@
-\version "2.20.0"
 #(ly:set-option 'relative-includes #t)
 %% solmisasi.ily
 %%
@@ -30,7 +29,7 @@
   (lily)
   (ice-9 regex))
 
-#(define _VERSION "1.0.8-beta")
+#(define-public _VERSION "1.0.10-beta")
 #(define _SOLMISASI_LILY_LOADED #f)
 
 %% #t when running a Windows OS
