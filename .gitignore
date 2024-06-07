@@ -35,3 +35,5 @@ jekyll_serve.sh
 favicon_150x150.ps
 
 bugs/
+.tmp*
+
