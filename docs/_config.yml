@@ -2,6 +2,7 @@ title: solmisasi-lily
 description: "\"Solmisasi\" library for Lilypond"
 baseurl: "/solmisasi-lily" # the subpath of your site, e.g. /blog
 url: "https://henriyulianto.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+repository: henriyulianto/solmisasi-lily
 
 permalink: pretty
 exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile", "*.solmisasi.log", "*.ly", "*tmp-lilypond*"]
