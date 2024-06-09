@@ -30,7 +30,16 @@
   (ice-9 regex))
 
 #(define-public _VERSION "1.0.10-beta")
+%#(define-public _USE_VERSION2 #f)
+#(if (defined? '_USE_VERSION2)
+     (set! _VERSION "2.0.0-dev"))
 #(define _SOLMISASI_LILY_LOADED #f)
+#(define-syntax for
+   (syntax-rules (in)
+     ((for element in list body ...)
+      (map (lambda (element)
+             body ...)
+           list))))
 
 %% #t when running a Windows OS
 #(define-public is-windows
@@ -167,60 +176,53 @@
    (normalize-path
     (location-extract-path (*location*))))
 
+% Switch to v2 (dev)
+#(define-public (use-version2)
+   (begin
+    (set! _VERSION "2.0.0-dev")
+    (set! _USE_VERSION2 #t)
+    ))
+useVersionTwo = #(define-void-function () ()
+                   (use-version2))
+
 % List of include files
-#(define-public ily-files '(
-                             "logging"
-                             "define-pitch-names"
-                             "misc-functions"
-                             "solmisasi-script-alist"
-                             "solmisasi-markups"
-                             "solmisasi-engraver"
-                             "solmisasi-music-parser"
-                             "solmisasi-layout-definition"
-                             ))
+#(define ily-files
+   (if (not (defined? '_USE_VERSION2))
+       '(
+          "logging"
+          "define-pitch-names"
+          "misc-functions"
+          "solmisasi-script-alist"
+          "solmisasi-markups"
+          "solmisasi-engraver"
+          "solmisasi-music-parser"
+          "solmisasi-layout-definition"
+          "solmisasi-finished-loading"
+          )
+       ;; use version2
+       '(
+          "logging"
+          "define-pitch-names"
+          "misc-functions"
+          "solmisasi-script-alist"
+          "solmisasi-markups"
+          "solmisasi-engraver-v2"
+          "solmisasi-music-parser-v2"
+          "solmisasi-layout-definition-v2"
+          "solmisasi-finished-loading"
+          )))
 
+#(ly:message (format #f "Start loading \"solmisasi-lily\" v~a ...\n"
+                     _VERSION))
 
-#(ly:message (format #f "Start loading \"solmisasi\" library v~a ...\n" _VERSION))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "logging"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "define-pitch-names"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "misc-functions"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "solmisasi-script-alist"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "solmisasi-markups"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "solmisasi-engraver"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "solmisasi-layout-definition"))
-
-#(ly:parser-include-string
-  (format #f "\\include \"~a/include/~a.ily\""
-          _SOLMISASI_LIB_DIR
-          "solmisasi-music-parser"))
+#(let* ((parserStr ""))
+   (for file in ily-files
+        (set! parserStr
+              (format #f "~a\\include \"~a/include/~a.ily\"\n"
+                      parserStr
+                      _SOLMISASI_LIB_DIR
+                      file)))
+   (ly:parser-include-string parserStr))
 
 % #(define-public (scorify-music music)
 %    "Preprocess @var{music}."
@@ -229,7 +231,3 @@
 %     (fold (lambda (f m) (f m))
 %           music
 %           toplevel-music-functions)))
-
-#(set! _SOLMISASI_LILY_LOADED #t)
-#(ly:message "Finished loading core \"solmisasi\" library.
-==========================================")

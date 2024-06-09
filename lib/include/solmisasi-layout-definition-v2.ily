@@ -1,8 +1,8 @@
-%% solmisasi-layout-definition.ily
+%% solmisasi-layout-definition-v2.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
 %%
-%% Copyright (C) 2016 - Henri Yulianto
+%% Copyright (C) 2016-2024 - Henri Yulianto
 %%
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
