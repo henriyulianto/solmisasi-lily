@@ -17,11 +17,11 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(if 
+#(if
   (ly:version? < (list 2 21 0))
-    (use-modules (scm song-util))
-    (use-modules (lily song-util))
-)
+  (use-modules (scm song-util))
+  (use-modules (lily song-util))
+  )
 
 #(define (sol:message arg . rest)
    #f)
@@ -31,14 +31,12 @@
   ;; PROPERTY OPERATIONS
   ;; SolmisasiStaff
 
-
-
   ;; Konstanta untuk solmisasiMusic
   (define _KEY_SIG_PROP 	'solmisasi-key-sig)
   (define _TIME_SIG_PROP 	'solmisasi-time-sig)
   (define _REST_PROP 			'solmisasi-rest)
   (define _DOT_NOTE_PROP 	'solmisasi-dot-note)
-  (define _EXPERIMENTAL		#f)
+  (define _EXPERIMENTAL		#t)
 
   (define key-changes '())
   (define key-change-completed? #f)
@@ -738,7 +736,7 @@
                                                                    (ly:make-moment (* duradot8 1/8))))
                                      (set! has-extra-job (ly:moment<? ZERO-MOMENT still-remainder-moment))
                                      ;;(sol:message (_ "  [solmisasiMusic] current-moment=~a | duradot4=~a | still=~a | has-extra-job=~a\n")
-                                      ;;            current-moment duradot4 still-remainder-moment has-extra-job)
+                                     ;;            current-moment duradot4 still-remainder-moment has-extra-job)
 
                                      (if (equal? has-extra-job #t)
                                          (begin

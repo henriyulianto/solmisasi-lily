@@ -175,13 +175,13 @@ strofab = \lyricmode {
         }
         \new Lyrics \with {
           \override VerticalAxisGroup.staff-affinity = #CENTER
-        } \lyricsto "nullSop" {
+        } \lyricsto "vSop" {
           \set stanza = "1."
           \strofaa
         }
         \new Lyrics \with {
           \override VerticalAxisGroup.staff-affinity = #CENTER
-        } \lyricsto "nullSop" {
+        } \lyricsto "vSop" {
           \set stanza = "2."
           \strofab
         }
@@ -205,13 +205,13 @@ strofab = \lyricmode {
         }
         \new Lyrics \with {
           \override VerticalAxisGroup.staff-affinity = #CENTER
-        } \lyricsto "nullTen" {
+        } \lyricsto "vTen" {
           \set stanza = "1."
           \strofaa
         }
         \new Lyrics \with {
           \override VerticalAxisGroup.staff-affinity = #CENTER
-        } \lyricsto "nullTen" {
+        } \lyricsto "vTen" {
           \set stanza = "2."
           \strofab
         }
@@ -254,56 +254,56 @@ strofab = \lyricmode {
   }
 }
 
-\score {
-  \articulate <<
-    \new Staff \with {
-      midiInstrument = "choir aahs"
-      midiMinimumVolume = #0.5
-      midiMaximumVolume = #0.9
-      midiPanPosition = #0.5
-    } {
-      \new Voice {
-        \soprani
-      }
-    }
-    \new Staff \with {
-      midiInstrument = "choir aahs"
-      midiMinimumVolume = #0.5
-      midiMaximumVolume = #0.85
-      midiPanPosition = #0.25
-    } {
-      \new Voice {
-        \contralti
-      }
-    }
-    \new Staff \with {
-      midiInstrument = "choir aahs"
-      midiMinimumVolume = #0.5
-      midiMaximumVolume = #0.85
-      midiPanPosition = #-0.5
-    } {
-      \new Voice {
-        \tenori
-      }
-    }
-    \new Staff \with {
-      midiInstrument = "choir aahs"
-      midiMinimumVolume = #0.5
-      midiMaximumVolume = #0.85
-      midiPanPosition = #-0.25
-    } {
-      \new Voice {
-        \bassi
-      }
-    }
-  >>
-  \midi {
-    \context {
-      \Score
-      midiChannelMapping = #'staff
-    }
-  }
-}
+% \score {
+%   \articulate <<
+%     \new Staff \with {
+%       midiInstrument = "choir aahs"
+%       midiMinimumVolume = #0.5
+%       midiMaximumVolume = #0.9
+%       midiPanPosition = #0.5
+%     } {
+%       \new Voice {
+%         \soprani
+%       }
+%     }
+%     \new Staff \with {
+%       midiInstrument = "choir aahs"
+%       midiMinimumVolume = #0.5
+%       midiMaximumVolume = #0.85
+%       midiPanPosition = #0.25
+%     } {
+%       \new Voice {
+%         \contralti
+%       }
+%     }
+%     \new Staff \with {
+%       midiInstrument = "choir aahs"
+%       midiMinimumVolume = #0.5
+%       midiMaximumVolume = #0.85
+%       midiPanPosition = #-0.5
+%     } {
+%       \new Voice {
+%         \tenori
+%       }
+%     }
+%     \new Staff \with {
+%       midiInstrument = "choir aahs"
+%       midiMinimumVolume = #0.5
+%       midiMaximumVolume = #0.85
+%       midiPanPosition = #-0.25
+%     } {
+%       \new Voice {
+%         \bassi
+%       }
+%     }
+%   >>
+%   \midi {
+%     \context {
+%       \Score
+%       midiChannelMapping = #'staff
+%     }
+%   }
+% }
 
 \markup {
   \left-column {

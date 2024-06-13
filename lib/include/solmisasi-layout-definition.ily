@@ -2,7 +2,7 @@
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
 %%
-%% Copyright (C) 2016 - Henri Yulianto
+%% Copyright (C) 2016-2024 - Henri Yulianto
 %%
 %% This program is free software: you can redistribute it and/or modify
 %% it under the terms of the GNU General Public License as published by
@@ -157,6 +157,7 @@ solmisasiStaffContextMods = \with {
   \override Stem.direction = #UP
   \override Stem.transparent = ##t
   \override NoteHead.Y-offset = #-0.65
+  \override Rest.Y-offset = #-0.65
   \override Tie.details.height-limit = #1.3
   %\override Slur.details.height-limit = #1.3
   \override TextScript.direction = #UP
@@ -321,6 +322,7 @@ solmisasiVoiceContextMods = \with {
     \alias Staff
 
     \consists #Solmisasi_note_head_engraver
+    \consists #Solmisasi_rest_engraver
     \consists #Solmisasi_equivalence_key_engraver
 
     \with \solmisasiStaffContextMods

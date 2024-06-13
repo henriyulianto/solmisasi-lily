@@ -49,12 +49,12 @@ mary_lyric = \lyricmode {
   Ma -- ry had a lit -- tle lamb,
   lit -- tle lamb, lit -- tle lamb.
   Ma -- ry had a lit -- tle lamb whose
-  fleece was white as snow.
+  fleece was white as snow. __
   % Verse 2
   Ev -- ery -- where that Ma -- ry went,
   Ma -- ry went, Ma -- ry went.
   Ev -- ery -- where that Ma -- ry went
-  the lamb was sure to go.
+  the lamb was sure to go. __
 }
 
 \score {
@@ -66,12 +66,7 @@ mary_lyric = \lyricmode {
       \new SolmisasiVoice {
         \solmisasiMusic \mary_music
       }
-      \new NullVoice = "melodi" {
-        \mary_music
-      }
-      \new Lyrics \lyricsto "melodi" {
-        \mary_lyric
-      }
+      \addlyrics \mary_lyric
     >>
   >>
   \layout {
