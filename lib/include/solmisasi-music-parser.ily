@@ -449,7 +449,7 @@
                         (or (assoc-ref key-alts major-tonic-number) 0)
                         ))
                  (set! key-sig-string
-                       (format "~a = ~a"
+                       (format #f "~a = ~a"
                                (number->string mode)
                                (get-key-sig-string tonic)))
                  (set! transposed-last-pitch

@@ -69,14 +69,15 @@ mary_lyric = \lyricmode {
       \addlyrics \mary_lyric
     >>
   >>
-  \layout {
-    \context {
-      \Lyrics
-      \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.basic-distance = #0
-      \override LyricText.font-family = #'sans
-      \override LyricText.font-size = #0
-      \override LyricHyphen.Y-offset = #0.2
-      \override LyricHyphen.minimum-distance = #2.0
-    }
+}
+
+\layout {
+  \context {
+    \Lyrics
+    \override VerticalAxisGroup.nonstaff-relatedstaff-spacing.basic-distance = #0
+    \override LyricText.font-family = #'sans
+    \override LyricText.font-size = #0
+    \override LyricHyphen.Y-offset = #0.2
+    \override LyricHyphen.minimum-distance = #2.0
   }
 }

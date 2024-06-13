@@ -133,7 +133,7 @@
           (inc-y 0.25)
           (inc-x 0.0)
           (left-x 1.5)
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
+          (pscmd (format #f "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
                          (+ left-x usable-length (* -1 inc-x)) 	(+ inc-y middle-y)
                          (+ left-x inc-x) 											(+ inc-y bottom-y)
@@ -181,7 +181,7 @@
           (inc-y 0.1)
           (inc-x 0.2)
           (left-x 1.5)
-          (pscmd (format "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
+          (pscmd (format #f "~a setlinewidth 1 setlinecap [0.5 0.5] 0 setdash ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
                          (+ left-x inc-x) 									  		(+ inc-y middle-y)
                          (+ left-x usable-length (* -1 inc-x))	(+ inc-y bottom-y)
@@ -240,8 +240,8 @@ withExtensions =
     (lambda (o)
       (ly:parser-parse-string
        (ly:parser-clone)
-       (format "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
-      (solmisasi:log (format "* Extension \"~a\" has been loaded." o))
+       (format #f "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
+      (solmisasi:log (format #f "* Extension \"~a\" has been loaded." o))
       )
     exts))
 

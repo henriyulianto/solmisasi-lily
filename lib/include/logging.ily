@@ -43,7 +43,7 @@ openLogfile =
    (if (not solmisasi-logfile)
        (set! solmisasi-logfile
              (open-output-file
-              (format "~a.solmisasi.log" (ly:parser-output-name))))))
+              (format #f "~a.solmisasi.log" (ly:parser-output-name))))))
 
 % Needs global variable of loglevel: solmisasi-loglevel
 
@@ -58,7 +58,7 @@ openLogfile =
              ;; console output
              (ly:error location
                        (format
-                        (string-append "solmisasi-lily: " fmt) vals))
+                        #f (string-append "solmisasi-lily: " fmt) vals))
              ;; logfile output
              (format solmisasi-logfile fmt vals))
             (begin
@@ -66,7 +66,7 @@ openLogfile =
              ;; "location" is actually the "fmt" argument
              (ly:error
               (format
-               (string-append "solmisasi-lily: " (*location*)) fmt))
+               #f (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
                      (format "error: ~a\n" (*location*)) fmt))))))
 
@@ -79,12 +79,12 @@ openLogfile =
             (begin
              (ly:input-warning (*location*)
                                (format
-                                (string-append "solmisasi-lily: " fmt) vals))
+                                #f (string-append "solmisasi-lily: " fmt) vals))
              (format solmisasi-logfile fmt vals))
             (begin
              (ly:warning
               (format
-               (string-append "solmisasi-lily: " (*location*)) fmt))
+               #f (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
                      (format "warning: ~a\n" (*location*)) fmt))))))
 
@@ -108,12 +108,12 @@ openLogfile =
             (begin
              (ly:input-message (*location*)
                                (format
-                                (string-append "solmisasi-lily: " fmt) vals))
+                                #f (string-append "solmisasi-lily: " fmt) vals))
              (format solmisasi-logfile fmt vals))
             (begin
              (ly:message
               (format
-               (string-append "solmisasi-lily: " (*location*)) fmt))
+               #f (string-append "solmisasi-lily: " (*location*)) fmt))
              (format solmisasi-logfile
                      (format "log: ~a\n" (*location*)) fmt))))))
 
