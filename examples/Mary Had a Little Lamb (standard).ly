@@ -28,7 +28,7 @@ mary_in_d_maj_notes = {
     fis4. e8 d4 e |
     fis4 4 4 4 |
     e e fis e |
-    d2. r4
+    d2.\fermata r4
   }
 }
 
