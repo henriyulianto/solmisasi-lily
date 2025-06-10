@@ -248,7 +248,7 @@ solmisasiVoiceContextMods = \with {
     barNumberVisibility = #all-bar-numbers-visible
     tieWaitForNote = ##t
     noChordSymbol = #(make-bold-markup "(tacet)")
-    scriptDefinitions = #solmisasi-script-alist
+    %scriptDefinitions = #solmisasi-script-alist
     \forceShowBracket
   }
 
