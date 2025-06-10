@@ -19,6 +19,75 @@
 
 %% MACROS
 
+#(define (ly:moment<=? momI momII)
+   "Returns a boolean whether momI is less than or equal to momII."
+   (or (ly:moment<? momI momII) (equal? momI momII)))
+
+#(define (moment->number moment)
+   "Returns rational number from moment."
+   (/ (ly:moment-main-numerator moment) (ly:moment-main-denominator moment)))
+
+#(define (moment->duration moment)
+   "Try to convert moment to a duration suitable for displaying a note or a rest,
+so in the following form : (ly:make-duration k dots 1 1)
+Note that, if moment=5/8, for example, no duration of this form is possible."
+   (let* ((p (ly:moment-main-numerator moment))
+          (q (ly:moment-main-denominator moment))
+          (k (- (ly:intlog2 q) (ly:intlog2 p))))
+     (if (< (ash p k) q) (set! k (1+ k))) ; (ash p k) = p * 2^k
+     (if (> k 6)
+         (ly:make-duration 6 0) ; 6 means 64th (max value).
+         (let loop ((p1 (- (ash p k) q))
+                    (dots 0))
+           (let ((p2 (ash p1 1)))
+             ;; (format #t "p1 = ~a ; p2 = ~a\n" p1 p2)
+             (if (>= p2 q)
+                 (loop (- p2 q) (1+ dots))
+                 ;; it seems that (not documented) :
+                 ;;    (ly:duration-length (ly:make-duration a b c d)) =
+                 ;;    (ly:moment-mul (ly:duration-length (ly:make-duration a b))
+                 ;;                   (ly:make-moment c d))
+                 (let* ((dur (ly:make-duration k dots))        ; duration for displaying the note
+                                                               (dur-len (ly:duration-length dur))     ; his display length.
+                                                               (frac (ly:moment-div moment dur-len))) ; to adjust to the real length
+                   (ly:make-duration k dots
+                                     (ly:moment-main-numerator frac) ; frac = 1/1 for moment = 3/4, 7/8 etc ..
+                                     (ly:moment-main-denominator frac)))))))))
+
+#(define-public (compose . functions)
+   (let ((functions* (drop-right functions 1))
+         (last-function (last functions)))
+     (letrec ((reduce (lambda (x functions)
+                        (if (null? functions)
+                            x
+                            (reduce ((car functions) x) (cdr functions))))))
+       (lambda args (reduce (apply (last functions) args) (reverse functions*))))))
+
+#(define (insert-at new k l)
+   (cond ((null? l)
+          (list new))
+         ((zero? k)
+          (append (list new) l))
+         (else
+          (append (car l)
+                  (insert-at new (1- k) (cdr l))))))
+
+#(define (get-list-index l el)
+   (if (null? l)
+       -1
+       (if (= (car l) el)
+           0
+           (let ((result (get-list-index (cdr l) el)))
+             (if (= result -1)
+                 -1
+                 (1+ result))))))
+
+#(define (count-element-less-than-or-equal el l)
+   (cond
+    ((null? l) 0)
+    (else
+     (+ (if (<= (car l) el) 1 0) (count-element-less-than-or-equal el (cdr l))))))
+
 #(define music-flatten
    (lambda (mus)
      "Convert nested sequential musics into single sequential musics"
@@ -460,6 +529,210 @@ beam_grouping_by_time_sig  =
 %% EXTERNAL LIBRARIES
 \include "imported/shapeII.ily"
 \include "imported/extract-chords.ily"
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FUNCTIONS FOR SOLMISASI MUSIC PARSER
+#(begin
+
+  (define (note-event? m)
+    (if (and (ly:music? m)
+             (music-is-of-type? m 'note-event))
+        #t
+        #f))
+
+  (define (rest-event? m)
+    (if (ly:music? m)
+        (if (or (music-is-of-type? m 'rest-event)
+                (music-is-of-type? m 'multi-measure-rest))
+            #t
+            #f)
+        #f))
+
+  (define (event-chord? m)
+    (and (ly:music? m)
+         (music-is-of-type? m 'event-chord)
+         (ly:music-property m 'elements #f)))
+
+  (define (get-last-pitch-for-volta m)
+    (let*
+     ((last-elt (last (ly:music-property m 'elements))))
+     (if (not (null? (ly:music-property last-elt 'elements)))
+         (get-last-pitch-for-volta last-elt)
+         (if (note-event? last-elt)
+             (ly:music-property last-elt 'pitch)
+             #f))
+     ))
+
+  (define (slur-start-note? m)
+    (let* ((articulations (ly:music-property m 'articulations)))
+      (not (null?
+            (filter
+             (lambda (a)
+               (and (music-is-of-type? a 'slur-event)
+                    (= -1 (ly:music-property a 'span-direction))))
+             articulations)))))
+
+  (define (slur-stop-note? m)
+    (let* ((articulations (ly:music-property m 'articulations)))
+      (not (null?
+            (filter
+             (lambda (a)
+               (and (music-is-of-type? a 'slur-event)
+                    (= 1 (ly:music-property a 'span-direction))))
+             articulations)))))
+
+  (define (tied-note? m)
+    (let ((articulations (ly:music-property m 'articulations)))
+      (not (null?
+            (filter (lambda (a) (music-is-of-type? a 'tie-event)) articulations)))))
+
+  (define (append-tweaks! m a)
+    (ly:music-set-property! m 'tweaks
+                            (append
+                             (ly:music-property m 'tweaks)
+                             (list a)))
+    m)
+
+  (define (append-articulations! m a)
+    (ly:music-set-property! m 'articulations
+                            (append
+                             (ly:music-property m 'articulations)
+                             (list a)))
+    m)
+
+  (define (delete-articulations! m a)
+    (ly:music-set-property! m 'articulations
+                            (delete
+                             a (ly:music-property m 'articulations)))
+    m)
+
+  (define (close-div-start)
+    (make-music 'TextSpanEvent
+                'tweaks (list (cons
+                               (cons 'TextSpanner 'stencil)
+                               close-divisi-stencil))
+                'direction -1
+                'span-direction -1))
+
+  (define (open-div-start)
+    (make-music 'TextSpanEvent
+                'tweaks (list (cons
+                               (cons 'TextSpanner 'stencil)
+                               open-divisi-stencil))
+                'direction -1
+                'span-direction -1))
+
+  (define (div-span-stop)
+    (make-music 'TextSpanEvent
+                ;'direction -1
+                'span-direction 1))
+
+  (define (is-music-chord? m)
+    (and (note-event? m)
+         (ly:music-property m 'cdr-chords #f)))
+
+  (define (is-music-span-top? m)
+    (ly:music-property m 'div-span-stop #f))
+
+  (define (prepare-repeat-volta-last-pitch mus)
+    (if (not (ly:music? mus))
+        (ly:error "Parameter harus berupa ly:music?.")
+        (let ((volta-has-alternatives? #f))
+          (music-map
+           (lambda (m)
+             (if (equal? 'VoltaRepeatedMusic (ly:music-property m 'name))
+                 (begin
+                  (set! volta-has-alternatives?
+                        (not (null? (ly:music-property m 'elements))))
+                  (if volta-has-alternatives?
+                      (music-map
+                       (lambda (v)
+                         (ly:music-set-property! v 'last-pitch-for-volta
+                                                 (get-last-pitch-for-volta m))
+                         v)
+                       m))
+                  ))
+             m)
+           mus)))
+    mus)
+
+  (define (prepare-chords mus)
+    (map-some-music
+     (lambda (m)
+       (and (and (event-chord? m)
+                 (not (null?
+                       (filter (lambda (x)
+                                 (music-is-of-type? x 'note-event))
+                               (ly:music-property m 'elements)))))
+            (make-sequential-music
+             (append
+              (list #{
+                \once\override Beam.stencil =
+                #(lambda (grob)
+                   (ly:stencil-stack
+                    (ly:stencil-translate-axis (ly:beam::print grob) 0.0 Y)
+                    Y DOWN
+                    (ly:beam::print grob)
+                    0 3.5))
+                    #})
+              (list (make-music
+                     'NoteEvent (car (ly:music-property m 'elements))
+                     'cdr-chords (cdr (ly:music-property m 'elements)))))))
+       ) ; end lambda
+     mus))
+
+  (define (prepare-chord-open-close mus)
+    (let* ((stoplst (list))
+           (chord-iteration 0)
+           ;(rmus #f)
+           (last-music (empty-music)))
+      ;--> Forward
+      (set! chord-iteration 0)
+      (music-map
+       (lambda (m)
+         (cond
+          ((or (and (note-event? m) (not (is-music-chord? m)))
+               (rest-event? m))
+           (if (is-music-chord? last-music)
+               (begin
+                (set! stoplst (append stoplst (list chord-iteration)))
+                (ly:music-set-property! m 'div-span-stop #t))))
+          ((and (note-event? m) (is-music-chord? m))
+           (if (or (and (not (is-music-chord? last-music))
+                        (not (equal? last-music (empty-music))))
+                   (rest-event? m))
+               (begin
+                (set! stoplst (append stoplst (list chord-iteration)))
+                (ly:music-set-property! m 'div-span-stop #t))))
+          ) ; end cond
+         (if (or (note-event? m) (rest-event? m))
+             (begin
+              (set! chord-iteration (1+ chord-iteration))
+              (set! last-music m)))
+         m) ; end lambda
+       mus)
+      ; <-- Backward
+      (set! last-music (empty-music))
+      (set! chord-iteration 0)
+      (music-map
+       (lambda (m)
+         (if (or (note-event? m) (rest-event? m))
+             (begin
+              (if (and (not (null? stoplst))
+                       (eq? chord-iteration (1- (car stoplst))))
+                  (begin
+                   (set! stoplst (cdr stoplst))
+                   (if (is-music-chord? m)
+                       (ly:music-set-property! m 'close-div-start #t)
+                       (ly:music-set-property! m 'open-div-start #t))))
+              (set! chord-iteration (1+ chord-iteration))
+              (set! last-music m)))
+         m) ; end lambda
+       mus)
+      ;(set! mus (my-retrograde-music rmus))
+      mus))
+
+  )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)

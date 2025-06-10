@@ -34,7 +34,7 @@
   ;; Konstanta untuk solmisasiMusic
   (define _KEY_SIG_PROP 	'solmisasi-key-sig)
   (define _TIME_SIG_PROP 	'solmisasi-time-sig)
-  (define _REST_PROP 			'solmisasi-rest)
+  (define _REST_PROP 		'solmisasi-rest)
   (define _DOT_NOTE_PROP 	'solmisasi-dot-note)
   (define _EXPERIMENTAL		#t)
 

@@ -47,7 +47,7 @@
           (inc-y 0.3)
           (inc-x 0.0)
           (left-x (+ 1.7 left-padding))
-          (pscmd (format "~a setlinewidth 1 setlinecap ~a ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
+          (pscmd (format #f "~a setlinewidth 1 setlinecap ~a ~a ~a moveto ~a ~a lineto ~a ~a moveto ~a ~a lineto stroke"
                          0.15
                          (if (equal? style 'dashed-line) "[0.5 0.5] 0 setdash" "")
                          (+ left-x usable-length (* -1 inc-x)) 	(+ inc-y middle-y)

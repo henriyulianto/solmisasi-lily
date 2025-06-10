@@ -1,7 +1,7 @@
 \version "2.24.3"
 \include "english.ly"
 \include "solmisasi.ily"
-\include "articulate.ly"
+%\include "articulate.ly"
 
 #(set-default-paper-size "a4")
 

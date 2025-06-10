@@ -195,9 +195,9 @@
            "misc-functions"
            "solmisasi-script-alist"
            "solmisasi-markups"
-           "solmisasi-engraver-v2"
+           "solmisasi-engraver"
            "solmisasi-music-parser-v2"
-           "solmisasi-layout-definition-v2"
+           "solmisasi-layout-definition"
            "solmisasi-finished-loading"
            )))
 
@@ -214,6 +214,9 @@
     (ly:parser-include-string parserStr))
 
   )
+
+% EXTRA CONFIG
+#(define-public _AUTO_BEAMING #t)
 
 % #(define-public (scorify-music music)
 %    "Preprocess @var{music}."
