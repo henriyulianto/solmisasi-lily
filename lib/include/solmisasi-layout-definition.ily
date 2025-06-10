@@ -209,9 +209,6 @@ solmisasiVoiceContextMods = \with {
     \translate #'(0 . -1.5)
     \musicglyph #"comma"
   }
-  \override Rest.staff-position = #0
-  %\override Rest.Y-offset = #-0.65
-  %\override Rest.font-size = #0.5
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -251,7 +248,7 @@ solmisasiVoiceContextMods = \with {
     barNumberVisibility = #all-bar-numbers-visible
     tieWaitForNote = ##t
     noChordSymbol = #(make-bold-markup "(tacet)")
-    scriptDefinitions = #solmisasi-script-alist
+    %scriptDefinitions = #solmisasi-script-alist
     \forceShowBracket
   }
 
