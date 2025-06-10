@@ -299,7 +299,6 @@ solmisasiVoiceContextMods = \with {
     \with {
       \solmisasiVoiceContextMods
     }
-    %\applyMusic \solmisasiMusic \default
   }
 
   \context {
