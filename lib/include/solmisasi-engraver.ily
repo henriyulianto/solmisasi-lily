@@ -71,8 +71,9 @@
             (chord-down-Y-pos (- 0 (* chord-gap 0.5) (* stl-base-height 0.4)))
             (chord-up-Y-pos (+ 0 (* chord-gap 0.5) (* stl-base-height 0.5)))
             (dot-circle-stencil (ly:stencil-translate
-                                 (make-circle-stencil 0.22 0.001 #t)
-                                 (cons 0.5 -0.25))))
+                                 (make-circle-stencil 0.18 0.001 #t)
+                                 (cons 0.5 -0.25)))
+            )
 
            (if solmisasi-dot-note?
                (if (or (not cdr-chords) (null? cdr-chords))
@@ -360,8 +361,9 @@
                (stl
                 (grob-interpret-markup grob
                                        #{
-                                         \markup {
-                                           \larger \bold \solmisasi
+                                         \markup \smaller {
+                                           \override #'(font-features .("tnum" "cv47" "-kern"))
+                                           \number
                                            \fraction
                                            #(string-append
                                              " "
@@ -401,5 +403,4 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_ENGRAVER_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi engraver module has been loaded."))
+#(ly:message "* Solmisasi engraver module has been loaded.")

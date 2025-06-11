@@ -150,5 +150,4 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define PITCHNAMES_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Solmisasi pitch names data has been loaded."))
+#(ly:message "* Solmisasi pitch names data has been loaded.")

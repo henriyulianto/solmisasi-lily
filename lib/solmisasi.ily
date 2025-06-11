@@ -19,14 +19,17 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(if (ly:version? < (list 2 21 0))
-     (use-modules (scm song-util))
-     (if (ly:version? < (list 2 24 999))
-         (use-modules (lily song-util))))
+%%%%%% DEPECRATED
+% #(if (ly:version? < (list 2 21 0))
+%      (use-modules (scm song-util))
+%      (if (ly:version? < (list 2 24 999))
+%          (use-modules (lily song-util))))
 
 %% MAIN WRAPPER SCRIPT for "solmisasi" library
 
-%%Taken from openLilyLib's os-path.scm
+#(ly:message "\n")
+
+%% Taken from openLilyLib's os-path.scm
 
 #(define-public (ly:programming-error fmt . vals)
    #f)
@@ -35,15 +38,18 @@
   (lily)
   (ice-9 regex))
 
-#(define-public _VERSION
-   (if (not (defined? 'solmisasiLilyV2))
-       "1.1.1-beta"
-       (if (equal? solmisasiLilyV2 #t)
-           "2.0.0-beta"
-           "1.1.1-beta")))
-#(define-public (solmisasi-lily-version) _VERSION)
-
+#(define USE_OLD_VERSION? #f)
+#(define SOLMISASI_LILY_VERSION "2.0.0-beta")
 #(define-public SOLMISASI_LILY_LOADED #f)
+
+#(define-public (use-solmisasi-lily-version-one)
+   (begin
+    (set! USE_OLD_VERSION? #t)
+    (set! SOLMISASI_LILY_VERSION "1.1.1-beta")))
+
+#(define-public (solmisasi-lily-version)
+   SOLMISASI_LILY_VERSION)
+
 #(define-syntax for
    (syntax-rules (in)
      ((for element in list body ...)
@@ -164,11 +170,11 @@
 %% Return the normalized absolute path and file name of the
 %% file where this function is called from (not the one that
 %% is compiled by LilyPond).
-#(define-public thisFile
+#(define-public this-file
    (define-scheme-function (location)()
      (normalize-location location)))
 
-#(define-public (this-file-compiled? location)
+#(define-public (file-compiled? location)
    "Return #t if the file where this function is called
     is the one that is currently compiled by LilyPond."
    (let ((outname (ly:parser-output-name))
@@ -176,46 +182,35 @@
      (regexp-match? (string-match (format "^(.*/)?~A\\.i?ly$" outname) locname))))
 
 %% LilyPond format wrapper for this-file-compiled?
-#(define-public thisFileCompiled
+#(define-public this-file-compiled?
    (define-scheme-function (location)()
-     (this-file-compiled? location)))
+     (file-compiled? location)))
 
 %%%%% End of os-path.scm
 
-#(define-public _SOLMISASI_LIB_DIR
+#(define-public SOLMISASI_LIB_DIR
    (normalize-path
     (location-extract-path (*location*))))
 
 %% List of include files
 #(define ily-files
-   (if (not (defined? '_USE_VERSION2))
-       '(
-          "logging"
-          "define-pitch-names"
-          "misc-functions"
-          "solmisasi-script-alist"
-          "solmisasi-markups"
-          "solmisasi-engraver"
-          "solmisasi-music-parser"
-          "solmisasi-layout-definition"
-          "solmisasi-finished-loading"
-          )
-       ;; use version2
-       '(
-          "logging"
-          "define-pitch-names"
-          "misc-functions"
-          "solmisasi-script-alist"
-          "solmisasi-markups"
-          "solmisasi-engraver"
-          "solmisasi-music-parser-v2"
-          "solmisasi-layout-definition"
-          "solmisasi-finished-loading"
-          ;"framework-svg.mod"
-          )))
+   (list
+    ;"logging"
+    "define-pitch-names"
+    "misc-functions"
+    "solmisasi-script-alist"
+    "solmisasi-markups"
+    "solmisasi-engraver"
+    (if USE_OLD_VERSION?
+        "solmisasi-music-parser"
+        "solmisasi-music-parser-v2")
+    "solmisasi-layout-definition"
+    "solmisasi-finished-loading"
+    "framework-svg.mod"
+    ))
 
-#(ly:message (format #f "Start loading \"solmisasi-lily\" v~a ...\n"
-                     _VERSION))
+#(ly:message (ly:format "Start loading \"solmisasi-lily\" v~a ...\n"
+                        SOLMISASI_LILY_VERSION))
 
 %% INCLUDE ALL
 #(let* ((parserStr ""))
@@ -223,6 +218,8 @@
         (set! parserStr
               (ly:format "~a\\include \"~a/include/~a.ily\"\n"
                          parserStr
-                         _SOLMISASI_LIB_DIR
+                         SOLMISASI_LIB_DIR
                          file)))
    (ly:parser-include-string parserStr))
+
+#(ly:message "\n")

@@ -367,5 +367,4 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_SCRIPTALIST_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-  (solmisasi:log "* Solmisasi script definitions data has been loaded."))
+#(ly:message "* Solmisasi script definitions data has been loaded.")

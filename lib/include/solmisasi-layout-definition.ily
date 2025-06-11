@@ -110,7 +110,7 @@ of X and a line-position of X indicate the same vertical position."
              (string? description)))
        (throw 'init-format-error))
    (if (not (equal? #f (object-property symbol 'translation-doc)))
-       (ly:error (_ "symbol ~S redefined") symbol))
+       (ly:error ("symbol ~S redefined") symbol))
    (set-object-property! symbol 'translation-type? type?)
    (set-object-property! symbol 'translation-doc description)
    (set! all-translation-properties (cons symbol all-translation-properties))
@@ -209,6 +209,9 @@ solmisasiVoiceContextMods = \with {
     \translate #'(0 . -1.5)
     \musicglyph #"comma"
   }
+  \override Rest.staff-position = #0
+  %\override Rest.Y-offset = #-0.65
+  %\override Rest.font-size = #0.5
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -248,7 +251,7 @@ solmisasiVoiceContextMods = \with {
     barNumberVisibility = #all-bar-numbers-visible
     tieWaitForNote = ##t
     noChordSymbol = #(make-bold-markup "(tacet)")
-    %scriptDefinitions = #solmisasi-script-alist
+    % scriptDefinitions = #solmisasi-script-alist
     \forceShowBracket
   }
 
@@ -299,6 +302,7 @@ solmisasiVoiceContextMods = \with {
     \with {
       \solmisasiVoiceContextMods
     }
+    %\applyMusic \solmisasiMusic \default
   }
 
   \context {
@@ -467,5 +471,4 @@ solmisasiVoiceContextMods = \with {
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_LAYOUT_DEFINITION_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi layout module has been loaded."))
+#(ly:message "* Solmisasi layout module has been loaded.")

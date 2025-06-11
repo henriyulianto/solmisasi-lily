@@ -36,4 +36,6 @@ favicon_150x150.ps
 
 bugs/
 .tmp*
+.bundle/
+vendor/
 

@@ -17,7 +17,87 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-%% MACROS
+% EXTRA CONFIG
+#(define-public _AUTO_BEAMING #t)
+
+% Due to 2.25 changes
+#(define-public (empty-music) (make-music 'Music))
+
+%% From: song-util.scm (2.24 and below)
+
+#(define-public (music-property-value? music property value)
+   "Return @code{#t} iff @var{music}'s @var{property} is equal to
+@var{value}."
+   (equal? (ly:music-property music property) value))
+
+#(define-public (music-name? music name)
+   "Return @code{#t} iff @var{music}'s name is @var{name}."
+   (if (list? name)
+       (member (ly:music-property music 'name) name)
+       (music-property-value? music 'name name)))
+
+#(define-public (music-property? music property)
+   "Return @code{#t} iff @var{music} is a property setter
+and sets or unsets @var{property}."
+   (and (music-name? music '(PropertySet PropertyUnset))
+        (music-property-value? music 'symbol property)))
+
+#(define-public (music-has-property? music property)
+   "Return @code{#t} iff @var{music} contains @var{property}."
+   (not (eq? (ly:music-property music property) '())))
+
+#(define-public (property-value music)
+   "Return value of a property setter @var{music}.
+If it unsets the property, return @code{#f}."
+   (if (music-name? music 'PropertyUnset)
+       #f
+       (ly:music-property music 'value)))
+
+#(define-public (music-elements music)
+   "Return list of all @var{music}'s top-level children."
+   (let ((elt (ly:music-property music 'element))
+         (elts (ly:music-property music 'elements))
+         (arts (ly:music-property music 'articulations)))
+     (if (pair? arts)
+         (set! elts (append elts arts)))
+     (if (null? elt)
+         elts
+         (cons elt elts))))
+
+#(define-public (find-child music predicate)
+   "Find the first node in @var{music} that satisfies @var{predicate}."
+   (define (find-child queue)
+     (if (null? queue)
+         #f
+         (let ((elt (car queue)))
+           (if (predicate elt)
+               elt
+               (find-child (append (music-elements elt) (cdr queue)))))))
+   (find-child (list music)))
+
+#(define-public (find-child-named music name)
+   "Return the first child in @var{music} that is named @var{name}."
+   (find-child music (lambda (elt) (music-name? elt name))))
+
+#(define-public (process-music music function)
+   "Process all nodes of @var{music} (including @var{music}) in the DFS order.
+Apply @var{function} on each of the nodes.  If @var{function} applied on a
+node returns @code{#t}, don't process the node's subtree.
+
+If a non-boolean is returned, it is considered the material to recurse."
+   (define (process-music queue)
+     (if (not (null? queue))
+         (let* ((elt (car queue))
+                (stop (function elt)))
+           (process-music (if (boolean? stop)
+                              (if stop
+                                  (cdr queue)
+                                  (append (music-elements elt) (cdr queue)))
+                              ((if (cheap-list? stop) append cons)
+                               stop (cdr queue)))))))
+   (process-music (list music)))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 #(define (ly:moment<=? momI momII)
    "Returns a boolean whether momI is less than or equal to momII."
@@ -44,11 +124,11 @@ Note that, if moment=5/8, for example, no duration of this form is possible."
              (if (>= p2 q)
                  (loop (- p2 q) (1+ dots))
                  ;; it seems that (not documented) :
-                 ;;    (ly:duration-length (ly:make-duration a b c d)) =
-                 ;;    (ly:moment-mul (ly:duration-length (ly:make-duration a b))
+                 ;;    (ly:duration->moment (ly:make-duration a b c d)) =
+                 ;;    (ly:moment-mul (ly:duration->moment (ly:make-duration a b))
                  ;;                   (ly:make-moment c d))
                  (let* ((dur (ly:make-duration k dots))        ; duration for displaying the note
-                                                               (dur-len (ly:duration-length dur))     ; his display length.
+                                                               (dur-len (ly:duration->moment dur))     ; his display length.
                                                                (frac (ly:moment-div moment dur-len))) ; to adjust to the real length
                    (ly:make-duration k dots
                                      (ly:moment-main-numerator frac) ; frac = 1/1 for moment = 3/4, 7/8 etc ..
@@ -524,7 +604,7 @@ beam_grouping_by_time_sig  =
 #(define laEqualsTo               flexibleLa)
 #(define laSamaDengan             flexibleLa) % in Bahasa Indonesia
 #(define transposeTurunSatuOktaf  transposeDownOneOctave) % in Bahasa Indonesia
-#(define transposeNaikSatuOktaf	 	 transposeUpOneOctave) % in Bahasa Indonesia
+#(define transposeNaikSatuOktaf	  transposeUpOneOctave) % in Bahasa Indonesia
 
 %% EXTERNAL LIBRARIES
 \include "imported/shapeII.ily"
@@ -735,6 +815,135 @@ beam_grouping_by_time_sig  =
   )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% UTILITIES
+
+%% For tuplets
+dot =
+#(define-music-function (p d) (ly:pitch? ly:duration?)
+   (make-music 'NoteEvent
+               'pitch p
+               'duration d
+               'solmisasi-dot-note #t))
+
+satuDot =
+#(define-music-function (p d) (ly:pitch? ly:duration?)
+   #{
+     \melisma \dot $p $d \melismaEnd
+   #}
+   )
+
+duaDot =
+#(define-music-function (p d) (ly:pitch? ly:duration?)
+   #{
+     \melisma \dot $p $d \melisma \dot $p $d \melismaEnd
+   #}
+   )
+
+%% Lyrics
+alignSyllable =
+#(define-music-function (align) (number?)
+   #{ \once\override LyricText.self-alignment-X = #align #})
+syairDiKiri = \alignSyllable #LEFT
+syairDiKanan = \alignSyllable #RIGHT
+leftAlignedSyllable = \alignSyllable #LEFT
+rightAlignedSyllable = \alignSyllable #RIGHT
+
+syairOff =
+{
+  %\override VerticalAlignment.no-alignment = ##t
+  \omit LyricText
+  \omit LyricExtender
+  \omit LyricHyphen
+  \omit LyricSpace
+  \omit VerticalAxisGroup
+  \omit StanzaNumber
+  \omit InstrumentName
+  \omit BarLine
+}
+syairOn = \undo \syairOff
+lyricsOff = \syairOff
+lyricsOn = \undo \syairOff
+
+%% Coloring
+bgcolor =
+#(define-music-function
+  (color toppad bottompad)
+  (
+    string?
+    (number? 0)
+    (number? 0)
+    )
+  #{
+    \override Staff.StaffSymbol.transparent = ##f
+    \override Staff.StaffSymbol.color = #(eval-string color)
+    \override Staff.StaffSymbol.layer = #-10
+    \override Staff.StaffSymbol.stencil =
+    #(grob-transformer 'stencil
+                       (lambda (grob orig)
+                         (let* ((X-ext (ly:stencil-extent orig X))
+                                (Y-ext (ly:stencil-extent orig Y)))
+                           (set! Y-ext (cons
+                                        (- (car Y-ext) bottompad)
+                                        (+ (cdr Y-ext) toppad)))
+                           (ly:grob-set-property! grob 'layer -10)
+                           (ly:stencil-add
+                            (stencil-with-color
+                             (ly:round-filled-box X-ext Y-ext 0)
+                             (eval-string color))
+                            orig))))
+  #})
+
+%% Rehearsal Marks
+boxedAlphabetMark =
+#(define-music-function (info) ((markup? empty-stencil))
+   #{
+     \once \set Score.markFormatter = #format-mark-alphabet
+     \once \override Score.RehearsalMark.stencil =
+     #(lambda (grob)
+        (if (and (grob::is-live? grob)
+                 (ly:grob-property-data grob 'stencil))
+            (grob-interpret-markup grob
+                                   #{
+                                     \markup {
+                                       \override #'(thickness . 1.3)
+                                       \override #'(box-padding . 0.5)
+                                       \box #(ly:grob-property grob 'text)
+                                       \hspace #0.4 \bold \smallCaps #info
+                                     }
+                                   #})
+            (empty-stencil)))
+     \mark \default
+   #})
+
+disallowLineBreak = \override Score.NonMusicalPaperColumn.line-break-permission = ##f
+allowLineBreak = \override Score.NonMusicalPaperColumn.line-break-permission = ##t
+disallowPageBreak = \override Score.NonMusicalPaperColumn.page-break-permission = ##f
+allowLineBreak = \override Score.NonMusicalPaperColumn.page-break-permission = ##t
+
+dynamicsOff = {
+  \override DynamicText.stencil = ##f
+  \override DynamicTextSpanner.stencil = ##f
+  \override DynamicLineSpanner.stencil = ##f
+  \override Hairpin.stencil = ##f
+  \override TextScript.stencil = ##f
+}
+dynamicsOn = \undo \dynamicsOff
+
+dynamicText =
+#(define-event-function (mkup) (markup?)
+   (make-dynamic-script (markup (#:italic mkup))))
+
+extenderOnSolmisasiOnly =
+#(define-music-function (syl) (ly:music?)
+   (if (music-is-of-type? syl 'lyric-event)
+       #{ \tag #'solmisasi { \lyricmode { $syl __ } }
+          \tag #'notbalok { \lyricmode { $syl } }
+       #}
+       (empty-music)))
+
+conditional =
+#(define-scheme-function (cond what) (boolean? scheme?) (if cond what))
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Misc functions module has been loaded."))
+#(ly:message "* Miscellaneous functions module has been loaded.")

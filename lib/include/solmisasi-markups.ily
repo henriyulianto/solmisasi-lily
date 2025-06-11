@@ -32,11 +32,18 @@
                         thickness))
           ;; backward slashes might use slope and point in the other direction!
           (dy (* mag (if forward 0.65 -0.65)))
-          (number-stencil (interpret-markup layout props
-                                            (markup
-                                             (make-fontsize-markup font-size
-                                                                   (number->string num)))))
-          (octave-dot-radius (+ 0.18 (* mag-diff 0.25)))
+          (number-stencil (interpret-markup
+                           layout props
+                           #{
+                             \markup \fontsize #font-size
+                             %\override #'(font-features .("cv47")) \number
+                             #(number->string num)
+                           #}))
+          ;  (markup
+          ;                                              (make-fontsize-markup font-size
+          ;                                                                    (make-number-markup
+          ;                                                                     (number->string num))))))
+          (octave-dot-radius (+ 0.15 (* mag-diff 0.25)))
           (octave-dot-padding (+ 0.2 (* mag-diff 0.6)))
           (octave-dot-stencil
            (case (abs diff-octave)
@@ -150,7 +157,7 @@
                            \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
                            \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
                          }
-                         \infoNadaBaru #nada #oktafDasar
+                         \bold \infoNadaBaru #nada #oktafDasar
                        }
                      #}))
 
@@ -163,14 +170,8 @@
                      #{
                        \markup {
                          \override #'(thickness . 1.3)
-                         \override #'(box-padding . 0.5)
+                         \override #'(box-padding . 0.75)
                          \box
-                         % \with-dimensions-from
-                         %          \pad-x #1.5
-                         %          \overlay {
-                         %            \infoNadaBaru #(ly:make-pitch 1 5 1/2) #0
-                         %            \infoNadaBaru #(ly:make-pitch -1 5 -1/2) #0
-                         %          }
                          \center-align \concat \bold \larger {
                            #key-sig-number-string "=" #key-sig-string
                          }
@@ -191,5 +192,4 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MARKUPS_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi markups module has been loaded."))
+#(ly:message "* Solmisasi markups module has been loaded.")
