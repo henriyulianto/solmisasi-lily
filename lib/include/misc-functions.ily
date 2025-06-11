@@ -389,8 +389,8 @@ withExtensions =
     (lambda (o)
       (ly:parser-parse-string
        (ly:parser-clone)
-       (format #f "\\include \"~a/extension/solmisasi-~a.ily\"" _SOLMISASI_LIB_DIR o))
-      (solmisasi:log (format #f "* Extension \"~a\" has been loaded." o))
+       (ly:format "\\include \"~a/extension/solmisasi-~a.ily\"" SOLMISASI_LIB_DIR o))
+      (ly:message (ly:format"* Extension \"~a\" has been loaded." o))
       )
     exts))
 
@@ -943,6 +943,10 @@ extenderOnSolmisasiOnly =
 
 conditional =
 #(define-scheme-function (cond what) (boolean? scheme?) (if cond what))
+
+%% Printing
+#(define is-svg?
+   (eq? 'svg (ly:get-option 'backend)))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)

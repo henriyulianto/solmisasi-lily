@@ -192,10 +192,17 @@
    (normalize-path
     (location-extract-path (*location*))))
 
+
+%% Append the directory of this file to current parser's include path
+#(ly:parser-append-to-include-path
+  SOLMISASI_LIB_DIR)
+#(ly:parser-append-to-include-path
+  (ly:format "~a/include" SOLMISASI_LIB_DIR))
+
 %% List of include files
 #(define ily-files
    (list
-    ;"logging"
+    "logging"
     "define-pitch-names"
     "misc-functions"
     "solmisasi-script-alist"
@@ -205,8 +212,8 @@
         "solmisasi-music-parser"
         "solmisasi-music-parser-v2")
     "solmisasi-layout-definition"
-    "solmisasi-finished-loading"
     "framework-svg.mod"
+    "solmisasi-finished-loading"
     ))
 
 #(ly:message (ly:format "Start loading \"solmisasi-lily\" v~a ...\n"
