@@ -229,4 +229,10 @@
                          file)))
    (ly:parser-include-string parserStr))
 
+%% Initialize default serif and sans fonts
+\paper {
+  property-defaults.fonts.serif = "Source Serif 4"
+  property-defaults.fonts.sans = "Source Sans 3"
+}
+
 #(ly:message "\n")
