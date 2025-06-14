@@ -146,16 +146,17 @@
      (ly:error "Unknown error."))))
 
 #(define (break-length-and-dots note/rest)
-   (let* ((dur (ly:music-property note/rest 'duration))
-          (durlog (ly:duration-log dur))
-          (durdots	(make-list (ly:duration-dot-count dur) 1))
-          (arti (ly:music-property note/rest 'articulations #f))
-          (scale (ly:duration-scale dur))
-          (event-type (cond
-                       ((note-event? note/rest)
-                        'NoteEvent)
-                       ((rest-event? note/rest)
-                        'RestEvent))))
+   (let* ((dur     (ly:music-property note/rest 'duration))
+          (durlog  (ly:duration-log dur))
+          (durdots (make-list (ly:duration-dot-count dur) 1))
+          (arti    (ly:music-property note/rest 'articulations #f))
+          (scale   (ly:duration-scale dur))
+          (event-type
+           (cond
+            ((note-event? note/rest)
+             'NoteEvent)
+            ((rest-event? note/rest)
+             'RestEvent))))
      ;(display (format #f "durlog = ~a" durlog))(newline)
      (if (null? durdots)
          (begin
@@ -182,7 +183,8 @@
             (append-map
              (lambda (x)
                (set! durlog (1+ durlog))
-               (list (make-solmisasi-dot-note note/rest (ly:make-duration durlog 0))))
+               (list (make-solmisasi-dot-note note/rest
+                                              (ly:make-duration durlog 0))))
              durdots)
             (if (note-event? note/rest)
                 (list melismaEnd)
@@ -191,23 +193,25 @@
           ))))
 
 #(define (solmisasi-completion note/rest)
-   (let* ((beat-unit							(ly:moment-mul unit (ly:make-moment units-in-beat)))
-          (is-onbeat?							(equal? ZERO-MOMENT
+   (let* ((beat-unit        (ly:moment-mul unit (ly:make-moment units-in-beat)))
+          (is-onbeat?       (equal? ZERO-MOMENT
                                     (ly:moment-mod now beat-unit)))
-          (note/rest-dur					(ly:music-property note/rest 'duration))
-          (note/rest-len					(ly:duration->moment note/rest-dur))
-          (note/rest-upbeat 			(ly:moment-sub beat-unit
-                                              (ly:moment-mod note/rest-len beat-unit)))
-          (main-num								0)
-          (dots-num								0)
-          (event-type (cond
-                       ((note-event? note/rest)
-                        'NoteEvent)
-                       ((rest-event? note/rest)
-                        'RestEvent)))
-          (note/rest-first				#f)
-          (note/rest-rest					#f)
-          (note/rest-list					(list)))
+          (note/rest-dur    (ly:music-property note/rest 'duration))
+          (note/rest-len    (ly:duration->moment note/rest-dur))
+          (note/rest-upbeat (ly:moment-sub beat-unit
+                                           (ly:moment-mod note/rest-len beat-unit)))
+          (pitch            (ly:music-property note/rest 'pitch))
+          (main-num         0)
+          (dots-num         0)
+          (note/rest-first  #f)
+          (note/rest-rest   #f)
+          (note/rest-list   (list))
+          (event-type
+           (cond
+            ((note-event? note/rest)
+             'NoteEvent)
+            ((rest-event? note/rest)
+             'RestEvent))))
      (set! note/rest (make-music event-type note/rest))
      (if (note-event? note/rest)
          (begin
@@ -318,17 +322,25 @@
      (if (ly:music? note/rest-rest)
          (begin
           ;; dots for the rest
-          (set! (ly:music-property note/rest-rest 'pitch)
-                (if last-pitch
-                    last-pitch
-                    (ly:make-pitch -6 0 0)))
-          (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
+          ; (set! (ly:music-property note/rest-rest 'pitch)
+          ;                 (if last-pitch
+          ;                     last-pitch
+          ;                     (ly:make-pitch -6 0 0)))
+          ;           (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
+          (set! note/rest-rest
+                (make-solmisasi-dot-note
+                 note/rest-rest
+                 (ly:music-property note/rest-rest 'duration)))
+
           ;(display (is-dot-note? note/rest-first))
           ;(if (and (not (is-dot-note? note/rest-first))
           ;         (slur-stop-note? note/rest-first))
           (delete-articulations! note/rest-rest (make-slur-event START))
           (delete-articulations! note/rest-rest (make-slur-event STOP))
-          ;(append-articulations! note/rest-first (make-tie-event #f))
+
+          (display "FIRST = ")(display-lily-music note/rest-first)
+
+          (display-lily-music note/rest-rest)
           ;(append-tweaks! note/rest-rest (list (quote color) 0.5 0.5 0.5))
           ;)
           (set! note/rest-list
@@ -348,7 +360,9 @@
                            melismaEnd
                            (empty-music))
                        )))
-          ))
+          )
+         (display "--- END OF NOTE ---\n")
+         )
 
      ; (display current-time-sig)(newline)
      ;      (display-scheme-music major-tonic-pitch)

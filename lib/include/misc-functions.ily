@@ -664,7 +664,8 @@ beam_grouping_by_time_sig  =
   (define (tied-note? m)
     (let ((articulations (ly:music-property m 'articulations)))
       (not (null?
-            (filter (lambda (a) (music-is-of-type? a 'tie-event)) articulations)))))
+            (filter (lambda (a)
+                      (music-is-of-type? a 'tie-event)) articulations)))))
 
   (define (append-tweaks! m a)
     (ly:music-set-property! m 'tweaks
