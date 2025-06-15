@@ -942,7 +942,8 @@ extenderOnSolmisasiOnly =
        (empty-music)))
 
 conditional =
-#(define-scheme-function (cond what) (boolean? scheme?) (if cond what))
+#(define-scheme-function (cond what) (boolean? scheme?)
+   (if cond what))
 
 %% Printing
 #(define is-svg?

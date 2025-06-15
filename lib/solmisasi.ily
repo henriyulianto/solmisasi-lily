@@ -34,6 +34,8 @@
 #(define-public (ly:programming-error fmt . vals)
    #f)
 
+#(define-public solmisasi:log ly:message)
+
 #(use-modules
   (lily)
   (ice-9 regex))
@@ -202,7 +204,8 @@
 %% List of include files
 #(define ily-files
    (list
-    "logging"
+    "framework-svg.mod"
+    ;"logging"
     "define-pitch-names"
     "misc-functions"
     "solmisasi-script-alist"
@@ -212,7 +215,6 @@
         "solmisasi-music-parser"
         "solmisasi-music-parser-v2")
     "solmisasi-layout-definition"
-    "framework-svg.mod"
     "solmisasi-finished-loading"
     ))
 
@@ -231,8 +233,14 @@
 
 %% Initialize default serif and sans fonts
 \paper {
-  property-defaults.fonts.serif = "Source Serif 4"
-  property-defaults.fonts.sans = "Source Sans 3"
+  property-defaults.fonts.serif =
+  #(if (eq? 'svg (ly:get-option 'backend))
+       "source-serif-4"
+       "Lilypond Serif")
+  property-defaults.fonts.sans =
+  #(if (eq? 'svg (ly:get-option 'backend))
+       "source-sans-3"
+       "Aptos")
 }
 
 #(ly:message "\n")
