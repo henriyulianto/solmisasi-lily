@@ -30,25 +30,6 @@ lyricExtenderLayerNum = #-4
 spanBarLayerNum = #-5
 startBarLayerNum = #-5
 
-%% Double barlines scheme engraver
-DbBars =
-#(lambda (context)
-   (let ((time-signature '())
-         (last-fraction #f))
-     `((process-music
-        . ,(lambda (trans)
-             (let ((frac (ly:context-property context 'timeSignatureFraction)))
-               (if (and (null? time-signature)
-                        (not (equal? last-fraction frac))
-                        (fraction? frac))
-                   (begin
-                    (ly:context-set-property! context 'whichBar "||")
-                    (set! last-fraction frac))))))
-
-       (stop-translation-timestep
-        . ,(lambda (trans)
-             (set! time-signature '()))))))
-
 #(define (get-staff-symbol grob)
    "Return the staff symbol corresponding to Grob @var{grob}."
    (if (grob::has-interface grob 'staff-symbol-interface)
@@ -91,7 +72,7 @@ of X and a line-position of X indicate the same vertical position."
       dot-positions)
      stencil))
 
-#(add-bar-glyph-print-procedure ":" (make-custom-dot-bar-line '(-1 1)))
+% #(add-bar-glyph-print-procedure ":" (make-custom-dot-bar-line '(-1 1)))
 
 #(define-public (my-lyric-text::print grob)
    (let ((text (ly:grob-property grob 'text))
@@ -157,6 +138,7 @@ solmisasiStaffContextMods = \with {
   \override Stem.direction = #UP
   \override Stem.transparent = ##t
   \override NoteHead.Y-offset = #-0.65
+  \override NoteHead.layer = #90
   \override Rest.Y-offset = #-0.65
   \override Tie.details.height-limit = #1.3
   %\override Slur.details.height-limit = #1.3
@@ -174,7 +156,8 @@ solmisasiStaffContextMods = \with {
   \override Beam.transparent = ##f
   \override Beam.beam-thickness = #0.15
   \override Beam.length-fraction = #0.5
-  \override Beam.extra-offset = #'(0 . 0.65)
+  \override Beam.extra-offset = #'(0 . 0.75)
+  \override Beam.layer = #100
   \override TupletBracket.bracket-visibility = ##t
   \override Dots.staff-position = #2
   \override VerticalAxisGroup.default-staff-staff-spacing =
@@ -226,16 +209,13 @@ solmisasiVoiceContextMods = \with {
     \consists \DbBars
     \consists "Span_arpeggio_engraver"
 
-    \remove "Metronome_mark_engraver"
-    \remove "Bar_number_engraver"
-
     \override SpanBar.layer= #-5
     \override BarNumber.font-size = #-0.5
     \override BarNumber.padding = #1
     \override BarNumber.font-shape = #'italic
     \override BarNumber.after-line-breaking = ##f
     \override BarNumber.extra-offset = #'(-0.3 . -0.1)
-    \override VoltaBracket.font-size = #-2.5
+    \override VoltaBracket.font-size = #-1.5
     \override SystemStartBar.collapse-height = #4
     \override SystemStartBar.thickness = #1.9 % sama dengan BarLine.hair-thickness
     \override TimeSignature.style = #'numbered
@@ -250,7 +230,7 @@ solmisasiVoiceContextMods = \with {
     }
     barNumberVisibility = #all-bar-numbers-visible
     tieWaitForNote = ##t
-    noChordSymbol = #(make-bold-markup "(tacet)")
+    noChordSymbol = \markup\with-dimensions-from\null \smaller { (tacet) }
     % scriptDefinitions = #solmisasi-script-alist
     \forceShowBracket
   }
@@ -340,7 +320,6 @@ solmisasiVoiceContextMods = \with {
     \consists "Time_signature_engraver"
     \consists "Text_spanner_engraver"
     \consists "Text_engraver"
-    \consists "Metronome_mark_engraver"
     \consists "Axis_group_engraver"
 
     keepAliveInterfaces =
@@ -409,7 +388,6 @@ solmisasiVoiceContextMods = \with {
 
   \context {
     \ChoirStaff
-    \consists "Bar_number_engraver"
   }
 
   \context {

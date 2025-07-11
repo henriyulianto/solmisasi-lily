@@ -17,6 +17,8 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#(use-modules (lily))
+
 #(define (not-angka-internal layout props num alter diff-octave thickness)
    (let* ((font-size (or (chain-assoc-get 'font-size props) 0))
           (to-be-slashed (> (abs alter) 0))
@@ -36,14 +38,12 @@
                            layout props
                            #{
                              \markup \fontsize #font-size
-                             %\override #'(font-features .("cv47")) \number
                              #(number->string num)
-                           #}))
-          ;  (markup
-          ;                                              (make-fontsize-markup font-size
-          ;                                                                    (make-number-markup
-          ;                                                                     (number->string num))))))
-          (octave-dot-radius (+ 0.15 (* mag-diff 0.25)))
+                           #}
+                           ))
+          (octave-dot-radius (+
+                              (if is-svg? 0.18 0.15)
+                              (* mag-diff 0.25)))
           (octave-dot-padding (+ 0.2 (* mag-diff 0.6)))
           (octave-dot-stencil
            (case (abs diff-octave)
@@ -83,7 +83,7 @@
           (num-y (interval-widen (cons center-y center-y) (abs dy)))
           (is-sane (and (interval-sane? num-x) (interval-sane? num-y)))
           (slash-stencil (if is-sane
-                             (make-line-stencil thickness
+                             (make-line-stencil (if is-svg? (* 1.25 thickness) thickness)
                                                 (car num-x) (- (interval-center num-y) dy)
                                                 (cdr num-x) (+ (interval-center num-y) dy))
                              #f)))
@@ -189,6 +189,19 @@
        (markup?)
        (interpret-markup layout props
                          (markup arg))))
+
+%% Override "with-url" markup
+#(define-markup-command (with-URL layout props url arg)
+   (string? markup?)
+   #:category graphic
+   #:as-string (format #f "~a [~a]"
+                       (markup->string arg #:layout layout #:props props)
+                       url)
+   (interpret-markup layout props
+                     (if (not (or (eq? 'pdf (ly:get-option 'backend))
+                                  (eq? 'cairo (ly:get-option 'backend))))
+                         #{ \markup #arg #}
+                         #{ \markup \with-url #url #arg #})))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MARKUPS_LOADED #t)

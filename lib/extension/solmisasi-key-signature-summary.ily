@@ -2,15 +2,6 @@
 %%% A solmisasi-lily extension
 %%% By Henri Yulianto, 2020
 
-
-#(define (get-header-property-value sym)
-   "Get key signature summary from header props."
-   (assoc-ref (ly:module->alist $defaultheader) sym))
-
-#(define (set-header-property-value sym val)
-   "Set the value of key signature summary in header props."
-   (module-define! $defaultheader sym val))
-
 #(define updateKeySignatureSummary
    (define-void-function (music sym) (ly:music? symbol?)
      "Update key signature summary in header."

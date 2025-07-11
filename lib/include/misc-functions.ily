@@ -817,6 +817,14 @@ beam_grouping_by_time_sig  =
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% UTILITIES
 
+#(define (get-header-property-value sym)
+   "Get key signature summary from header props."
+   (assoc-ref (ly:module->alist $defaultheader) sym))
+
+#(define (set-header-property-value sym val)
+   "Set the value of key signature summary in header props."
+   (module-define! $defaultheader sym val))
+
 %% For tuplets
 dot =
 #(define-music-function (p d) (ly:pitch? ly:duration?)
@@ -895,24 +903,25 @@ bgcolor =
 
 %% Rehearsal Marks
 boxedAlphabetMark =
-#(define-music-function (info) ((markup? empty-stencil))
+#(define-music-function (self-alignment-X info)
+   ((number? LEFT) (markup? empty-markup))
    #{
-     \once \set Score.markFormatter = #format-mark-alphabet
+     \once \set Score.rehearsalMarkFormatter = #format-mark-alphabet
      \once \override Score.RehearsalMark.stencil =
      #(lambda (grob)
         (if (and (grob::is-live? grob)
                  (ly:grob-property-data grob 'stencil))
             (grob-interpret-markup grob
                                    #{
-                                     \markup {
+                                     \markup \pad-to-box #'(0 . 0) #'(0 . 1) \line {
                                        \override #'(thickness . 1.3)
                                        \override #'(box-padding . 0.5)
                                        \box #(ly:grob-property grob 'text)
-                                       \hspace #0.4 \bold \smallCaps #info
+                                       \hspace #0.25 \smaller\smaller \bold \smallCaps $info
                                      }
                                    #})
             (empty-stencil)))
-     \mark \default
+     \tweak self-alignment-X $self-alignment-X \mark \default
    #})
 
 disallowLineBreak = \override Score.NonMusicalPaperColumn.line-break-permission = ##f
@@ -921,22 +930,33 @@ disallowPageBreak = \override Score.NonMusicalPaperColumn.page-break-permission 
 allowLineBreak = \override Score.NonMusicalPaperColumn.page-break-permission = ##t
 
 dynamicsOff = {
-  \override DynamicText.stencil = ##f
-  \override DynamicTextSpanner.stencil = ##f
-  \override DynamicLineSpanner.stencil = ##f
-  \override Hairpin.stencil = ##f
-  \override TextScript.stencil = ##f
+  \omit DynamicText
+  \omit DynamicTextSpanner
+  \omit DynamicLineSpanner
+  \omit Hairpin
+  \omit TextScript
 }
 dynamicsOn = \undo \dynamicsOff
 
+spanBarOn = \override Staff.BarLine.allow-span-bar = ##t
+spanBarOff = \override Staff.BarLine.allow-span-bar = ##f
+
 dynamicText =
 #(define-event-function (mkup) (markup?)
-   (make-dynamic-script (markup (#:italic mkup))))
+   (make-dynamic-script (markup #:normal-text (#:italic mkup))))
 
 extenderOnSolmisasiOnly =
 #(define-music-function (syl) (ly:music?)
    (if (music-is-of-type? syl 'lyric-event)
-       #{ \tag #'solmisasi { \lyricmode { $syl __ } }
+       #{ \tag #'notangka { \lyricmode { $syl __ } }
+          \tag #'notbalok { \lyricmode { $syl } }
+       #}
+       (empty-music)))
+
+leftAlignedOnSolmisasiOnly =
+#(define-music-function (syl) (ly:music?)
+   (if (music-is-of-type? syl 'lyric-event)
+       #{ \tag #'notangka { \lyricmode { \syairDiKiri $syl } }
           \tag #'notbalok { \lyricmode { $syl } }
        #}
        (empty-music)))
@@ -948,6 +968,17 @@ conditional =
 %% Printing
 #(define is-svg?
    (eq? 'svg (ly:get-option 'backend)))
+
+#(define-markup-command (musical-structure layout props structure)
+   (markup?)
+   (interpret-markup layout props
+                     #{
+                       \markup {
+                         \pad-markup #0.3
+                         \box \pad-markup #0.3
+                         \bold \caps \upright #structure
+                       }
+                     #}))
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)

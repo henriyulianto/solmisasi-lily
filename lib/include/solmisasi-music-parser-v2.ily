@@ -101,7 +101,7 @@
           ((rest-event? music)
            (if (ly:pitch? last-pitch)
                last-pitch
-               (if (and (defined? last-note)
+               (if (and (ly:music? last-note)
                         (ly:music-property last-note 'pitch #f))
                    (ly:music-property last-note 'pitch)
                    (ly:make-pitch 0 0))))
@@ -123,7 +123,7 @@
                 ((rest-event? music)
                  (if (ly:pitch? last-pitch)
                      last-pitch
-                     (if (and (defined? last-note)
+                     (if (and (ly:music? last-note)
                               (ly:music-property last-note 'pitch #f))
                          (ly:music-property last-note 'pitch)
                          (ly:make-pitch 0 0))))
@@ -171,22 +171,23 @@
          (begin
           (if arti
               (ly:music-set-property! note/rest 'articulations arti))
+          (append-articulations! note/rest (make-tie-event #t))
           (clean-music-list
            (append
             (list (make-music event-type
                               note/rest
                               'duration (ly:make-duration durlog 0 scale)))
-            (if (note-event? note/rest)
-                (list melismaBegin)
-                (list (empty-music)))
+            ; (if (note-event? note/rest)
+            ;                 (list melismaBegin)
+            ;                 (list (empty-music)))
             (append-map
              (lambda (x)
                (set! durlog (1+ durlog))
                (list (make-solmisasi-dot-note note/rest (ly:make-duration durlog 0))))
              durdots)
-            (if (note-event? note/rest)
-                (list melismaEnd)
-                (list (empty-music)))
+            ; (if (note-event? note/rest)
+            ;                 (list melismaEnd)
+            ;                 (list (empty-music)))
             ))
           ))))
 
@@ -269,8 +270,8 @@
                 ))
            ; else (not onbeat)
            (begin
-            (if (ly:moment<? (ly:moment-mod now beat-unit) (ly:make-moment 1/8))
-                (set! beat-unit (ly:make-moment 1/16)))
+            ; (if (ly:moment<? (ly:moment-mod now beat-unit) (ly:make-moment 1/8))
+            ;                 (set! beat-unit (ly:make-moment 1/16)))
             (if (ly:moment<=? (ly:moment-add (ly:moment-mod now beat-unit) note/rest-len)
                               beat-unit)
                 (begin
@@ -315,14 +316,20 @@
                  ))))
        ))
      ;; If there are duration splits
-     (if (ly:music? note/rest-rest)
+     (if note/rest-rest
          (begin
           ;; dots for the rest
-          (set! (ly:music-property note/rest-rest 'pitch)
-                (if last-pitch
-                    last-pitch
-                    (ly:make-pitch -6 0 0)))
-          (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
+          (set! note/rest-rest
+                (make-solmisasi-dot-note
+                 note/rest-rest
+                 (ly:music-property note/rest-rest 'duration)))
+          (if (not (rest-event? note/rest-first))
+              (append-articulations! note/rest-first (make-tie-event #t)))
+          ; (set! (ly:music-property note/rest-rest 'pitch)
+          ;                 (if last-pitch
+          ;                     last-pitch
+          ;                     (ly:make-pitch -6 0 0)))
+          ;           (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
           ;(display (is-dot-note? note/rest-first))
           ;(if (and (not (is-dot-note? note/rest-first))
           ;         (slur-stop-note? note/rest-first))
@@ -334,19 +341,19 @@
           (set! note/rest-list
                 (flatten-list
                  (list note/rest-first
-                       (if (and (not (is-dot-note? note/rest-first))
-                                (not (slur-start-note? note/rest-first))
-                                (is-dot-note? note/rest-rest)
-                                (not (rest-event? note/rest-first)))
-                           melismaBegin
-                           (empty-music))
+                       ; (if (and (not (is-dot-note? note/rest-first))
+                       ;                                 (not (slur-start-note? note/rest-first))
+                       ;                                 (is-dot-note? note/rest-rest)
+                       ;                                 (not (rest-event? note/rest-first)))
+                       ;                            melismaBegin
+                       ;                            (empty-music))
                        (solmisasi-completion note/rest-rest)
-                       (if (and (not (is-dot-note? note/rest-first))
-                                (not (slur-start-note? note/rest-first))
-                                (is-dot-note? note/rest-rest)
-                                (not (rest-event? note/rest-first)))
-                           melismaEnd
-                           (empty-music))
+                       ; (if (and (not (is-dot-note? note/rest-first))
+                       ;                                 (not (slur-start-note? note/rest-first))
+                       ;                                 (is-dot-note? note/rest-rest)
+                       ;                                 (not (rest-event? note/rest-first)))
+                       ;                            melismaEnd
+                       ;                            (empty-music))
                        )))
           ))
 

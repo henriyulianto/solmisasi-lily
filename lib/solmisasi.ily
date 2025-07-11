@@ -40,13 +40,12 @@
   (lily)
   (ice-9 regex))
 
-#(define USE_OLD_VERSION? #f)
 #(define SOLMISASI_LILY_VERSION "2.0.0-beta")
 #(define-public SOLMISASI_LILY_LOADED #f)
 
 #(define-public (use-solmisasi-lily-version-one)
    (begin
-    (set! USE_OLD_VERSION? #t)
+    (define USE_OLD_VERSION? #t)
     (set! SOLMISASI_LILY_VERSION "1.1.1-beta")))
 
 #(define-public (solmisasi-lily-version)
@@ -210,8 +209,8 @@
     "misc-functions"
     "solmisasi-script-alist"
     "solmisasi-markups"
-    "solmisasi-engraver"
-    (if USE_OLD_VERSION?
+    "solmisasi-engravers"
+    (if (defined? 'USE_OLD_VERSION?)
         "solmisasi-music-parser"
         "solmisasi-music-parser-v2")
     "solmisasi-layout-definition"
