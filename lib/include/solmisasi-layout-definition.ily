@@ -103,6 +103,7 @@ of X and a line-position of X indicate the same vertical position."
     (lambda (x)
       (apply translator-property-description x))
     `(
+       (savedInstrumentName ,markup? "Original instrument name.")
        (male-vocal ,boolean? "Is this context for male vocals?")
        (transposed-up ,boolean? "Is this context transposed up one octave?"))))
 
@@ -116,6 +117,7 @@ forceShowBracket = \override Score.SystemStartBracket.collapse-height = #4
 
 solmisasiStaffContextMods = \with {
   \remove "Ledger_line_engraver"
+  \consists #Solmisasi_equivalence_key_engraver
 
   \omit Accidental
   \omit Clef
@@ -170,7 +172,9 @@ solmisasiStaffContextMods = \with {
 }
 
 solmisasiVoiceContextMods = \with {
-  \consists "Pitch_squash_engraver"
+  \consists Pitch_squash_engraver
+  \consists #Solmisasi_note_heads_engraver
+  \consists #Solmisasi_rest_engraver
 
   squashedPosition = #0
 
@@ -279,10 +283,7 @@ solmisasiVoiceContextMods = \with {
     \name "SolmisasiVoice"
     \alias Voice
 
-    \with {
-      \solmisasiVoiceContextMods
-    }
-    %\applyMusic \solmisasiMusic \default
+    \with \solmisasiVoiceContextMods
   }
 
   \context {
@@ -301,12 +302,8 @@ solmisasiVoiceContextMods = \with {
 
   \context {
     \Staff
-    \name "SolmisasiStaff"
+    \name SolmisasiStaff
     \alias Staff
-
-    \consists #Solmisasi_note_head_engraver
-    \consists #Solmisasi_rest_engraver
-    \consists #Solmisasi_equivalence_key_engraver
 
     \with \solmisasiStaffContextMods
   }
@@ -359,6 +356,7 @@ solmisasiVoiceContextMods = \with {
     \consists "Break_align_engraver"
     \consists "Time_signature_engraver"
     \consists "Key_engraver"
+    \consists Text_spanner_engraver
     \consists #Solmisasi_time_signature_engraver
     \consists #Solmisasi_key_engraver
 

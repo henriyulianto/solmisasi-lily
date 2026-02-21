@@ -41,37 +41,35 @@
                              #(number->string num)
                            #}
                            ))
-          (octave-dot-radius (+
-                              (if is-svg? 0.18 0.15)
-                              (* mag-diff 0.25)))
+          (octave-dot-radius (+ 0.18 (* mag-diff 0.25)))
           (octave-dot-padding (+ 0.2 (* mag-diff 0.6)))
           (octave-dot-stencil
            (case (abs diff-octave)
              ((0) #f)
              ((1) (ly:stencil-aligned-to
                    (make-circle-stencil octave-dot-radius 0.001 #t)
-                   0 0))
+                   Y -0))
              ((2) (ly:stencil-aligned-to
                    (ly:stencil-combine-at-edge
                     (make-circle-stencil octave-dot-radius 0.001 #t)
-                    0
+                    Y
                     -1
                     (make-circle-stencil octave-dot-radius 0.001 #t)
                     octave-dot-padding)
-                   0 0))
+                   Y (if (positive? diff-octave) -0.6 0.6)))
              ((3) (ly:stencil-aligned-to
                    (ly:stencil-combine-at-edge
                     (ly:stencil-combine-at-edge
                      (make-circle-stencil octave-dot-radius 0.001 #t)
-                     0
+                     Y
                      -1
                      (make-circle-stencil octave-dot-radius 0.001 #t)
                      octave-dot-padding)
-                    0
-                    1
+                    Y
+                    -1
                     (make-circle-stencil octave-dot-radius 0.001 #t)
                     octave-dot-padding)
-                   0 0))
+                   Y (if (positive? diff-octave) -0.7 0.7)))
              ))
           (num-x (horizontal-slash-interval num forward (ly:stencil-extent number-stencil X) mag))
           (center-y (interval-center (ly:stencil-extent number-stencil Y)))
@@ -103,8 +101,8 @@
                                (ly:stencil-translate
                                 octave-dot-stencil
                                 (if (> diff-octave 0)
-                                    (cons center-x (+ end-y (* mag 0.4)))
-                                    (cons center-x (- start-y (* mag 0.4))))
+                                    (cons center-x (+ end-y (* mag 0.45)))
+                                    (cons center-x (- start-y (* mag 0.45))))
                                 ))))
      ;; return
      number-stencil))
@@ -198,7 +196,7 @@
                        (markup->string arg #:layout layout #:props props)
                        url)
    (interpret-markup layout props
-                     (if (not (or (eq? 'pdf (ly:get-option 'backend))
+                     (if (not (or (eq? 'ps (ly:get-option 'backend))
                                   (eq? 'cairo (ly:get-option 'backend))))
                          #{ \markup #arg #}
                          #{ \markup \with-url #url #arg #})))

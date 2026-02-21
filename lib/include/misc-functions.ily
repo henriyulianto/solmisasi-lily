@@ -924,6 +924,28 @@ boxedAlphabetMark =
      \tweak self-alignment-X $self-alignment-X \mark \default
    #})
 
+boxedNumberMark =
+#(define-music-function (self-alignment-X info)
+   ((number? LEFT) (markup? empty-markup))
+   #{
+     \once \set Score.rehearsalMarkFormatter = #format-mark-numbers
+     \once \override Score.RehearsalMark.stencil =
+     #(lambda (grob)
+        (if (and (grob::is-live? grob)
+                 (ly:grob-property-data grob 'stencil))
+            (grob-interpret-markup grob
+                                   #{
+                                     \markup \pad-to-box #'(0 . 0) #'(0 . 1) \line {
+                                       \override #'(thickness . 1.3)
+                                       \override #'(box-padding . 0.5)
+                                       \box #(ly:grob-property grob 'text)
+                                       \hspace #0.25 \smaller\smaller \bold \smallCaps $info
+                                     }
+                                   #})
+            (empty-stencil)))
+     \tweak self-alignment-X $self-alignment-X \mark \default
+   #})
+
 disallowLineBreak = \override Score.NonMusicalPaperColumn.line-break-permission = ##f
 allowLineBreak = \override Score.NonMusicalPaperColumn.line-break-permission = ##t
 disallowPageBreak = \override Score.NonMusicalPaperColumn.page-break-permission = ##f
@@ -979,6 +1001,27 @@ conditional =
                          \bold \caps \upright #structure
                        }
                      #}))
+
+setStaffShortInstrumentName =
+#(define-music-function (new-inst-name) (markup?)
+   #{
+     \context Staff
+     \applyContext
+     #(lambda (context)
+        (let ((old-inst-name (ly:context-property context 'shortInstrumentName)))
+          (ly:context-set-property! context 'savedInstrumentName old-inst-name)
+          (ly:context-set-property! context 'shortInstrumentName new-inst-name)))
+   #})
+
+resetStaffShortInstrumentName =
+#(define-music-function () ()
+   #{
+     \context Staff
+     \applyContext
+     #(lambda (context)
+        (let ((saved-inst-name (ly:context-property context 'savedInstrumentName)))
+          (ly:context-set-property! context 'shortInstrumentName saved-inst-name)))
+   #})
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define MISC_FUNCTIONS_LOADED #t)

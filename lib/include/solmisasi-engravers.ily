@@ -32,7 +32,7 @@
    (and (not (string-contains (string-downcase instrName) "iring"))
         (not (string-contains (string-downcase instrName) "piano"))))
 
-#(define Solmisasi_note_head_engraver
+#(define Solmisasi_note_heads_engraver
    (make-engraver
     ((initialize trans)
      (solmisasi:log "- Engraving solmisasi notes in context ~a" (ly:translator-context trans)))
@@ -72,7 +72,7 @@
             (chord-up-Y-pos (+ 0 (* chord-gap 0.5) (* stl-base-height 0.5)))
             (dot-circle-stencil (ly:stencil-translate
                                  (make-circle-stencil
-                                  (if is-svg? 0.22 0.18)
+                                  (if is-svg? 0.22 0.20)
                                   0.001 #t)
                                  (cons 0.5 -0.25)))
             (classname "notangka")
