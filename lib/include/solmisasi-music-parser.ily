@@ -17,11 +17,10 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(if
-  (ly:version? < (list 2 21 0))
-  (use-modules (scm song-util))
-  (use-modules (lily song-util))
-  )
+% #(if (ly:version? < (list 2 21 0))
+%      (use-modules (scm song-util))
+%      (if (ly:version? < (list 2 24 999))
+%          (use-modules (lily song-util))))
 
 #(define (sol:message arg . rest)
    #f)
@@ -1021,5 +1020,4 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MUSIC_PARSER_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi music parser module has been loaded."))
+#(ly:message "* Solmisasi music parser module has been loaded.")

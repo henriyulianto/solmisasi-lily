@@ -17,8 +17,6 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(begin
-  (set! _SOLMISASI_LILY_LOADED #t)
-  (solmisasi:log "Finished loading core \"solmisasi\" library.
+#(set! SOLMISASI_LILY_LOADED #t)
+#(ly:message "Finished loading core \"solmisasi\" library.
 ==========================================")
-  )

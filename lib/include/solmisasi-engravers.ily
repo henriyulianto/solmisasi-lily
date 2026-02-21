@@ -32,7 +32,7 @@
    (and (not (string-contains (string-downcase instrName) "iring"))
         (not (string-contains (string-downcase instrName) "piano"))))
 
-#(define Solmisasi_note_head_engraver
+#(define Solmisasi_note_heads_engraver
    (make-engraver
     ((initialize trans)
      (solmisasi:log "- Engraving solmisasi notes in context ~a" (ly:translator-context trans)))
@@ -71,8 +71,14 @@
             (chord-down-Y-pos (- 0 (* chord-gap 0.5) (* stl-base-height 0.4)))
             (chord-up-Y-pos (+ 0 (* chord-gap 0.5) (* stl-base-height 0.5)))
             (dot-circle-stencil (ly:stencil-translate
-                                 (make-circle-stencil 0.22 0.001 #t)
-                                 (cons 0.5 -0.25))))
+                                 (make-circle-stencil
+                                  (if is-svg? 0.22 0.20)
+                                  0.001 #t)
+                                 (cons 0.5 -0.25)))
+            (classname "notangka")
+            (parenthesized? (ly:grob-property grob 'parenthesized))
+            (attr-alist `((class . ,classname)))
+            )
 
            (if solmisasi-dot-note?
                (if (or (not cdr-chords) (null? cdr-chords))
@@ -117,56 +123,56 @@
                       (if is-male-vocal? -1 0)
                       0))
                  (stl
-                  (grob-interpret-markup grob
-                                         (if solmisasi-rest?
-                                             (markup
-                                              #:line
-                                              (#:lower
-                                               0.5
-                                               (#:solmisasi #:simple "0")))
-                                             ; not rest
-                                             (if (or (not cdr-chords) (null? cdr-chords))
-                                                 ; single note
-                                                 (markup
-                                                  #:line
-                                                  (#:lower
-                                                   0.5
-                                                   (#:solmisasi
-                                                    (#:not-angka grob-pitch-solmisasi base-octave))))
-                                                 ; chords
-                                                 (let* ((cm
-                                                         #{
-                                                           \markup \fontsize #-0.4 {
-                                                             \lower #0.5
-                                                             \solmisasi {
-                                                               %\with-dimensions-from #base-markup
-                                                               %\hcenter-in
-                                                               \not-angka #grob-pitch-solmisasi #base-octave
-                                                             }
-                                                         } #}))
-                                                   (for-each
-                                                    (lambda (ch)
-                                                      (set! cm
-                                                            #{
-                                                              \markup {
-                                                                \center-column {
-                                                                  \vspace #chord-gap
-                                                                  \overlay {
-                                                                    \translate #(cons 0 chord-down-Y-pos) #cm
-                                                                    \translate #(cons 0 chord-up-Y-pos)
-                                                                    \with-dimensions-from \fontsize #-0.4 #base-markup
-                                                                    \fontsize #-0.4 \lower #0.5 \solmisasi {
-                                                                      \not-angka #(ly:music-property ch 'pitch-solmisasi) #base-octave
-                                                                    }
-                                                                  }
-                                                                }
-                                                              }
-                                                            #})
-                                                      ) ; end lambda
-                                                    cdr-chords) ; end for-each
-                                                   cm) ; end let
-                                                 ) ; end if not cdr-chords
-                                             )))
+                  (grob-interpret-markup
+                   grob
+                   (if solmisasi-rest?
+                       (markup
+                        #:line
+                        (#:lower
+                         0.5
+                         (#:solmisasi #:simple "0")))
+                       ; not rest
+                       (if (or (not cdr-chords) (null? cdr-chords))
+                           ; single note
+                           (markup
+                            #:line
+                            (#:lower
+                             0.5
+                             (#:solmisasi
+                              (#:not-angka grob-pitch-solmisasi base-octave))))
+                           ; chords
+                           (let* ((cm
+                                   #{
+                                     \markup \fontsize #-0.4 {
+                                       \lower #0.5
+                                       \solmisasi {
+                                         \not-angka #grob-pitch-solmisasi #base-octave
+                                       }
+                                   } #}))
+                             (for-each
+                              (lambda (ch)
+                                (set! cm
+                                      #{
+                                        \markup {
+                                          \center-column {
+                                            \vspace #chord-gap
+                                            \overlay {
+                                              \translate #(cons 0 chord-down-Y-pos) #cm
+                                              \translate #(cons 0 chord-up-Y-pos)
+                                              \with-dimensions-from \fontsize #-0.4 #base-markup
+                                              \fontsize #-0.4 \lower #0.5 \solmisasi {
+                                                \not-angka
+                                                #(ly:pitch->solmisasi (ly:music-property ch 'pitch)) #base-octave
+                                              }
+                                            }
+                                          }
+                                        }
+                                      #})
+                                ) ; end lambda
+                              cdr-chords) ; end for-each
+                             cm) ; end let
+                           ) ; end if not cdr-chords
+                       )))
                  )
                 ; set stencil
                 (ly:grob-set-property! grob 'stencil stl)
@@ -188,33 +194,44 @@
                     ) ; end if
                 ))
 
-           (if (eq? (ly:grob-property grob 'style) 'cross)
-               (ly:grob-set-property! grob 'stencil
-                                      (grob-interpret-markup grob
-                                                             #{
-                                                               \markup {
-                                                                 \raise #0.2
-                                                                 \musicglyph #"noteheads.s2cross"
-                                                               }
-                                                             #})))
-           (if (eq? (ly:grob-property grob 'style) 'xcircle)
-               (ly:grob-set-property! grob 'stencil
-                                      (grob-interpret-markup grob
-                                                             #{
-                                                               \markup {
-                                                                 \raise #0.2
-                                                                 \musicglyph #"noteheads.s2xcircle"
-                                                               }
-                                                             #})))
-           (if (eq? (ly:grob-property grob 'style) 'triangle)
-               (ly:grob-set-property! grob 'stencil
-                                      (grob-interpret-markup grob
-                                                             #{
-                                                               \markup {
-                                                                 \raise #0.2
-                                                                 \musicglyph #"noteheads.u1triangle"
-                                                               }
-                                                             #})))
+           (cond
+            ((eq? (ly:grob-property grob 'style) 'cross)
+             (ly:grob-set-property! grob 'stencil
+                                    (grob-interpret-markup grob
+                                                           #{
+                                                             \markup {
+                                                               \raise #0.2
+                                                               \musicglyph #"noteheads.s2cross"
+                                                             }
+                                                           #})))
+            ((eq? (ly:grob-property grob 'style) 'xcircle)
+             (ly:grob-set-property! grob 'stencil
+                                    (grob-interpret-markup grob
+                                                           #{
+                                                             \markup {
+                                                               \raise #0.2
+                                                               \musicglyph #"noteheads.s2xcircle"
+                                                             }
+                                                           #})))
+            ((eq? (ly:grob-property grob 'style) 'slash)
+             (ly:grob-set-property! grob 'stencil
+                                    (grob-interpret-markup grob
+                                                           #{
+                                                             \markup {
+                                                               \raise #0.2
+                                                               \musicglyph #"noteheads.s2slash"
+                                                             }
+                                                           #})))
+            ((eq? (ly:grob-property grob 'style) 'triangle)
+             (ly:grob-set-property! grob 'stencil
+                                    (grob-interpret-markup grob
+                                                           #{
+                                                             \markup {
+                                                               \raise #0.2
+                                                               \musicglyph #"noteheads.u1triangle"
+                                                             }
+                                                           #}))))
+           (ly:grob-set-property! grob 'output-attributes attr-alist)
            ))))))
 
 #(define Solmisasi_rest_engraver
@@ -226,9 +243,10 @@
       ;; make sure \omit is not in effect (stencil is not #f)
       (if (ly:grob-property-data grob 'stencil)
           (ly:grob-set-property! grob 'stencil
-                                 (grob-interpret-markup grob
-                                                        #{ \markup \lower #0.5 "0" #}))))))
-   )
+                                 (grob-interpret-markup
+                                  grob
+                                  #{ \markup \lower #0.5 "0" #}
+                                  )))))))
 
 #(define Solmisasi_key_engraver
    (let* ((current-key-sig (cons 1 (ly:make-pitch -6 0 0)))
@@ -360,8 +378,9 @@
                (stl
                 (grob-interpret-markup grob
                                        #{
-                                         \markup {
-                                           \larger \bold \solmisasi
+                                         \markup \smaller {
+                                           \override #'(font-features .("tnum" "cv47" "-kern"))
+                                           \number
                                            \fraction
                                            #(string-append
                                              " "
@@ -399,7 +418,171 @@
                              (cons 0.5 0))
                             )))
 
+%% Additional engravers
+
+%% Double barlines scheme engraver
+DbBars =
+#(lambda (context)
+   (let ((time-signature '())
+         (last-fraction #f))
+     `((process-music
+        . ,(lambda (trans)
+             (let ((frac (ly:context-property context 'timeSignatureFraction)))
+               (if (and (null? time-signature)
+                        (not (equal? last-fraction frac))
+                        (fraction? frac))
+                   (begin
+                    (ly:context-set-property! context 'whichBar "||")
+                    (set! last-fraction frac))))))
+
+       (stop-translation-timestep
+        . ,(lambda (trans)
+             (set! time-signature '()))))))
+
+%% Unfold bar number across repeat structures
+Unfold_bar_numbers_engraver =
+#(lambda (ctx)
+   (let* ((repeat-start #f)
+          (alternative-starts '())
+          (repeat-count #f))
+     (make-engraver
+      (listeners
+       ((volta-repeat-start-event engraver event)
+        ;; A \repeat volta <number> { ... } starts.
+        ;; Get and store 'repeat-count and 'currentBarNumber.
+        ;; At this point of time it's not yet know whether alternatives
+        ;; will occurr.
+        (set! repeat-count
+              (ly:event-property event 'repeat-count))
+        (set! repeat-start
+              (ly:context-property ctx 'currentBarNumber)))
+
+       ((volta-span-event engraver event)
+        ;; If 'volta-span-event happens, alternatives are present.
+        ;; Get and store (in a accumulates list) the bar numbers
+        ;; when an alternative starts.
+        (let ((volta-numbers (ly:event-property event 'volta-numbers)))
+          (set! alternative-starts
+                (cons
+                 (ly:context-property ctx 'currentBarNumber)
+                 alternative-starts))))
+
+       ((volta-repeat-end-event engraver event)
+        ;; 'volta-repeat-end-event is triggered at the end of the first
+        ;; alternative or at the end of the repeat-setion, if no
+        ;; alternatives are present.
+        ;; For bar numbering this means we need to know the lengths of
+        ;; the alternatives and the length of repeat-start to begin of
+        ;; first alternative.
+        (let* ((curr-bar-number
+                (ly:context-property ctx 'currentBarNumber))
+               ;; We call 'alternative-number in order to know whether
+               ;; alternatives are present at all.
+               (alternative-number
+                (ly:event-property event 'alternative-number #f))
+               ;; We call 'return-count to know how often a certain
+               ;; alternative is repeated.
+               (return-count (ly:event-property event 'return-count))
+               ;; Drop bar-numbers lower than the start of current
+               ;; repeat.
+               (relevant-alternative-starts
+                (filter
+                 (lambda (x)
+                   (> x repeat-start))
+                 alternative-starts))
+               ;; If we have alternatives, calculate their lengths.
+               (relevant-alternative-lengths
+                (let lp ((vals-list relevant-alternative-starts))
+                  (if (or (null? vals-list) (odd? (length vals-list)))
+                      '()
+                      (cons
+                       (- (car vals-list) (cadr vals-list))
+                       (lp (drop vals-list 2))))))
+               ;; Get the length of the repeat body, without first
+               ;; alternative, if present.
+               (body-length
+                (-
+                 (if alternative-number
+                     (last relevant-alternative-starts)
+                     curr-bar-number)
+                 repeat-start)))
+
+          (ly:context-set-property! ctx 'currentBarNumber
+                                    (+
+                                     curr-bar-number
+                                     (* body-length return-count)
+                                     (*
+                                      (if (pair? relevant-alternative-lengths)
+                                          (last relevant-alternative-lengths)
+                                          0)
+                                      (1- return-count))))))))))
+
+#(define Bass_changes_equal_root_engraver
+   (lambda (ctx)
+     "For sequential @code{ChordNames} with same root, but different bass, the root
+markup is dropped: D D/C D/B  -> D /C /B
+The behaviour may be controlled by setting the @code{chordChanges}
+context-property."
+     (let ((chord-pitches '())
+           (last-chord-pitches '())
+           (bass-pitch #f))
+       (make-engraver
+        ((initialize this-engraver)
+         (let ((chord-note-namer (ly:context-property ctx 'chordNoteNamer)))
+           ;; Set 'chordNoteNamer, respect user setting if already done
+           (ly:context-set-property! ctx 'chordNoteNamer
+                                     (if (procedure? chord-note-namer)
+                                         chord-note-namer
+                                         note-name->markup))))
+        (listeners
+         ((note-event this-engraver event)
+          (let* ((pitch (ly:event-property event 'pitch))
+                 (pitch-name (ly:pitch-notename pitch))
+                 (pitch-alt (ly:pitch-alteration pitch))
+                 (bass (ly:event-property event 'bass #f))
+                 (inversion (ly:event-property event 'inversion #f)))
+            ;; Collect notes of the chord
+            ;;  - to compare inversed chords we need to collect the bass note
+            ;;    as usual member of the chord, whereas an added bass must be
+            ;;    treated separate from the usual chord-notes
+            ;;  - notes are stored as pairs containing their
+            ;;    pitch-name (an integer), i.e. disregarding their octave and
+            ;;    their alteration
+            (cond (bass (set! bass-pitch pitch))
+                  (inversion
+                   (set! bass-pitch pitch)
+                   (set! chord-pitches
+                         (cons (cons pitch-name pitch-alt) chord-pitches)))
+                  (else
+                   (set! chord-pitches
+                         (cons (cons pitch-name pitch-alt) chord-pitches)))))))
+        (acknowledgers
+         ((chord-name-interface this-engraver grob source-engraver)
+          (let ((chord-changes (ly:context-property ctx 'chordChanges #f)))
+            ;; If subsequent chords are equal apart from their bass,
+            ;; reset the 'text-property.
+            ;; Equality is done by comparing the sorted lists of this chord's
+            ;; elements and the previous chord. Sorting is needed because
+            ;; inverted chords may have a different order of pitches.
+            ;; `chord-changes' needs to be true
+            (if (and bass-pitch
+                     chord-changes
+                     (equal?
+                      (sort chord-pitches car<)
+                      (sort last-chord-pitches car<)))
+                (ly:grob-set-property! grob 'text
+                                       (make-line-markup
+                                        (list
+                                         (ly:context-property ctx 'slashChordSeparator)
+                                         ((ly:context-property ctx 'chordNoteNamer)
+                                          bass-pitch
+                                          (ly:context-property ctx 'chordNameLowercaseMinor))))))
+            (set! last-chord-pitches chord-pitches)
+            (set! chord-pitches '())
+            (set! bass-pitch #f))))
+        ((finalize this-engraver)
+         (set! last-chord-pitches '()))))))
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_ENGRAVER_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi engraver module has been loaded."))
+#(ly:message "* Solmisasi engravers module has been loaded.")

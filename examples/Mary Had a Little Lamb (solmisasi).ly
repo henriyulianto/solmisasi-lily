@@ -17,7 +17,7 @@
         "Engraved using GNU Lilypond "
         #(lilypond-version) "."
         " — with solmisasi-lily v"
-        #_VERSION
+        #(solmisasi-lily-version)
       }
     }
   }

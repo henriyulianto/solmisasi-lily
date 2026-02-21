@@ -17,36 +17,36 @@
 %% You should have received a copy of the GNU General Public License
 %% along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#(if
-  (ly:version? < (list 2 21 0))
-  (use-modules (scm song-util))
-  (use-modules (lily song-util))
-  )
+% #(if (ly:version? < (list 2 21 0))
+%      (use-modules (scm song-util))
+%      (if (ly:version? < (list 2 24 999))
+%          (use-modules (lily song-util))))
 
 #(define (sol:message arg . rest)
    #f)
 
 #(begin
   ;; Konstanta untuk solmisasiMusic
-  (define _KEY_SIG_PROP 	'solmisasi-key-sig)
-  (define _TIME_SIG_PROP 	'solmisasi-time-sig)
-  (define _REST_PROP 		'solmisasi-rest)
-  (define _DOT_NOTE_PROP 	'solmisasi-dot-note)
-  (define _EXPERIMENTAL		#t)
+  (define _KEY_SIG_PROP   'solmisasi-key-sig)
+  (define _TIME_SIG_PROP  'solmisasi-time-sig)
+  (define _REST_PROP      'solmisasi-rest)
+  (define _DOT_NOTE_PROP  'solmisasi-dot-note)
+  (define _EXPERIMENTAL   #t)
 
   ;; Variabel
-  (define now 					ZERO-MOMENT)
-  (define elapsed				ZERO-MOMENT)
-  (define unit					(ly:make-moment 1/32))
-  (define units-in-beat			8)
-  (define beam-group-length		(ly:make-moment 1/4))
-  (define measure-length 		(ly:make-moment 4/4))
-  (define current-time-sig		#f)
-  (define last-pitch			#f)
-  (define last-pitch-solmisasi 	#f)
-  (define last-note				#f)
-  (define major-tonic-pitch 	(ly:make-pitch 0 0 0))
-  (define key-changes			'())
+  (define now                   ZERO-MOMENT)
+  (define elapsed               ZERO-MOMENT)
+  (define unit                  (ly:make-moment 1/32))
+  (define units-in-beat         8)
+  (define beam-group-length     (ly:make-moment 1/4))
+  (define measure-length        (ly:make-moment 4/4))
+  (define current-time-sig      #f)
+  (define last-pitch            #f)
+  (define last-pitch-solmisasi  #f)
+  (define last-note             #f)
+  (define major-tonic-pitch     (ly:make-pitch 0 0 0))
+  (define key-changes           '())
+  (define tied?                 #f)
   )
 
 #(define melismaBegin
@@ -59,8 +59,19 @@
     (make-property-unset 'melismaBusy)
     'Bottom))
 
-#(define (is-dot-note?	n)
+#(define (is-dot-note? n)
    (equal? #t (ly:music-property n 'solmisasi-dot-note #f)))
+
+#(define (on-tie-event? m)
+   (let* ((tie-found?     #f)
+          (articulations  (ly:music-property m 'articulations #f)))
+     (if articulations
+         (for-each
+          (lambda (a)
+            (set! tie-found?
+                  (music-is-of-type? a 'tie-event)))
+          articulations))
+     tie-found?))
 
 #(define (make-tie-event trans)
    (make-music 'TieEvent
@@ -90,7 +101,7 @@
           ((rest-event? music)
            (if (ly:pitch? last-pitch)
                last-pitch
-               (if (and (defined? last-note)
+               (if (and (ly:music? last-note)
                         (ly:music-property last-note 'pitch #f))
                    (ly:music-property last-note 'pitch)
                    (ly:make-pitch 0 0))))
@@ -112,7 +123,7 @@
                 ((rest-event? music)
                  (if (ly:pitch? last-pitch)
                      last-pitch
-                     (if (and (defined? last-note)
+                     (if (and (ly:music? last-note)
                               (ly:music-property last-note 'pitch #f))
                          (ly:music-property last-note 'pitch)
                          (ly:make-pitch 0 0))))
@@ -145,7 +156,7 @@
                         'NoteEvent)
                        ((rest-event? note/rest)
                         'RestEvent))))
-     (display (format #f "durlog = ~a" durlog))(newline)
+     ;(display (format #f "durlog = ~a" durlog))(newline)
      (if (null? durdots)
          (begin
           (if (and (ly:music-property note/rest 'div-span-stop #f)
@@ -160,22 +171,23 @@
          (begin
           (if arti
               (ly:music-set-property! note/rest 'articulations arti))
+          (append-articulations! note/rest (make-tie-event #t))
           (clean-music-list
            (append
             (list (make-music event-type
                               note/rest
                               'duration (ly:make-duration durlog 0 scale)))
-            (if (note-event? note/rest)
-                (list melismaBegin)
-                (list (empty-music)))
+            ; (if (note-event? note/rest)
+            ;                 (list melismaBegin)
+            ;                 (list (empty-music)))
             (append-map
              (lambda (x)
                (set! durlog (1+ durlog))
                (list (make-solmisasi-dot-note note/rest (ly:make-duration durlog 0))))
              durdots)
-            (if (note-event? note/rest)
-                (list melismaEnd)
-                (list (empty-music)))
+            ; (if (note-event? note/rest)
+            ;                 (list melismaEnd)
+            ;                 (list (empty-music)))
             ))
           ))))
 
@@ -184,7 +196,7 @@
           (is-onbeat?							(equal? ZERO-MOMENT
                                     (ly:moment-mod now beat-unit)))
           (note/rest-dur					(ly:music-property note/rest 'duration))
-          (note/rest-len					(ly:duration-length note/rest-dur))
+          (note/rest-len					(ly:duration->moment note/rest-dur))
           (note/rest-upbeat 			(ly:moment-sub beat-unit
                                               (ly:moment-mod note/rest-len beat-unit)))
           (main-num								0)
@@ -200,8 +212,6 @@
      (set! note/rest (make-music event-type note/rest))
      (if (note-event? note/rest)
          (begin
-          (display (format #f "Beat unit = ~a" beat-unit))(newline)
-          (display (if is-onbeat? " onbeat" ""))
           (set! last-pitch (ly:music-property note/rest 'pitch))
           (set! last-note note/rest)))
      ;; If we're on beat:
@@ -220,7 +230,7 @@
      (cond
       ((not (memq (ly:moment-main-denominator note/rest-len) '(1 2 4 8 16 32)))
        (set! note/rest-list note/rest)
-       (set! now (ly:moment-add now (ly:duration-length note/rest-dur)))
+       (set! now (ly:moment-add now (ly:duration->moment note/rest-dur)))
        )
       (else
        (if is-onbeat?
@@ -260,8 +270,8 @@
                 ))
            ; else (not onbeat)
            (begin
-            (if (ly:moment<? (ly:moment-mod now beat-unit) (ly:make-moment 1/8))
-                (set! beat-unit (ly:make-moment 1/16)))
+            ; (if (ly:moment<? (ly:moment-mod now beat-unit) (ly:make-moment 1/8))
+            ;                 (set! beat-unit (ly:make-moment 1/16)))
             (if (ly:moment<=? (ly:moment-add (ly:moment-mod now beat-unit) note/rest-len)
                               beat-unit)
                 (begin
@@ -306,12 +316,20 @@
                  ))))
        ))
      ;; If there are duration splits
-     (if (ly:music? note/rest-rest)
+     (if note/rest-rest
          (begin
           ;; dots for the rest
-          (set! (ly:music-property note/rest-rest 'pitch)
-                (ly:make-pitch -6 0 0))
-          (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
+          (set! note/rest-rest
+                (make-solmisasi-dot-note
+                 note/rest-rest
+                 (ly:music-property note/rest-rest 'duration)))
+          (if (not (rest-event? note/rest-first))
+              (append-articulations! note/rest-first (make-tie-event #t)))
+          ; (set! (ly:music-property note/rest-rest 'pitch)
+          ;                 (if last-pitch
+          ;                     last-pitch
+          ;                     (ly:make-pitch -6 0 0)))
+          ;           (set! (ly:music-property note/rest-rest 'solmisasi-dot-note) #t)
           ;(display (is-dot-note? note/rest-first))
           ;(if (and (not (is-dot-note? note/rest-first))
           ;         (slur-stop-note? note/rest-first))
@@ -323,19 +341,19 @@
           (set! note/rest-list
                 (flatten-list
                  (list note/rest-first
-                       (if (and (not (is-dot-note? note/rest-first))
-                                (not (slur-start-note? note/rest-first))
-                                (is-dot-note? note/rest-rest)
-                                (not (rest-event? note/rest-first)))
-                           melismaBegin
-                           (empty-music))
+                       ; (if (and (not (is-dot-note? note/rest-first))
+                       ;                                 (not (slur-start-note? note/rest-first))
+                       ;                                 (is-dot-note? note/rest-rest)
+                       ;                                 (not (rest-event? note/rest-first)))
+                       ;                            melismaBegin
+                       ;                            (empty-music))
                        (solmisasi-completion note/rest-rest)
-                       (if (and (not (is-dot-note? note/rest-first))
-                                (not (slur-start-note? note/rest-first))
-                                (is-dot-note? note/rest-rest)
-                                (not (rest-event? note/rest-first)))
-                           melismaEnd
-                           (empty-music))
+                       ; (if (and (not (is-dot-note? note/rest-first))
+                       ;                                 (not (slur-start-note? note/rest-first))
+                       ;                                 (is-dot-note? note/rest-rest)
+                       ;                                 (not (rest-event? note/rest-first)))
+                       ;                            melismaEnd
+                       ;                            (empty-music))
                        )))
           ))
 
@@ -411,14 +429,28 @@
 
      m))
 
+#(define (ly:pitch->solmisasi p)
+   ;; p = ly:pitch
+   (let* ((solmisasi-pitch (ly:make-pitch 0 0 0)))
+     (set! last-pitch p)
+     (set! solmisasi-pitch
+           (ly:pitch-transpose p
+                               (ly:pitch-negate
+                                (ly:pitch-diff major-tonic-pitch
+                                               (ly:make-pitch 0 0 0)))))
+     (set! last-pitch-solmisasi solmisasi-pitch)
+     solmisasi-pitch))
+
+#(define (insert-solmisasi-pitch-property m)
+   ;; m - note event or rest event
+   (ly:music-set-property! m
+                           'pitch-solmisasi
+                           (ly:pitch->solmisasi
+                            (ly:music-property m 'pitch))))
+
+
 #(define (parse-note-and-rest-events m)
    (let* ((pitch (ly:music-property m 'pitch #f))
-          (pitch-solmisasi (if (ly:pitch? pitch)
-                               (ly:pitch-transpose pitch
-                                                   (ly:pitch-negate
-                                                    (ly:pitch-diff major-tonic-pitch
-                                                                   (ly:make-pitch 0 0 0))))
-                               last-pitch-solmisasi))
           (volta-pitch (ly:music-property m 'last-pitch-for-volta #f))
           (to-solmisasi (lambda (x)
                           (let ((solm (solmisasi-completion x)))
@@ -426,17 +458,13 @@
                                 (set! solm (make-sequential-music solm)))
                             solm))))
      (if (ly:pitch? pitch)
-         (begin
-          (set! last-pitch pitch)
-          ;; transpose ke c major agar lebih mudah penanganannya
-          (ly:music-set-property! m 'pitch-solmisasi pitch-solmisasi)
-          (set! last-pitch-solmisasi pitch-solmisasi))
-         (begin
-          (ly:music-set-property! m 'pitch last-pitch)
-          (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)))
+         (insert-solmisasi-pitch-property m)
+         (begin ;else
+           (ly:music-set-property! m 'pitch last-pitch)
+           (ly:music-set-property! m 'pitch-solmisasi last-pitch-solmisasi)))
      (if volta-pitch
          (set! last-pitch volta-pitch))
-     (display now)(newline)
+     ;(display now)(newline)
      (to-solmisasi m)))
 
 #(define (process-skip-events m)
@@ -444,70 +472,129 @@
    (set! last-pitch-solmisasi #f)
    (set! now (ly:moment-add
               now
-              (ly:duration-length (ly:music-property m 'duration))))
+              (ly:duration->moment (ly:music-property m 'duration))))
    m)
 
 #(define (process-partial-music m)
    (let* ((partialset-element (find-child-named m 'PartialSet))
           (partial-moment
            (if (ly:music? partialset-element)
-               (ly:duration-length
+               (ly:duration->moment
                 (ly:music-property partialset-element 'duration))
                #f)))
      (if (ly:moment? partial-moment)
          (set! now (ly:moment-add now (ly:moment-sub measure-length partial-moment))))
-     (display "------- PARTIAL -------")(newline)
-     (display now)(newline)
+     ;(display "------- PARTIAL -------")(newline)
+     ;(display now)(newline)
+     m))
+
+#(define (is-tuplet-of-three-eighths? m)
+   (and (music-is-of-type? m 'time-scaled-music)
+        (equal? (ly:music-property m 'denominator) 3)
+        (equal? (ly:music-property m 'numerator) 2)
+        (equal? (ly:music-length m) (ly:make-moment 1/4))
+        ))
+
+#(define (parse-tuplet-of-three m)
+   (let* ((tupletMus (ly:music-property m 'element))
+          (tupletNotes (ly:music-property tupletMus 'elements))
+          (newTupletNotes (list))
+          (newDot (empty-music))
+          ;             (pitch-solmisasi (lambda (p)
+          ;                                (if (ly:pitch? p)
+          ;                                    (ly:pitch-transpose p
+          ;                                                        (ly:pitch-negate
+          ;                                                         (ly:pitch-diff major-tonic-pitch
+          ;                                                                        (ly:make-pitch 0 0 0))))
+          ;                                    last-pitch-solmisasi)))
+          (volta-pitch (ly:music-property m 'last-pitch-for-volta #f))
+          )
+     (for-each
+      (lambda (n)
+        ; (if tied?
+        ;             (ly:music-set-property! n 'solmisasi-dot-note #t))
+        (insert-solmisasi-pitch-property n)
+        (if (equal? (ly:music-length n) (ly:make-moment 1/6))
+            ;; split into two eighths
+            (begin
+             (ly:music-set-property! n
+                                     'duration
+                                     (ly:make-duration 3 0 2/3))
+             (set! newDot
+                   (make-solmisasi-dot-note n (ly:make-duration 3 0 2/3)))
+             (set! newTupletNotes
+                   (append newTupletNotes
+                           (list n melismaBegin newDot melismaEnd)))
+             )
+            ;; do not split
+            (set! newTupletNotes
+                  (append newTupletNotes (list n)))
+            )
+        )
+      tupletNotes)
+     (ly:music-set-property! m
+                             'element
+                             (make-sequential-music newTupletNotes))
+     (set! now (ly:moment-add now (ly:music-length m)))
      m))
 
 solmisasiMusic =
 #(define-music-function (music) (ly:music?)
-   (let* ((solmisasified-music (ly:music-deep-copy music)))
-     (set! now ZERO-MOMENT)
-     ;-----------------------------------------------------------
-     ; Initialize music with 4/4 time signature
-     (set! solmisasified-music
-           (make-sequential-music
-            (append
-             ;(list (beam_grouping_by_time_sig (cons 4 4)))
-             (list solmisasified-music))))
-     ;-----------------------------------------------------------
-     ; Event: ChordEvent
-     (set! solmisasified-music
-           (prepare-chord-open-close
-            (prepare-chords solmisasified-music)))
-     ;-----------------------------------------------------------
-     ; Process the whole music
-     (map-some-music
-      (lambda (m)
-        (or
-         ;; ---- TIME SIGNATURE
-         (and (music-is-of-type? m 'time-signature-music)
-              (parse-time-signature-music m))
-         ;; ---- KEY SIGNATURE
-         (and (music-is-of-type? m 'key-change-event)
-              (parse-key-change-events m))
-         ;; ---- PARTIALSET
-         (and (and (music-name? m 'ContextSpeccedMusic)
-                   ;(music-property-value? m 'context-type 'Score)
-                   ;(music-property-value? m 'descend-only #t)
-                   (music-has-property? m 'element)
-                   (ly:music? (find-child-named m 'PartialSet)))
-              (process-partial-music m))
-         ;; ---- SKIPS
-         (and (music-is-of-type? m 'skip-event)
-              (process-skip-events m))
-         ;; ---- NOTE or REST
-         (and (or (note-event? m) (rest-event? m))
-              (parse-note-and-rest-events m))
-         ) ; end or
-        ) ; end lambda
-      solmisasified-music) ; end map-some-music
-     solmisasified-music) ; end let
+   (let*
+    ((solmisasified-music (ly:music-deep-copy
+                           #{ \keepWithTag #'(solmisasi notangka) #music #})))
+
+    (set! now ZERO-MOMENT)
+    ;-----------------------------------------------------------
+    ; Initialize music with 4/4 time signature
+    ; (set! solmisasified-music
+    ;           (make-sequential-music
+    ;            (append
+    ;             ;(list (beam_grouping_by_time_sig (cons 4 4)))
+    ;             (list solmisasified-music))))
+    ;-----------------------------------------------------------
+    ; Event: ChordEvent
+    (set! solmisasified-music
+          (prepare-chord-open-close
+           (prepare-chords solmisasified-music)))
+    ;-----------------------------------------------------------
+    ; Process the whole music
+    (map-some-music
+     (lambda (m)
+       (or
+        ;; ---- TIME SIGNATURE
+        (and (music-is-of-type? m 'time-signature-music)
+             (parse-time-signature-music m))
+        ;; ---- KEY SIGNATURE
+        (and (music-is-of-type? m 'key-change-event)
+             (parse-key-change-events m))
+        ;; ---- PARTIALSET
+        (and (and (music-name? m 'ContextSpeccedMusic)
+                  ;(music-property-value? m 'context-type 'Score)
+                  ;(music-property-value? m 'descend-only #t)
+                  (music-has-property? m 'element)
+                  (ly:music? (find-child-named m 'PartialSet)))
+             (process-partial-music m))
+        ;; ---- SKIPS
+        (and (music-is-of-type? m 'skip-event)
+             (process-skip-events m))
+        ;; ---- TIE EVENTS
+        ; (and (on-tie-event? m)
+        ;              (set! tied? #t))
+        ;;----- TUPLETS
+        (and (is-tuplet-of-three-eighths? m)
+             (parse-tuplet-of-three m))
+        ;; ---- NOTE or REST
+        (and (or (note-event? m) (rest-event? m))
+             (parse-note-and-rest-events m))
+        ) ; end or
+       ) ; end lambda
+     solmisasified-music) ; end map-some-music
+
+    solmisasified-music) ; end let
    )
 %%% END music function solmisasiMusic
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define SOLMISASI_MUSIC_PARSER_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Solmisasi music parser (experimental v2) module has been loaded."))
+#(ly:message "* Solmisasi music parser v2 module has been loaded.")

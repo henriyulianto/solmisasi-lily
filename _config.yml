@@ -5,7 +5,7 @@ url: "https://henriyulianto.github.io" # the base hostname & protocol for your s
 repository: henriyulianto/solmisasi-lily
 
 permalink: pretty
-exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile", "*.solmisasi.log", "*.ly", "*tmp-lilypond*"]
+exclude: ["node_modules/", "*.gemspec", "*.gem", "Gemfile", "Gemfile.lock", "package.json", "package-lock.json",  "script/", "LICENSE.txt", "lib/", "bin/", "README.md", "Rakefile", "*.solmisasi.log", "*.ly", "*tmp-lilypond*", "vendor"]
 
 source: docs/
 destination: docs/_site
@@ -38,6 +38,8 @@ compress_html:
   startings: []
   blanklines: false
   profile: false
+
+#github: [metadata]
 
 # archive_version: v1.0.5.1-beta
 # archive_url: https://github.com/henriyulianto/solmisasi-lily/releases/download/{{ site.archive_version }}/solmisasi-lily-{{ site.archive_version }}.zip

@@ -93,9 +93,10 @@ openLogfile =
    (if (>= solmisasi-loglevel solmisasi-loglevel-log)
        (begin
         ;(openLogfile)
-        (format (current-output-port) "solmisasi-lily: ")
-        (format (current-output-port) fmt vals)
-        (format (current-output-port) "\n")
+        ; (format (current-output-port) "solmisasi-lily: ")
+        ;         (format (current-output-port) fmt vals)
+        ;         (format (current-output-port) "\n")
+        (ly:message (format #f (string-append "solmisasi-lily: " fmt) vals))
         ;(format solmisasi-logfile fmt vals)
         )))
 
@@ -119,5 +120,4 @@ openLogfile =
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 #(define LOGGING_LOADED #t)
-#(if (defined? 'LOGGING_LOADED)
-     (solmisasi:log "* Logging module has been loaded."))
+#(solmisasi:log "* Logging module has been loaded.")
