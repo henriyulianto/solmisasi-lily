@@ -1,5 +1,5 @@
 #(ly:set-option 'relative-includes #t)
-\version "2.25.26"
+\version "2.24.4"
 %% solmisasi.ily
 %%
 %% (Part of "solmisasi-lily" library for Lilypond)
@@ -193,12 +193,14 @@
    (normalize-path
     (location-extract-path (*location*))))
 
-
-%% Append the directory of this file to current parser's include path
-#(ly:parser-append-to-include-path
-  SOLMISASI_LIB_DIR)
-#(ly:parser-append-to-include-path
-  (ly:format "~a/include" SOLMISASI_LIB_DIR))
+#(if (ly:version? >= (list 2 25 0))
+     (begin
+      ; Append the directory of this file to current parser's include path
+      (ly:parser-append-to-include-path SOLMISASI_LIB_DIR)
+      (ly:parser-append-to-include-path (ly:format "~a/include" SOLMISASI_LIB_DIR))
+      )
+     (ly:parser-include-string (ly:format "\\include \"~a/include/backward-from-2.25.ily\"\n"
+                                          SOLMISASI_LIB_DIR)))
 
 %% List of include files
 #(define ily-files

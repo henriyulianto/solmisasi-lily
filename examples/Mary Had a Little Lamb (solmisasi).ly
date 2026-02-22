@@ -1,6 +1,5 @@
-\version "2.24.3"
+\version "2.24.4"
 
-#(define _USE_VERSION2 #t)
 \include "solmisasi.ily"
 
 \paper {
