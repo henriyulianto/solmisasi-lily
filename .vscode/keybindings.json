@@ -1,0 +1,8 @@
+[
+  {
+    "key": "ctrl+alt+f",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Format current LilyPond file (python-ly)",
+    "when": "editorTextFocus && editorLangId == 'lilypond'"
+  }
+]

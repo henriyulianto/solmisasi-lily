@@ -1,0 +1,28 @@
+{
+    "vslilypond.compilation.additionalCommandLineArguments": "-I /home/henri/projects/solmisasi-lily/lib",
+    "vslilypond.compilation.compileMainFileOnSave": false,
+    "vslilypond.compilation.compileOnSave": false,
+    "vslilypond.general.pathToLilypond": "/home/henri/lilypond-2.24.4/bin/lilypond",
+    "vslilypond.intellisense.enabled": false,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "/home/henri/lilypond-2.24.4/**": true
+    },
+    "search.exclude": {
+        "/home/henri/lilypond-2.24.4/**": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/.git/subtree-cache/**": true,
+        "**/.hg/store/**": true,
+        "/home/henri/lilypond-2.24.4/**": true
+    },
+    "lilypondFormatter.general.useBundledPythonLy": false,
+    "[lilypond]": {
+        "editor.formatOnSave": false
+    }
+}

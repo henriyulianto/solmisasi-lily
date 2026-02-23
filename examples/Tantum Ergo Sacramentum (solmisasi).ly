@@ -1,4 +1,4 @@
-\version "2.25.26"
+\version "2.24.4"
 \include "english.ly"
 \include "solmisasi.ily"
 %\include "articulate.ly"
@@ -57,7 +57,7 @@
 
 global = {
   \tempo "Andante"
-  \key c\major \time 3/4
+  \time 3/4
 }
 
 soprani = {

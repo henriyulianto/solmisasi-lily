@@ -1,0 +1,22 @@
+{
+    "name": "format-python-ly",
+    "displayName": "Format with python-ly",
+    "publisher": "local",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.50.0"
+    },
+    "main": "./extension.js",
+    "activationEvents": [
+        "onCommand:solmisasi.formatWithPythonLy"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "solmisasi.formatWithPythonLy",
+                "title": "Format with python-ly",
+                "category": "LilyPond"
+            }
+        ]
+    }
+}

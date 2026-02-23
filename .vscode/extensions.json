@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "lhl2617.vslilypond",
+        "lhl2617.lilypond-formatter",
+        "lhl2617.lilypond-pdf-preview",
+        "lhl2617.lilypond-snippets",
+        "jeandeaual.lilypond-syntax",
+        "jeandeaual.scheme"
+    ]
+}

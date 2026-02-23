@@ -1,0 +1,21 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+        "label": "Format current LilyPond file (python-ly)",
+        "type": "shell",
+        "command": "python",
+        "args": [
+            "-m",
+            "ly",
+            "reformat",
+            "${file}"
+        ],
+        "presentation": {
+            "reveal": "silent",
+            "panel": "shared"
+        },
+        "problemMatcher": []
+    }
+]
+}
