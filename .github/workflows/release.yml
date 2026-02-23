@@ -35,7 +35,9 @@ jobs:
           draft: false
           prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Prefer a Personal Access Token stored as `ACTIONS_TOKEN` for release creation. If not set,
+          # fall back to the automatically provided `github.token` (may have limited permissions).
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN || github.token }}
 
       - name: Upload release asset (zip)
         uses: actions/upload-release-asset@v1
@@ -45,4 +47,4 @@ jobs:
           asset_name: ${{ env.REPO_NAME }}-${{ github.ref_name }}.zip
           asset_content_type: application/zip
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN || github.token }}
