@@ -30,7 +30,7 @@ jobs:
           release_name: ${{ github.ref_name }}
           body: "Release ${{ github.ref_name }}"
           draft: false
-          prerelease: ${{ contains(github.ref_name, 'beta') }}
+          prerelease: ${{ contains(github.ref_name, 'alpha') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
