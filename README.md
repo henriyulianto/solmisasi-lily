@@ -13,3 +13,10 @@
 
 [![GitHub license](https://img.shields.io/github/license/henriyulianto/solmisasi-lily)](https://github.com/henriyulianto/solmisasi-lily/blob/master/LICENSE)
 [![Donate](https://img.shields.io/badge/donate-paypal-blue.svg)](https://www.paypal.me/AHenriYulianto)
+
+> **Note — prereleases:** Latest prerelease available — download from the repository Releases page:
+>
+> - [Latest prerelease (pre-release)](https://github.com/henriyulianto/solmisasi-lily/releases)
+>
+> (I'll update this link to point directly to a specific prerelease tag if you want; leaving uncommitted so you can review.)
+
