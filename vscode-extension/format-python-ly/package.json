@@ -7,9 +7,6 @@
         "vscode": "^1.50.0"
     },
     "main": "./extension.js",
-    "activationEvents": [
-        "onCommand:solmisasi.formatWithPythonLy"
-    ],
     "contributes": {
         "commands": [
             {
